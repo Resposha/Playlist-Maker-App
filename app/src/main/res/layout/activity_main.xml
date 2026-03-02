@@ -5,7 +5,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:background="@color/blue"
-    android:paddingHorizontal="16dp">
+    android:padding="16dp">
 
     <!-- match_parent - размер объекта займет весь экран устройства или все оставшееся место в корневом ViewGroup -->
     <!-- wrap_content - размер объекта займет столько, сколько занимает его содержимое -->
@@ -14,51 +14,53 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="start"
-        android:layout_marginTop="14dp"
         android:paddingBottom="40dp"
         android:text="@string/app_name"
         android:textColor="@color/white"
-        android:textSize="22sp" />
+        android:textSize="@dimen/main_textSize" />
 
     <Button
         android:layout_width="match_parent"
-        android:layout_height="0dp"
+        android:layout_height="@dimen/main_btn_layout_height"
         android:layout_marginBottom="16dp"
-        android:layout_weight="1"
+        android:layout_weight="@dimen/main_btn_layout_weight"
         android:backgroundTint="@color/white"
         android:text="@string/search"
         android:textColor="@color/black"
+        android:textSize="@dimen/main_textSize"
         app:icon="@drawable/ic_search"
         app:iconGravity="textStart"
-        app:iconPadding="8dp"
+        app:iconPadding="@dimen/main_btn_iconPadding"
         app:iconTint="@color/black"
-        app:cornerRadius="16dp" />
+        app:cornerRadius="@dimen/main_btn_cornerRadius" />
 
     <Button
         android:layout_width="match_parent"
-        android:layout_height="0dp"
+        android:layout_height="@dimen/main_btn_layout_height"
         android:layout_marginBottom="16dp"
-        android:layout_weight="1"
+        android:layout_weight="@dimen/main_btn_layout_weight"
         android:backgroundTint="@color/white"
         android:text="@string/library"
         android:textColor="@color/black"
+        android:textSize="@dimen/main_textSize"
         app:icon="@drawable/ic_library"
         app:iconGravity="textStart"
-        app:iconPadding="8dp"
+        app:iconPadding="@dimen/main_btn_iconPadding"
         app:iconTint="@color/black"
-        app:cornerRadius="16dp" />
+        app:cornerRadius="@dimen/main_btn_cornerRadius" />
 
     <Button
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_marginBottom="28dp"
-        android:layout_weight="1"
+        android:layout_height="@dimen/main_btn_layout_height"
+        android:layout_marginBottom="12dp"
+        android:layout_weight="@dimen/main_btn_layout_weight"
         android:backgroundTint="@color/white"
         android:text="@string/settings"
+        android:textSize="@dimen/main_textSize"
         android:textColor="@color/black"
         app:icon="@drawable/ic_settings"
         app:iconGravity="textStart"
-        app:iconPadding="8dp"
+        app:iconPadding="@dimen/main_btn_iconPadding"
         app:iconTint="@color/black"
-        app:cornerRadius="16dp" />
+        app:cornerRadius="@dimen/main_btn_cornerRadius" />
 </LinearLayout>
