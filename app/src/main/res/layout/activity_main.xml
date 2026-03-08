@@ -20,7 +20,7 @@
         android:textSize="@dimen/main_textSize" />
 
     <Button
-        android:id="@+id/btn_search"
+        android:id="@+id/main_button_search"
         android:layout_width="match_parent"
         android:layout_height="@dimen/main_btn_layout_height"
         android:layout_marginBottom="16dp"
@@ -36,7 +36,7 @@
         app:cornerRadius="@dimen/main_btn_cornerRadius" />
 
     <Button
-        android:id="@+id/btn_library"
+        android:id="@+id/main_button_library"
         android:layout_width="match_parent"
         android:layout_height="@dimen/main_btn_layout_height"
         android:layout_marginBottom="16dp"
@@ -52,7 +52,7 @@
         app:cornerRadius="@dimen/main_btn_cornerRadius" />
 
     <Button
-        android:id="@+id/btn_settings"
+        android:id="@+id/main_button_settings"
         android:layout_width="match_parent"
         android:layout_height="@dimen/main_btn_layout_height"
         android:layout_marginBottom="12dp"

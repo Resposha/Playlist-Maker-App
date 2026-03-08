@@ -7,4 +7,5 @@
     <dimen name="main_btn_cornerRadius">16dp</dimen>
     <dimen name="settings_textSize">16sp</dimen>
     <dimen name="settings_layout_marginTop_and_marginBottom">21dp</dimen>
+    <dimen name="settings_paddingStart">16dp</dimen>
 </resources>
