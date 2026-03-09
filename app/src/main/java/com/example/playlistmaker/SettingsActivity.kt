@@ -22,8 +22,7 @@ class SettingsActivity : AppCompatActivity() {
 
         val settingsToolbar = findViewById<MaterialToolbar>(R.id.settings_toolbar)
         settingsToolbar.setNavigationOnClickListener {
-            val mainIntent = Intent(this, MainActivity::class.java)
-            startActivity(mainIntent)
+            finish()
         }
     }
 }
