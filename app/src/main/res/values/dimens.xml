@@ -3,9 +3,11 @@
     <dimen name="main_textSize">22sp</dimen>
     <dimen name="main_btn_layout_height">0dp</dimen>
     <dimen name="main_btn_layout_weight">1</dimen>
+    <dimen name="main_btn_layout_marginHorizontal">16dp</dimen>
     <dimen name="main_btn_iconPadding">8dp</dimen>
     <dimen name="main_btn_cornerRadius">16dp</dimen>
     <dimen name="settings_textSize">16sp</dimen>
     <dimen name="settings_layout_marginTop_and_marginBottom">21dp</dimen>
     <dimen name="settings_paddingStart">16dp</dimen>
+    <dimen name="settings_paddingEnd">12dp</dimen>
 </resources>
