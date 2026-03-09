@@ -16,11 +16,13 @@
         app:titleTextColor="@color/black"
         app:navigationIcon="@drawable/ic_arrow_back" />
 
-    <com.google.android.material.switchmaterial.SwitchMaterial
+    <Switch
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/settings_layout_marginTop_and_marginBottom"
+        android:layout_marginBottom="@dimen/settings_layout_marginTop_and_marginBottom"
         android:paddingStart="@dimen/settings_paddingStart"
-        android:gravity="center_vertical"
+        android:gravity="center|start"
         android:text="@string/dark_theme"
         android:textColor="@color/black"
         android:textSize="@dimen/settings_textSize"
