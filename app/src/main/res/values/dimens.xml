@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <dimen name="toolbar_textSize">22sp</dimen>
     <dimen name="main_textSize">22sp</dimen>
     <dimen name="main_btn_layout_height">0dp</dimen>
     <dimen name="main_btn_layout_weight">1</dimen>

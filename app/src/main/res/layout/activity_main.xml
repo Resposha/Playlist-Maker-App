@@ -7,65 +7,30 @@
     android:orientation="vertical"
     android:background="@color/blue">
 
-    <!-- match_parent - размер объекта займет весь экран устройства или все оставшееся место в корневом ViewGroup -->
-    <!-- wrap_content - размер объекта займет столько, сколько занимает его содержимое -->
-
     <com.google.android.material.appbar.MaterialToolbar
         android:id="@+id/main_toolbar"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="24dp"
         app:title="@string/app_name"
-        app:titleTextColor="@color/white" />
+        app:titleTextColor="@color/white"
+        style="@style/ToolbarStyle"/>
 
     <Button
         android:id="@+id/main_button_search"
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/main_btn_layout_height"
-        android:layout_marginHorizontal="@dimen/main_btn_layout_marginHorizontal"
         android:layout_marginBottom="16dp"
-        android:layout_weight="@dimen/main_btn_layout_weight"
-        android:backgroundTint="@color/white"
         android:text="@string/search"
-        android:textColor="@color/black"
-        android:textSize="@dimen/main_textSize"
         app:icon="@drawable/ic_search"
-        app:iconGravity="textStart"
-        app:iconPadding="@dimen/main_btn_iconPadding"
-        app:iconTint="@color/black"
-        app:cornerRadius="@dimen/main_btn_cornerRadius" />
+        style="@style/MainButtonsStyle"/>
 
     <Button
         android:id="@+id/main_button_library"
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/main_btn_layout_height"
-        android:layout_marginHorizontal="@dimen/main_btn_layout_marginHorizontal"
         android:layout_marginBottom="16dp"
-        android:layout_weight="@dimen/main_btn_layout_weight"
-        android:backgroundTint="@color/white"
         android:text="@string/library"
-        android:textColor="@color/black"
-        android:textSize="@dimen/main_textSize"
         app:icon="@drawable/ic_library"
-        app:iconGravity="textStart"
-        app:iconPadding="@dimen/main_btn_iconPadding"
-        app:iconTint="@color/black"
-        app:cornerRadius="@dimen/main_btn_cornerRadius" />
+        style="@style/MainButtonsStyle"/>
 
     <Button
         android:id="@+id/main_button_settings"
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/main_btn_layout_height"
-        android:layout_marginHorizontal="@dimen/main_btn_layout_marginHorizontal"
         android:layout_marginBottom="28dp"
-        android:layout_weight="@dimen/main_btn_layout_weight"
-        android:backgroundTint="@color/white"
         android:text="@string/settings"
-        android:textSize="@dimen/main_textSize"
-        android:textColor="@color/black"
         app:icon="@drawable/ic_settings"
-        app:iconGravity="textStart"
-        app:iconPadding="@dimen/main_btn_iconPadding"
-        app:iconTint="@color/black"
-        app:cornerRadius="@dimen/main_btn_cornerRadius" />
+        style="@style/MainButtonsStyle"/>
 </LinearLayout>
