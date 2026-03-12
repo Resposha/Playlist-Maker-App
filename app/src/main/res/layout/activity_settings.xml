@@ -20,16 +20,19 @@
         style="@style/SettingsSwitchAndTextViewsStyle"/>
 
     <TextView
+        android:id="@+id/settings_share"
         android:text="@string/share_app"
         app:drawableEndCompat="@drawable/ic_share"
         style="@style/SettingsSwitchAndTextViewsStyle"/>
 
     <TextView
+        android:id="@+id/settings_support"
         android:text="@string/contact_support"
         app:drawableEndCompat="@drawable/ic_support"
         style="@style/SettingsSwitchAndTextViewsStyle"/>
 
     <TextView
+        android:id="@+id/settings_user_agreement"
         android:text="@string/user_agreement"
         app:drawableEndCompat="@drawable/ic_arrow_forward"
         style="@style/SettingsSwitchAndTextViewsStyle"/>
