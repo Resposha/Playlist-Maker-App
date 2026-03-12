@@ -5,13 +5,13 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:background="@color/blue">
+    style="@style/MainActivityStyle">
 
     <com.google.android.material.appbar.MaterialToolbar
         android:id="@+id/main_toolbar"
         app:title="@string/app_name"
-        app:titleTextColor="@color/white"
-        style="@style/ToolbarStyle"/>
+        style="@style/ToolbarStyle"
+        app:titleTextColor="@color/white"/>
 
     <Button
         android:id="@+id/main_button_search"

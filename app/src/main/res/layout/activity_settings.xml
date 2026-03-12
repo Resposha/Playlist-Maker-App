@@ -5,12 +5,11 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:background="@color/white">
+    style="@style/SettingsActivityStyle">
     
     <com.google.android.material.appbar.MaterialToolbar
         android:id="@+id/settings_toolbar"
         app:title="@string/settings"
-        app:titleTextColor="@color/black"
         app:navigationIcon="@drawable/ic_arrow_back"
         style="@style/ToolbarStyle"/>
 
