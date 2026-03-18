@@ -3,6 +3,7 @@
     <style name="Base.Theme.PlaylistMaker" parent="Theme.MaterialComponents.DayNight.NoActionBar">
         <!-- Customize your dark theme here. -->
         <!-- <item name="colorPrimary">@color/my_dark_primary</item> -->
+        <item name="colorControlNormal">@color/white</item>
     </style>
     <style name="MainActivityStyle">
         <item name="android:background">@color/black</item>
@@ -17,7 +18,24 @@
         <item name="android:fontFamily">@font/ys_display_medium</item>
         <item name="android:textFontWeight">500</item>
         <item name="android:textSize">@dimen/toolbar_textSize</item>
-        <item name="titleTextColor">@color/white</item>
+        <item name="titleTextColor">?attr/colorControlNormal</item>
+        <item name="navigationIconTint">?attr/colorControlNormal</item>
+    </style>
+    <style name="MainButtonsStyle" parent="Widget.MaterialComponents.Button.UnelevatedButton">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">@dimen/main_btn_layout_height</item>
+        <item name="android:layout_marginHorizontal">@dimen/main_btn_layout_marginHorizontal</item>
+        <item name="android:layout_weight">@dimen/main_btn_layout_weight</item>
+        <item name="android:backgroundTint">@color/white</item>
+        <item name="android:textColor">@color/black</item>
+        <item name="android:textSize">@dimen/main_textSize</item>
+        <item name="android:textAllCaps">false</item>
+        <item name="android:fontFamily">@font/ys_display_medium</item>
+        <item name="android:textFontWeight">500</item>
+        <item name="iconGravity">textStart</item>
+        <item name="iconPadding">@dimen/main_btn_iconPadding</item>
+        <item name="iconTint">@color/black</item>
+        <item name="cornerRadius">@dimen/main_btn_cornerRadius</item>
     </style>
     <style name="SettingsSwitchAndTextViewsStyle">
         <item name="android:layout_width">match_parent</item>
@@ -26,12 +44,12 @@
         <item name="android:layout_marginBottom">@dimen/settings_layout_marginTop_and_marginBottom</item>
         <item name="android:paddingStart">@dimen/settings_paddingStart</item>
         <item name="android:paddingEnd">@dimen/settings_paddingEnd</item>
-        <item name="android:textColor">@color/white</item>
+        <item name="android:textColor">?attr/colorControlNormal</item>
         <item name="android:textSize">@dimen/settings_textSize</item>
         <item name="android:fontFamily">@font/ys_display_regular</item>
         <item name="android:textFontWeight">400</item>
         <item name="android:thumbTint">@color/blue</item>
         <item name="android:trackTint">@color/blue_light</item>
-        <item name="android:fillColor">@color/white</item>
+        <item name="drawableTint">?attr/colorControlNormal</item>
     </style>
 </resources>
