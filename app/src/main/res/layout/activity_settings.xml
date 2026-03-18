@@ -9,13 +9,13 @@
     
     <com.google.android.material.appbar.MaterialToolbar
         android:id="@+id/settings_toolbar"
+        android:layout_marginBottom="24dp"
         app:title="@string/settings"
         app:navigationIcon="@drawable/ic_arrow_back"
         style="@style/ToolbarStyle"/>
 
     <Switch
         android:text="@string/dark_theme"
-        android:gravity="center|start"
         android:checked="true"
         style="@style/SettingsSwitchAndTextViewsStyle"/>
 
