@@ -49,12 +49,9 @@
         <item name="android:textFontWeight">400</item>
         <item name="drawableTint">@color/text_gray</item>
     </style>
-    <style name="SearchBarStyle">
-        <item name="android:background">@color/light_gray</item>
-    </style>
     <style name="SearchEditTextStyle">
         <item name="android:layout_width">match_parent</item>
-        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_height">match_parent</item>
         <item name="android:paddingStart">@dimen/search_EditText_paddingStart</item>
         <item name="android:textColor">@color/black</item>
         <item name="android:textColorHint">@color/text_gray</item>
@@ -62,6 +59,7 @@
         <item name="android:fontFamily">@font/ys_display_regular</item>
         <item name="android:textFontWeight">400</item>
         <item name="android:drawablePadding">8dp</item>
+        <item name="android:backgroundTint">@color/light_gray</item>
         <item name="drawableTint">@color/text_gray</item>
     </style>
     <style name="SearchIconClearStyle">
