@@ -14,6 +14,13 @@ import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.updatePadding
 
 class SearchActivity : AppCompatActivity() {
+    private var searchInput = INPUT
+
+    companion object {
+        const val SEARCH_QUERY = "SEARCH_QUERY"
+        const val INPUT = ""
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
@@ -24,11 +31,11 @@ class SearchActivity : AppCompatActivity() {
             insets
         }
 
-        val inputEditText = findViewById<EditText>(R.id.search_edit_text)
+        val searchEditText = findViewById<EditText>(R.id.search_edit_text)
         val clearButton = findViewById<ImageView>(R.id.search_icon_clear)
 
         clearButton.setOnClickListener {
-            inputEditText.setText("")
+            searchEditText.setText("")
         }
 
         val textWatcher = object : TextWatcher {
@@ -37,20 +44,19 @@ class SearchActivity : AppCompatActivity() {
             }
 
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-                if (s.isNullOrEmpty()) {
-                    Toast.makeText(this@SearchActivity, "Поисковой запрос не введен.", Toast.LENGTH_SHORT).show()
-                } else {
-                    val input = s.toString()
-                    Toast.makeText(this@SearchActivity, "Вы ввели следующий поисковой запрос: '$input'", Toast.LENGTH_SHORT).show()
-                }
                 clearButton.visibility = clearButtonVisibility(s)
             }
 
             override fun afterTextChanged(s: Editable?) {
-                // empty
+                if (s.isNullOrEmpty()) {
+                    Toast.makeText(this@SearchActivity, "Поисковой запрос не введен.", Toast.LENGTH_SHORT).show()
+                } else {
+                    searchInput = s.toString()
+                    Toast.makeText(this@SearchActivity, "Вы ввели следующий поисковой запрос: '$searchInput'", Toast.LENGTH_SHORT).show()
+                }
             }
         }
-        inputEditText.addTextChangedListener(textWatcher)
+        searchEditText.addTextChangedListener(textWatcher)
     }
 
     fun clearButtonVisibility(s: CharSequence?): Int {
@@ -59,5 +65,17 @@ class SearchActivity : AppCompatActivity() {
         } else {
             View.VISIBLE
         }
+    }
+
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        outState.putString(SEARCH_QUERY, searchInput)
+    }
+
+    override fun onRestoreInstanceState(savedInstanceState: Bundle) {
+        super.onRestoreInstanceState(savedInstanceState)
+        searchInput = savedInstanceState.getString(SEARCH_QUERY, INPUT)
+        val searchEditText = findViewById<EditText>(R.id.search_edit_text)
+        searchEditText.setText(searchInput)
     }
 }
