@@ -13,8 +13,9 @@
 
     <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="36dp"
-        android:layout_marginHorizontal="@dimen/various_elements_layout_marginHorizontal">
+        android:layout_height="@dimen/search_field_layout_height"
+        android:layout_marginHorizontal="@dimen/various_elements_layout_marginHorizontal"
+        android:layout_marginVertical="@dimen/search_field_layout_marginVertical">
 
         <EditText
             android:id="@+id/search_edit_text"
@@ -32,4 +33,12 @@
             android:visibility="gone"
             style="@style/SearchIconClearStyle"/>
     </FrameLayout>
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/search_track_recyclerview"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:layout_marginTop="@dimen/search_recyclerview_layout_marginTop"
+        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"/>
 </LinearLayout>
