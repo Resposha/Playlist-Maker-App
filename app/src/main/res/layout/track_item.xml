@@ -24,6 +24,8 @@
 
         <TextView
             android:id="@+id/track_name"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
             android:maxLines="1"
             android:ellipsize="end"
             style="@style/SearchTrackNameStyle"/>
@@ -60,6 +62,8 @@
     </LinearLayout>
 
     <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_gravity="center_vertical"
         android:src="@drawable/ic_arrow_forward"
         style="@style/SearchImageViewArrowForwardStyle"/>
