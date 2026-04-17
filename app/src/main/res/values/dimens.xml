@@ -3,15 +3,22 @@
     <dimen name="toolbar_textSize">22sp</dimen>
     <dimen name="various_elements_layout_marginHorizontal">16dp</dimen>
     <dimen name="main_textSize">22sp</dimen>
-    <dimen name="main_btn_layout_height">0dp</dimen>
-    <dimen name="main_btn_layout_weight">1</dimen>
     <dimen name="main_btn_iconPadding">8dp</dimen>
     <dimen name="main_btn_cornerRadius">16dp</dimen>
     <dimen name="settings_textSize">16sp</dimen>
-    <dimen name="settings_layout_marginTop_and_marginBottom">21dp</dimen>
+    <dimen name="settings_layout_marginVertical">21dp</dimen>
     <dimen name="settings_paddingStart">16dp</dimen>
     <dimen name="settings_paddingEnd">12dp</dimen>
     <dimen name="search_EditText_textSize">16sp</dimen>
     <dimen name="search_EditText_paddingStart">12dp</dimen>
     <dimen name="search_ImageView_paddingEnd">12dp</dimen>
+    <dimen name="search_field_layout_height">36dp</dimen>
+    <dimen name="search_field_layout_marginVertical">8dp</dimen>
+    <dimen name="search_recyclerview_layout_marginTop">16dp</dimen>
+    <dimen name="search_track_item_paddingHorizontal">12dp</dimen>
+    <dimen name="search_track_item_paddingVertical">8dp</dimen>
+    <dimen name="search_track_info_paddingHorizontal">8dp</dimen>
+    <dimen name="search_track_name_textSize">16sp</dimen>
+    <dimen name="search_artist_name_and_track_time_textSize">11sp</dimen>
+    <dimen name="search_album_art_layout_width_and_layout_height">45dp</dimen>
 </resources>

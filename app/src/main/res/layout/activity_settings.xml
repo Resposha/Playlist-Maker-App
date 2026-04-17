@@ -9,30 +9,56 @@
     
     <com.google.android.material.appbar.MaterialToolbar
         android:id="@+id/settings_toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
         android:layout_marginBottom="24dp"
         app:title="@string/settings"
         app:navigationIcon="@drawable/ic_arrow_back"
         style="@style/ToolbarStyle"/>
 
     <Switch
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginVertical="@dimen/settings_layout_marginVertical"
+        android:paddingStart="@dimen/settings_paddingStart"
+        android:paddingEnd="@dimen/settings_paddingEnd"
+        android:gravity="center|start"
         android:text="@string/dark_theme"
         android:checked="true"
         style="@style/SettingsSwitchAndTextViewsStyle"/>
 
     <TextView
         android:id="@+id/settings_share"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginVertical="@dimen/settings_layout_marginVertical"
+        android:paddingStart="@dimen/settings_paddingStart"
+        android:paddingEnd="@dimen/settings_paddingEnd"
+        android:gravity="center|start"
         android:text="@string/share_app"
         app:drawableEndCompat="@drawable/ic_share"
         style="@style/SettingsSwitchAndTextViewsStyle"/>
 
     <TextView
         android:id="@+id/settings_support"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginVertical="@dimen/settings_layout_marginVertical"
+        android:paddingStart="@dimen/settings_paddingStart"
+        android:paddingEnd="@dimen/settings_paddingEnd"
+        android:gravity="center|start"
         android:text="@string/contact_support"
         app:drawableEndCompat="@drawable/ic_support"
         style="@style/SettingsSwitchAndTextViewsStyle"/>
 
     <TextView
         android:id="@+id/settings_user_agreement"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginVertical="@dimen/settings_layout_marginVertical"
+        android:paddingStart="@dimen/settings_paddingStart"
+        android:paddingEnd="@dimen/settings_paddingEnd"
+        android:gravity="center|start"
         android:text="@string/user_agreement"
         app:drawableEndCompat="@drawable/ic_arrow_forward"
         style="@style/SettingsSwitchAndTextViewsStyle"/>
