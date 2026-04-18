@@ -25,7 +25,7 @@
         android:layout_marginBottom="16dp"
         android:text="@string/search"
         app:icon="@drawable/ic_search"
-        app:iconPadding="@dimen/main_btn_iconPadding"
+        app:iconPadding="@dimen/main_Button_iconPadding"
         app:iconGravity="textStart"
         style="@style/MainButtonsStyle"/>
 
@@ -38,7 +38,7 @@
         android:layout_marginBottom="16dp"
         android:text="@string/library"
         app:icon="@drawable/ic_library"
-        app:iconPadding="@dimen/main_btn_iconPadding"
+        app:iconPadding="@dimen/main_Button_iconPadding"
         app:iconGravity="textStart"
         style="@style/MainButtonsStyle"/>
 
@@ -51,7 +51,7 @@
         android:layout_marginBottom="28dp"
         android:text="@string/settings"
         app:icon="@drawable/ic_settings"
-        app:iconPadding="@dimen/main_btn_iconPadding"
+        app:iconPadding="@dimen/main_Button_iconPadding"
         app:iconGravity="textStart"
         style="@style/MainButtonsStyle"/>
 </LinearLayout>

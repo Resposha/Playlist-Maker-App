@@ -25,7 +25,7 @@
         <item name="android:fontFamily">@font/ys_display_medium</item>
         <item name="android:textFontWeight">500</item>
         <item name="iconTint">@color/black</item>
-        <item name="cornerRadius">@dimen/main_btn_cornerRadius</item>
+        <item name="cornerRadius">@dimen/main_Button_cornerRadius</item>
     </style>
     <style name="SettingsSwitchAndTextViewsStyle">
         <item name="android:textColor">@color/white</item>
@@ -46,7 +46,6 @@
         <item name="drawableTint">@color/black</item>
     </style>
     <style name="SearchIconClearStyle">
-        <item name="android:paddingEnd">@dimen/search_ImageView_paddingEnd</item>
         <item name="tint">@color/black</item>
     </style>
     <style name="SearchTrackNameStyle">
@@ -64,5 +63,19 @@
     </style>
     <style name="SearchImageViewArrowForwardStyle">
         <item name="tint">@color/white</item>
+    </style>
+    <style name="SearchPlaceholderTextViewStyle">
+        <item name="android:textColor">@color/white</item>
+        <item name="android:textSize">@dimen/search_placeholder_TextView_textSize</item>
+        <item name="android:fontFamily">@font/ys_display_medium</item>
+        <item name="android:textFontWeight">400</item>
+    </style>
+    <style name="SearchPlaceholderReloadButtonStyle">
+        <item name="android:textColor">@color/black</item>
+        <item name="android:textSize">@dimen/search_placeholder_Button_textSize</item>
+        <item name="android:fontFamily">@font/ys_display_medium</item>
+        <item name="android:textFontWeight">500</item>
+        <item name="android:backgroundTint">@color/white</item>
+        <item name="cornerRadius">@dimen/search_placeholder_Button_cornerRadius</item>
     </style>
 </resources>
