@@ -98,6 +98,7 @@ class SearchActivity : AppCompatActivity() {
             searchEditText.setText("")
             val inputMethodManager = getSystemService(Context.INPUT_METHOD_SERVICE) as? InputMethodManager
             inputMethodManager?.hideSoftInputFromWindow(clearButton.windowToken, 0)
+            hideConnectionIssuesMessage()
             hideNoResultsMessage()
             hideSearchResult()
         }
