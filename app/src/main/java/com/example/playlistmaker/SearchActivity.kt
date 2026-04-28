@@ -94,7 +94,7 @@ class SearchActivity : AppCompatActivity() {
         }
 
         searchEditText.setOnFocusChangeListener { view, hasFocus ->
-            searchHistoryMessage.isVisible = hasFocus && searchEditText.text.isEmpty() && searchHistory.get().isNotEmpty()
+            searchHistoryMessage.isVisible = hasFocus && searchEditText.text.isNullOrEmpty() && searchHistory.get().isNotEmpty()
         }
 
         clearHistoryButton.setOnClickListener {
@@ -185,7 +185,7 @@ class SearchActivity : AppCompatActivity() {
             }
 
             override fun afterTextChanged(s: Editable?) {
-                // empty
+                if (!s.isNullOrEmpty()) searchInput = s.toString()
             }
         }
         searchEditText.addTextChangedListener(textWatcher)
