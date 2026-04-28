@@ -10,7 +10,6 @@ import android.widget.Button
 import android.widget.EditText
 import android.widget.ImageView
 import android.widget.LinearLayout
-import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
@@ -26,31 +25,34 @@ import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
 class SearchActivity : AppCompatActivity() {
-    private var searchInput = INPUT
-
     companion object {
+        const val SEARCH_HISTORY = "search_history"
         const val SEARCH_QUERY = "SEARCH_QUERY"
-        const val INPUT = ""
+        const val EMPTY_STRING = ""
+        const val ITUNES = "https://itunes.apple.com"
     }
 
-    private val iTunesSearchBaseUrl = "https://itunes.apple.com"
+    private var searchInput = EMPTY_STRING
 
     private val retrofit = Retrofit.Builder()
-        .baseUrl(iTunesSearchBaseUrl)
+        .baseUrl(ITUNES)
         .addConverterFactory(GsonConverterFactory.create())
         .build()
 
     private val iTunesSearchService = retrofit.create(TrackSearchApi::class.java)
 
+    private val tracks = arrayListOf<Track>()
+
+    private lateinit var searchToolbar: MaterialToolbar
     private lateinit var searchEditText: EditText
     private lateinit var clearButton: ImageView
     private lateinit var trackRecyclerView: RecyclerView
     private lateinit var noResultsMessage: LinearLayout
     private lateinit var connectionIssuesMessage: LinearLayout
     private lateinit var reloadButton: Button
-
-    private val tracks = mutableListOf<Track>()
-    private val trackAdapter = TrackAdapter(tracks)
+    private lateinit var searchHistoryMessage: LinearLayout
+    private lateinit var searchHistoryRecyclerView: RecyclerView
+    private lateinit var clearHistoryButton: Button
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -62,19 +64,94 @@ class SearchActivity : AppCompatActivity() {
             insets
         }
 
-        val searchToolbar = findViewById<MaterialToolbar>(R.id.search_toolbar)
+        searchToolbar = findViewById<MaterialToolbar>(R.id.search_toolbar)
+        searchEditText = findViewById<EditText>(R.id.search_edit_text)
+        clearButton = findViewById<ImageView>(R.id.search_icon_clear)
+        trackRecyclerView = findViewById<RecyclerView>(R.id.search_recyclerview_found_tracks)
+        noResultsMessage = findViewById<LinearLayout>(R.id.search_no_results)
+        connectionIssuesMessage = findViewById<LinearLayout>(R.id.search_connection_issues)
+        reloadButton = findViewById<Button>(R.id.search_button_reload)
+        searchHistoryMessage = findViewById<LinearLayout>(R.id.search_history)
+        searchHistoryRecyclerView = findViewById<RecyclerView>(R.id.search_recyclerview_history)
+        clearHistoryButton = findViewById<Button>(R.id.search_button_clear_history)
+
+        val searchHistory = SearchHistory(getSharedPreferences(SEARCH_HISTORY, MODE_PRIVATE))
+
+        val searchHistoryAdapter = TrackAdapter(searchHistory.get()) {
+            // empty
+        }
+
+        val trackAdapter = TrackAdapter(tracks) {
+            searchHistory.addTrack(it)
+            searchHistoryAdapter.updateSearchHistory(searchHistory.get())
+        }
+
+        trackRecyclerView.adapter = trackAdapter
+        searchHistoryRecyclerView.adapter = searchHistoryAdapter
+
         searchToolbar.setNavigationOnClickListener {
             finish()
         }
 
-        searchEditText = findViewById<EditText>(R.id.search_edit_text)
-        clearButton = findViewById<ImageView>(R.id.search_icon_clear)
-        trackRecyclerView = findViewById<RecyclerView>(R.id.search_track_recyclerview)
-        noResultsMessage = findViewById<LinearLayout>(R.id.search_no_results)
-        connectionIssuesMessage = findViewById<LinearLayout>(R.id.search_connection_issues)
-        reloadButton = findViewById<Button>(R.id.search_button_reload)
+        searchEditText.setOnFocusChangeListener { view, hasFocus ->
+            searchHistoryMessage.isVisible = hasFocus && searchEditText.text.isNullOrEmpty() && searchHistory.get().isNotEmpty()
+        }
 
-        trackRecyclerView.adapter = trackAdapter
+        clearHistoryButton.setOnClickListener {
+            searchHistory.clear()
+            searchHistoryAdapter.updateSearchHistory(searchHistory.get())
+            searchHistoryMessage.isVisible = false
+        }
+
+        fun showFoundTracks(searchResult: List<Track>) {
+            noResultsMessage.isVisible = false
+            connectionIssuesMessage.isVisible = false
+            tracks.addAll(searchResult)
+            trackAdapter.notifyDataSetChanged()
+            trackRecyclerView.isVisible = true
+        }
+
+        fun hideSearchResult() {
+            tracks.clear()
+            trackAdapter.notifyDataSetChanged()
+            trackRecyclerView.isVisible = false
+        }
+
+        fun showNoResultsMessage() {
+            hideSearchResult()
+            connectionIssuesMessage.isVisible = false
+            noResultsMessage.isVisible = true
+        }
+
+        fun showConnectionIssuesMessage() {
+            hideSearchResult()
+            noResultsMessage.isVisible = false
+            connectionIssuesMessage.isVisible = true
+        }
+
+        fun searchRequest() {
+            iTunesSearchService.search(searchInput).enqueue(object : Callback<TrackResponse> {
+                override fun onResponse(
+                    call: Call<TrackResponse>,
+                    response: Response<TrackResponse>
+                ) {
+                    if (response.code() == 200) {
+                        val searchResult = response.body()?.results.orEmpty()
+                        if (searchResult.isEmpty()) {
+                            showNoResultsMessage()
+                        } else {
+                            showFoundTracks(searchResult)
+                        }
+                    } else {
+                        showConnectionIssuesMessage()
+                    }
+                }
+
+                override fun onFailure(call: Call<TrackResponse>, t: Throwable) {
+                    showConnectionIssuesMessage()
+                }
+            })
+        }
 
         searchEditText.setOnEditorActionListener { _, actionId, _ ->
             if (actionId == EditorInfo.IME_ACTION_DONE) {
@@ -85,11 +162,11 @@ class SearchActivity : AppCompatActivity() {
         }
 
         clearButton.setOnClickListener {
-            searchEditText.setText("")
+            searchEditText.setText(EMPTY_STRING)
             val inputMethodManager = getSystemService(Context.INPUT_METHOD_SERVICE) as? InputMethodManager
             inputMethodManager?.hideSoftInputFromWindow(clearButton.windowToken, 0)
-            hideConnectionIssuesMessage()
-            hideNoResultsMessage()
+            connectionIssuesMessage.isVisible = false
+            noResultsMessage.isVisible = false
             hideSearchResult()
         }
 
@@ -104,15 +181,11 @@ class SearchActivity : AppCompatActivity() {
 
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
                 clearButton.isVisible = !s.isNullOrEmpty()
+                searchHistoryMessage.isVisible = searchEditText.hasFocus() && s.isNullOrEmpty() && searchHistory.get().isNotEmpty()
             }
 
             override fun afterTextChanged(s: Editable?) {
-                if (s.isNullOrEmpty()) {
-                    Toast.makeText(this@SearchActivity, "Поисковой запрос не введен.", Toast.LENGTH_SHORT).show()
-                } else {
-                    searchInput = s.toString()
-                    Toast.makeText(this@SearchActivity, "Вы ввели следующий поисковой запрос: '$searchInput'", Toast.LENGTH_SHORT).show()
-                }
+                if (!s.isNullOrEmpty()) searchInput = s.toString()
             }
         }
         searchEditText.addTextChangedListener(textWatcher)
@@ -125,66 +198,8 @@ class SearchActivity : AppCompatActivity() {
 
     override fun onRestoreInstanceState(savedInstanceState: Bundle) {
         super.onRestoreInstanceState(savedInstanceState)
-        searchInput = savedInstanceState.getString(SEARCH_QUERY, INPUT)
+        searchInput = savedInstanceState.getString(SEARCH_QUERY, EMPTY_STRING)
         val searchEditText = findViewById<EditText>(R.id.search_edit_text)
         searchEditText.setText(searchInput)
-    }
-
-    private fun showFoundTracks(searchResult: List<Track>) {
-        hideNoResultsMessage()
-        hideConnectionIssuesMessage()
-        tracks.addAll(searchResult)
-        trackAdapter.notifyDataSetChanged()
-        trackRecyclerView.isVisible = true
-    }
-
-    private fun hideSearchResult() {
-        tracks.clear()
-        trackAdapter.notifyDataSetChanged()
-        trackRecyclerView.isVisible = false
-    }
-
-    private fun showNoResultsMessage() {
-        hideSearchResult()
-        hideConnectionIssuesMessage()
-        noResultsMessage.isVisible = true
-    }
-
-    private fun hideNoResultsMessage() {
-        noResultsMessage.isVisible = false
-    }
-
-    private fun showConnectionIssuesMessage() {
-        hideSearchResult()
-        hideNoResultsMessage()
-        connectionIssuesMessage.isVisible = true
-    }
-
-    private fun hideConnectionIssuesMessage() {
-        connectionIssuesMessage.isVisible = false
-    }
-
-    private fun searchRequest() {
-        iTunesSearchService.search(searchInput).enqueue(object : Callback<TrackResponse> {
-            override fun onResponse(
-                call: Call<TrackResponse>,
-                response: Response<TrackResponse>
-            ) {
-                if (response.code() == 200) {
-                    val searchResult = response.body()?.results.orEmpty()
-                    if (searchResult.isEmpty()) {
-                        showNoResultsMessage()
-                    } else {
-                        showFoundTracks(searchResult)
-                    }
-                } else {
-                    showConnectionIssuesMessage()
-                }
-            }
-
-            override fun onFailure(call: Call<TrackResponse>, t: Throwable) {
-                showConnectionIssuesMessage()
-            }
-        })
     }
 }

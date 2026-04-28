@@ -11,19 +11,19 @@
         <item name="android:background">@color/black</item>
     </style>
     <style name="ToolbarStyle">
+        <item name="titleTextColor">@color/white</item>
+        <item name="android:textSize">@dimen/toolbar_textSize</item>
         <item name="android:fontFamily">@font/ys_display_medium</item>
         <item name="android:textFontWeight">500</item>
-        <item name="android:textSize">@dimen/toolbar_textSize</item>
-        <item name="titleTextColor">@color/white</item>
         <item name="navigationIconTint">@color/white</item>
     </style>
     <style name="MainButtonsStyle" parent="Widget.MaterialComponents.Button.UnelevatedButton">
         <item name="android:backgroundTint">@color/white</item>
         <item name="android:textColor">@color/black</item>
         <item name="android:textSize">@dimen/main_textSize</item>
-        <item name="android:textAllCaps">false</item>
         <item name="android:fontFamily">@font/ys_display_medium</item>
         <item name="android:textFontWeight">500</item>
+        <item name="android:textAllCaps">false</item>
         <item name="iconTint">@color/black</item>
         <item name="cornerRadius">@dimen/main_Button_cornerRadius</item>
     </style>
@@ -33,8 +33,8 @@
         <item name="android:fontFamily">@font/ys_display_regular</item>
         <item name="android:textFontWeight">400</item>
         <item name="drawableTint">@color/white</item>
-        <item name="android:thumbTint">@color/blue</item>
-        <item name="android:trackTint">@color/blue_light</item>
+        <item name="thumbTint">@color/blue</item>
+        <item name="trackTint">@color/blue_light</item>
     </style>
     <style name="SearchEditTextStyle">
         <item name="android:textColor">@color/black</item>
@@ -66,16 +66,23 @@
     </style>
     <style name="SearchPlaceholderTextViewStyle">
         <item name="android:textColor">@color/white</item>
-        <item name="android:textSize">@dimen/search_placeholder_TextView_textSize</item>
+        <item name="android:textSize">@dimen/search_placeholder_and_history_TextView_textSize</item>
         <item name="android:fontFamily">@font/ys_display_medium</item>
         <item name="android:textFontWeight">400</item>
     </style>
-    <style name="SearchPlaceholderReloadButtonStyle">
+    <style name="SearchReloadAndClearHistoryButtonsStyle">
         <item name="android:textColor">@color/black</item>
         <item name="android:textSize">@dimen/search_placeholder_Button_textSize</item>
         <item name="android:fontFamily">@font/ys_display_medium</item>
         <item name="android:textFontWeight">500</item>
+        <item name="android:textAllCaps">false</item>
         <item name="android:backgroundTint">@color/white</item>
         <item name="cornerRadius">@dimen/search_placeholder_Button_cornerRadius</item>
+    </style>
+    <style name="SearchHistoryTextViewStyle">
+        <item name="android:textColor">@color/white</item>
+        <item name="android:textSize">@dimen/search_placeholder_and_history_TextView_textSize</item>
+        <item name="android:fontFamily">@font/ys_display_medium</item>
+        <item name="android:textFontWeight">500</item>
     </style>
 </resources>
