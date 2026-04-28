@@ -3,15 +3,17 @@ package com.example.playlistmaker
 import android.app.Application
 import androidx.appcompat.app.AppCompatDelegate
 
-const val APP_PREFERENCES = "app_preferences"
-const val THEME_SWITCHER = "theme_switcher"
-
 class App : Application() {
+    companion object {
+        const val THEME_SETTINGS = "theme_settings"
+        const val THEME_SWITCHER = "theme_switcher"
+    }
+
     private var darkTheme = false
 
     override fun onCreate() {
         super.onCreate()
-        val sharedPrefs = getSharedPreferences(APP_PREFERENCES, MODE_PRIVATE)
+        val sharedPrefs = getSharedPreferences(THEME_SETTINGS, MODE_PRIVATE)
         switchTheme(sharedPrefs.getBoolean(THEME_SWITCHER, darkTheme))
     }
 

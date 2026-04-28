@@ -14,6 +14,10 @@ import com.google.android.material.switchmaterial.SwitchMaterial
 import androidx.core.content.edit
 
 class SettingsActivity : AppCompatActivity() {
+    companion object {
+        const val THEME_SETTINGS = "theme_settings"
+        const val THEME_SWITCHER = "theme_switcher"
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -25,7 +29,7 @@ class SettingsActivity : AppCompatActivity() {
             insets
         }
 
-        val sharedPrefs = getSharedPreferences(APP_PREFERENCES, MODE_PRIVATE)
+        val sharedPrefs = getSharedPreferences(THEME_SETTINGS, MODE_PRIVATE)
 
         val settingsToolbar = findViewById<MaterialToolbar>(R.id.settings_toolbar)
         val settingsSwitch = findViewById<SwitchMaterial>(R.id.settings_switch)

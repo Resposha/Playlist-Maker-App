@@ -14,18 +14,23 @@
     <dimen name="search_ImageView_paddingEnd">12dp</dimen>
     <dimen name="search_field_layout_height">36dp</dimen>
     <dimen name="search_field_layout_marginVertical">8dp</dimen>
-    <dimen name="search_recyclerview_layout_marginTop">16dp</dimen>
+    <dimen name="search_RecyclerView_layout_marginTop">16dp</dimen>
     <dimen name="search_track_item_paddingHorizontal">12dp</dimen>
     <dimen name="search_track_item_paddingVertical">8dp</dimen>
     <dimen name="search_track_info_paddingHorizontal">8dp</dimen>
     <dimen name="search_track_name_textSize">16sp</dimen>
     <dimen name="search_artist_name_and_track_time_textSize">11sp</dimen>
-    <dimen name="search_placeholder_TextView_textSize">19sp</dimen>
+    <dimen name="search_placeholder_and_history_TextView_textSize">19sp</dimen>
     <dimen name="search_placeholder_TextView_paddingHorizontal">24dp</dimen>
-    <dimen name="search_placeholder_TextView_paddingBottom">24dp</dimen>
     <dimen name="search_placeholder_ImageView_paddingTop">102dp</dimen>
     <dimen name="search_placeholder_ImageView_paddingBottom">16dp</dimen>
     <dimen name="search_placeholder_Button_textSize">14sp</dimen>
     <dimen name="search_placeholder_Button_cornerRadius">54dp</dimen>
+    <dimen name="search_placeholder_Button_layout_marginTop">24dp</dimen>
+    <dimen name="search_history_TextView_layout_marginTop">24dp</dimen>
+    <dimen name="search_history_TextView_paddingTop">18dp</dimen>
+    <dimen name="search_history_TextView_paddingBottom">12dp</dimen>
+    <dimen name="search_history_RecyclerView_layout_marginTop">8dp</dimen>
+    <dimen name="search_history_Button_layout_marginTop">24dp</dimen>
     <dimen name="search_album_art_layout_width_and_layout_height">45dp</dimen>
 </resources>
