@@ -7,6 +7,7 @@ import androidx.core.content.edit
 class SearchHistory(private val sharedPrefs: SharedPreferences) {
     companion object {
         const val SEARCH_HISTORY = "search_history"
+        const val MAX_SIZE = 10
     }
 
     private val gson = Gson()
@@ -36,7 +37,7 @@ class SearchHistory(private val sharedPrefs: SharedPreferences) {
             }
         }
         history.add(0, newTrack)
-        if (history.size > 10) history.removeAt(history.size - 1)
+        if (history.size > MAX_SIZE) history.removeAt(history.size - 1)
         save(history)
     }
 
