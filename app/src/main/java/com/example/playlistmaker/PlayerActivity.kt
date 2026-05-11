@@ -32,6 +32,7 @@ class PlayerActivity : AppCompatActivity() {
     private lateinit var addToPlaylist: ImageButton
     private lateinit var playAndPause: ImageButton
     private lateinit var addToFavourite: ImageButton
+    private lateinit var playbackProgress: TextView
     private lateinit var trackTimeValue: TextView
     private lateinit var collectionName: TextView
     private lateinit var collectionNameValue: TextView
@@ -59,6 +60,7 @@ class PlayerActivity : AppCompatActivity() {
         addToPlaylist = findViewById<ImageButton>(R.id.player_button_add_to_playlist)
         playAndPause = findViewById<ImageButton>(R.id.player_button_play_and_pause)
         addToFavourite = findViewById<ImageButton>(R.id.player_button_add_to_favourite)
+        playbackProgress = findViewById<TextView>(R.id.player_playback_progress)
         trackTimeValue = findViewById<TextView>(R.id.player_track_time_value)
         collectionName = findViewById<TextView>(R.id.player_collection_name)
         collectionNameValue = findViewById<TextView>(R.id.player_collection_name_value)
@@ -70,6 +72,9 @@ class PlayerActivity : AppCompatActivity() {
         playerToolbar.setNavigationOnClickListener {
             finish()
         }
+
+        // временная заглушка
+        playbackProgress.text = SimpleDateFormat("mm:ss", Locale.getDefault()).format(track.trackTimeMillis.toLong())
 
         setTrackDetails(track)
     }
