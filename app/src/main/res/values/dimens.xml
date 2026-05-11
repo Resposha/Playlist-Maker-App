@@ -33,4 +33,18 @@
     <dimen name="search_history_RecyclerView_layout_marginTop">8dp</dimen>
     <dimen name="search_history_Button_layout_marginTop">24dp</dimen>
     <dimen name="search_album_art_layout_width_and_layout_height">45dp</dimen>
+    <dimen name="player_ConstraintLayout_paddingBottom">24dp</dimen>
+    <dimen name="player_layout_constraintGuide_begin_and_end">24dp</dimen>
+    <dimen name="player_layout_constraintGuide_for_track_details_begin_and_end">16dp</dimen>
+    <dimen name="player_album_art_layout_marginTop">26dp</dimen>
+    <dimen name="player_track_name_layout_marginTop">24dp</dimen>
+    <dimen name="player_artist_name_layout_marginTop">12dp</dimen>
+    <dimen name="player_button_play_and_pause_layout_marginTop">30dp</dimen>
+    <dimen name="player_playback_progress_layout_marginTop">4dp</dimen>
+    <dimen name="player_track_time_layout_marginTop">30dp</dimen>
+    <dimen name="player_track_details_paddingVertical">8dp</dimen>
+    <dimen name="player_track_name_textSize">22sp</dimen>
+    <dimen name="player_artist_name_textSize">14sp</dimen>
+    <dimen name="player_playback_progress_textSize">14sp</dimen>
+    <dimen name="player_track_details_textSize">13sp</dimen>
 </resources>
