@@ -51,7 +51,7 @@
             app:navigationIcon="@drawable/ic_arrow_back"
             style="@style/ToolbarStyle"/>
 
-        <!-- Album art -->
+        <!-- Album artwork -->
         <ImageView
             android:id="@+id/player_album_art"
             android:layout_width="wrap_content"
@@ -95,6 +95,7 @@
             app:layout_constraintTop_toTopOf="@id/player_button_play_and_pause"
             app:layout_constraintBottom_toBottomOf="@id/player_button_play_and_pause"
             app:layout_constraintHorizontal_chainStyle="spread"
+            android:background="@android:color/transparent"
             app:srcCompat="@drawable/button_add_to_playlist"/>
 
         <!-- Play and pause button -->
@@ -106,6 +107,7 @@
             app:layout_constraintStart_toEndOf="@id/player_button_add_to_playlist"
             app:layout_constraintEnd_toStartOf="@id/player_button_add_to_favourite"
             app:layout_constraintTop_toTopOf="@id/player_artist_name"
+            android:background="@android:color/transparent"
             app:srcCompat="@drawable/button_play"/>
 
         <!-- Add to favourite button -->
@@ -117,6 +119,7 @@
             app:layout_constraintEnd_toEndOf="@id/right_border"
             app:layout_constraintTop_toTopOf="@id/player_button_play_and_pause"
             app:layout_constraintBottom_toBottomOf="@id/player_button_play_and_pause"
+            android:background="@android:color/transparent"
             app:srcCompat="@drawable/button_add_to_favourite"/>
 
         <!-- Playback progress -->

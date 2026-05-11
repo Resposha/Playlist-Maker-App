@@ -1,6 +1,7 @@
 package com.example.playlistmaker
 
 import android.content.Context
+import android.content.Intent
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
@@ -18,6 +19,7 @@ import androidx.core.view.isVisible
 import androidx.core.view.updatePadding
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.appbar.MaterialToolbar
+import com.google.gson.Gson
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -26,6 +28,7 @@ import retrofit2.converter.gson.GsonConverterFactory
 
 class SearchActivity : AppCompatActivity() {
     companion object {
+        const val TRACK = "track"
         const val SEARCH_HISTORY = "search_history"
         const val SEARCH_QUERY = "SEARCH_QUERY"
         const val EMPTY_STRING = ""
@@ -78,12 +81,13 @@ class SearchActivity : AppCompatActivity() {
         val searchHistory = SearchHistory(getSharedPreferences(SEARCH_HISTORY, MODE_PRIVATE))
 
         val searchHistoryAdapter = TrackAdapter(searchHistory.get()) {
-            // empty
+            openTrackPlayer(it)
         }
 
         val trackAdapter = TrackAdapter(tracks) {
             searchHistory.addTrack(it)
             searchHistoryAdapter.updateSearchHistory(searchHistory.get())
+            openTrackPlayer(it)
         }
 
         trackRecyclerView.adapter = trackAdapter
@@ -201,5 +205,13 @@ class SearchActivity : AppCompatActivity() {
         searchInput = savedInstanceState.getString(SEARCH_QUERY, EMPTY_STRING)
         val searchEditText = findViewById<EditText>(R.id.search_edit_text)
         searchEditText.setText(searchInput)
+    }
+
+    private fun openTrackPlayer(track: Track) {
+        val intent = Intent(this, PlayerActivity::class.java)
+            .apply {
+                putExtra(TRACK, Gson().toJson(track))
+            }
+        startActivity(intent)
     }
 }
