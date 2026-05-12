@@ -108,6 +108,7 @@ class SearchActivity : AppCompatActivity() {
         }
 
         fun showFoundTracks(searchResult: List<Track>) {
+            searchHistoryMessage.isVisible = false
             noResultsMessage.isVisible = false
             connectionIssuesMessage.isVisible = false
             tracks.addAll(searchResult)
@@ -123,12 +124,14 @@ class SearchActivity : AppCompatActivity() {
 
         fun showNoResultsMessage() {
             hideSearchResult()
+            searchHistoryMessage.isVisible = false
             connectionIssuesMessage.isVisible = false
             noResultsMessage.isVisible = true
         }
 
         fun showConnectionIssuesMessage() {
             hideSearchResult()
+            searchHistoryMessage.isVisible = false
             noResultsMessage.isVisible = false
             connectionIssuesMessage.isVisible = true
         }
@@ -185,11 +188,17 @@ class SearchActivity : AppCompatActivity() {
 
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
                 clearButton.isVisible = !s.isNullOrEmpty()
-                searchHistoryMessage.isVisible = searchEditText.hasFocus() && s.isNullOrEmpty() && searchHistory.get().isNotEmpty()
+                val isSearchFieldEmpty = searchEditText.hasFocus() && s.isNullOrEmpty()
+                if (isSearchFieldEmpty) {
+                    hideSearchResult()
+                    noResultsMessage.isVisible = false
+                    connectionIssuesMessage.isVisible = false
+                }
+                searchHistoryMessage.isVisible = isSearchFieldEmpty && searchHistory.get().isNotEmpty()
             }
 
             override fun afterTextChanged(s: Editable?) {
-                if (!s.isNullOrEmpty()) searchInput = s.toString()
+                searchInput = if (!s.isNullOrEmpty()) s.toString() else EMPTY_STRING
             }
         }
         searchEditText.addTextChangedListener(textWatcher)
