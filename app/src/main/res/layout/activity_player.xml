@@ -93,7 +93,6 @@
             app:layout_constraintStart_toStartOf="@id/left_border"
             app:layout_constraintTop_toTopOf="@id/player_button_play_and_pause"
             app:layout_constraintBottom_toBottomOf="@id/player_button_play_and_pause"
-            app:layout_constraintHorizontal_chainStyle="spread"
             android:background="@android:color/transparent"
             app:srcCompat="@drawable/button_add_to_playlist"/>
 
@@ -105,7 +104,7 @@
             android:layout_marginTop="@dimen/player_button_play_and_pause_layout_marginTop"
             app:layout_constraintStart_toEndOf="@id/player_button_add_to_playlist"
             app:layout_constraintEnd_toStartOf="@id/player_button_add_to_favourite"
-            app:layout_constraintTop_toTopOf="@id/player_artist_name"
+            app:layout_constraintTop_toBottomOf="@id/player_artist_name"
             android:background="@android:color/transparent"
             app:srcCompat="@drawable/button_play"/>
 
