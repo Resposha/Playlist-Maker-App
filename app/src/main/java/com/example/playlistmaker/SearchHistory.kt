@@ -6,8 +6,8 @@ import androidx.core.content.edit
 
 class SearchHistory(private val sharedPrefs: SharedPreferences) {
     companion object {
-        const val SEARCH_HISTORY = "search_history"
-        const val MAX_SIZE = 10
+        private const val SEARCH_HISTORY = "search_history"
+        private const val MAX_SIZE = 10
     }
 
     private val gson = Gson()

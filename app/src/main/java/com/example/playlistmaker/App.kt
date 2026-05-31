@@ -5,8 +5,8 @@ import androidx.appcompat.app.AppCompatDelegate
 
 class App : Application() {
     companion object {
-        const val THEME_SETTINGS = "theme_settings"
-        const val THEME_SWITCHER = "theme_switcher"
+        private const val THEME_SETTINGS = "theme_settings"
+        private const val THEME_SWITCHER = "theme_switcher"
     }
 
     private var darkTheme = false

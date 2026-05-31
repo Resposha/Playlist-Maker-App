@@ -31,16 +31,16 @@ import retrofit2.converter.gson.GsonConverterFactory
 
 class SearchActivity : AppCompatActivity() {
     companion object {
-        const val TRACK = "track"
-        const val SEARCH_HISTORY = "search_history"
-        const val SEARCH_QUERY = "SEARCH_QUERY"
-        const val SEARCH_DEBOUNCE_DELAY = 2000L
-        const val CLICK_DEBOUNCE_DELAY = 1000L
-        const val EMPTY_STRING = ""
-        const val ITUNES = "https://itunes.apple.com"
+        private const val TRACK = "track"
+        private const val SEARCH_HISTORY = "search_history"
+        private const val SEARCH_QUERY = "SEARCH_QUERY"
+        private const val SEARCH_DEBOUNCE_DELAY = 2000L
+        private const val CLICK_DEBOUNCE_DELAY = 1000L
+        private const val EMPTY_STRING = ""
+        private const val ITUNES = "https://itunes.apple.com"
     }
 
-    private val handler = Handler(Looper.getMainLooper())
+    private val mainThreadHandler = Handler(Looper.getMainLooper())
 
     private var isClickAllowed = true
 
@@ -182,8 +182,8 @@ class SearchActivity : AppCompatActivity() {
         val searchRunnable = Runnable { searchRequest() }
 
         fun searchDebounce() {
-            handler.removeCallbacks(searchRunnable)
-            handler.postDelayed(searchRunnable, SEARCH_DEBOUNCE_DELAY)
+            mainThreadHandler.removeCallbacks(searchRunnable)
+            mainThreadHandler.postDelayed(searchRunnable, SEARCH_DEBOUNCE_DELAY)
         }
 
         searchEditText.setOnEditorActionListener { _, actionId, _ ->
@@ -220,7 +220,7 @@ class SearchActivity : AppCompatActivity() {
                 searchHistoryMessage.isVisible = isSearchFieldEmpty && searchHistory.get().isNotEmpty()
 
                 if (isSearchFieldEmpty) {
-                    handler.removeCallbacks(searchRunnable)
+                    mainThreadHandler.removeCallbacks(searchRunnable)
                     hideSearchResult()
                     noResultsMessage.isVisible = false
                     connectionIssuesMessage.isVisible = false
@@ -262,7 +262,7 @@ class SearchActivity : AppCompatActivity() {
         val current = isClickAllowed
         if (isClickAllowed) {
             isClickAllowed = false
-            handler.postDelayed({ isClickAllowed = true }, CLICK_DEBOUNCE_DELAY)
+            mainThreadHandler.postDelayed({ isClickAllowed = true }, CLICK_DEBOUNCE_DELAY)
         }
         return current
     }
