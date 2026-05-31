@@ -3,6 +3,8 @@ package com.example.playlistmaker
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.inputmethod.EditorInfo
@@ -11,6 +13,7 @@ import android.widget.Button
 import android.widget.EditText
 import android.widget.ImageView
 import android.widget.LinearLayout
+import android.widget.ProgressBar
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
@@ -31,9 +34,15 @@ class SearchActivity : AppCompatActivity() {
         const val TRACK = "track"
         const val SEARCH_HISTORY = "search_history"
         const val SEARCH_QUERY = "SEARCH_QUERY"
+        const val SEARCH_DEBOUNCE_DELAY = 2000L
+        const val CLICK_DEBOUNCE_DELAY = 1000L
         const val EMPTY_STRING = ""
         const val ITUNES = "https://itunes.apple.com"
     }
+
+    private val handler = Handler(Looper.getMainLooper())
+
+    private var isClickAllowed = true
 
     private var searchInput = EMPTY_STRING
 
@@ -56,6 +65,7 @@ class SearchActivity : AppCompatActivity() {
     private lateinit var searchHistoryMessage: LinearLayout
     private lateinit var searchHistoryRecyclerView: RecyclerView
     private lateinit var clearHistoryButton: Button
+    private lateinit var progressBar: ProgressBar
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -77,17 +87,22 @@ class SearchActivity : AppCompatActivity() {
         searchHistoryMessage = findViewById<LinearLayout>(R.id.search_history)
         searchHistoryRecyclerView = findViewById<RecyclerView>(R.id.search_recyclerview_history)
         clearHistoryButton = findViewById<Button>(R.id.search_button_clear_history)
+        progressBar = findViewById<ProgressBar>(R.id.search_progressbar)
 
         val searchHistory = SearchHistory(getSharedPreferences(SEARCH_HISTORY, MODE_PRIVATE))
 
         val searchHistoryAdapter = TrackAdapter(searchHistory.get()) {
-            openTrackPlayer(it)
+            if (clickDebounce()) {
+                openTrackPlayer(it)
+            }
         }
 
         val trackAdapter = TrackAdapter(tracks) {
-            searchHistory.addTrack(it)
-            searchHistoryAdapter.updateSearchHistory(searchHistory.get())
-            openTrackPlayer(it)
+            if (clickDebounce()) {
+                searchHistory.addTrack(it)
+                searchHistoryAdapter.updateSearchHistory(searchHistory.get())
+                openTrackPlayer(it)
+            }
         }
 
         trackRecyclerView.adapter = trackAdapter
@@ -111,6 +126,7 @@ class SearchActivity : AppCompatActivity() {
             searchHistoryMessage.isVisible = false
             noResultsMessage.isVisible = false
             connectionIssuesMessage.isVisible = false
+            tracks.clear()
             tracks.addAll(searchResult)
             trackAdapter.notifyDataSetChanged()
             trackRecyclerView.isVisible = true
@@ -137,11 +153,13 @@ class SearchActivity : AppCompatActivity() {
         }
 
         fun searchRequest() {
+            progressBar.isVisible = true
             iTunesSearchService.search(searchInput).enqueue(object : Callback<TrackResponse> {
                 override fun onResponse(
                     call: Call<TrackResponse>,
                     response: Response<TrackResponse>
                 ) {
+                    progressBar.isVisible = false
                     if (response.code() == 200) {
                         val searchResult = response.body()?.results.orEmpty()
                         if (searchResult.isEmpty()) {
@@ -155,9 +173,17 @@ class SearchActivity : AppCompatActivity() {
                 }
 
                 override fun onFailure(call: Call<TrackResponse>, t: Throwable) {
+                    progressBar.isVisible = false
                     showConnectionIssuesMessage()
                 }
             })
+        }
+
+        val searchRunnable = Runnable { searchRequest() }
+
+        fun searchDebounce() {
+            handler.removeCallbacks(searchRunnable)
+            handler.postDelayed(searchRunnable, SEARCH_DEBOUNCE_DELAY)
         }
 
         searchEditText.setOnEditorActionListener { _, actionId, _ ->
@@ -187,18 +213,26 @@ class SearchActivity : AppCompatActivity() {
             }
 
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-                clearButton.isVisible = !s.isNullOrEmpty()
+                searchInput = if (!s.isNullOrEmpty()) s.toString() else EMPTY_STRING
+
                 val isSearchFieldEmpty = searchEditText.hasFocus() && s.isNullOrEmpty()
+                clearButton.isVisible = !s.isNullOrEmpty()
+                searchHistoryMessage.isVisible = isSearchFieldEmpty && searchHistory.get().isNotEmpty()
+
                 if (isSearchFieldEmpty) {
+                    handler.removeCallbacks(searchRunnable)
                     hideSearchResult()
                     noResultsMessage.isVisible = false
                     connectionIssuesMessage.isVisible = false
                 }
-                searchHistoryMessage.isVisible = isSearchFieldEmpty && searchHistory.get().isNotEmpty()
+
+                if (!isSearchFieldEmpty) {
+                    searchDebounce()
+                }
             }
 
             override fun afterTextChanged(s: Editable?) {
-                searchInput = if (!s.isNullOrEmpty()) s.toString() else EMPTY_STRING
+                // empty
             }
         }
         searchEditText.addTextChangedListener(textWatcher)
@@ -222,5 +256,14 @@ class SearchActivity : AppCompatActivity() {
                 putExtra(TRACK, Gson().toJson(track))
             }
         startActivity(intent)
+    }
+
+    private fun clickDebounce() : Boolean {
+        val current = isClickAllowed
+        if (isClickAllowed) {
+            isClickAllowed = false
+            handler.postDelayed({ isClickAllowed = true }, CLICK_DEBOUNCE_DELAY)
+        }
+        return current
     }
 }
