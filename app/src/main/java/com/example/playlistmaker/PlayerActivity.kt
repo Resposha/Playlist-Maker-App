@@ -18,13 +18,13 @@ import androidx.core.view.updatePadding
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.google.android.material.appbar.MaterialToolbar
-import com.google.gson.Gson
 import java.text.SimpleDateFormat
 import java.util.Locale
 
 class PlayerActivity : AppCompatActivity() {
     companion object {
         private const val TRACK = "track"
+        private const val SEARCH_HISTORY = "search_history"
         private const val STATE_DEFAULT = 0
         private const val STATE_PREPARED = 1
         private const val STATE_PLAYING = 2
@@ -47,7 +47,6 @@ class PlayerActivity : AppCompatActivity() {
         }
     }
 
-    private lateinit var track: Track
     private lateinit var playerToolbar: MaterialToolbar
     private lateinit var albumArtwork: ImageView
     private lateinit var trackName: TextView
@@ -74,8 +73,16 @@ class PlayerActivity : AppCompatActivity() {
             insets
         }
 
-        track = Gson().fromJson(intent.getStringExtra(TRACK), Track::class.java)
-        url = track.previewUrl
+        val trackId = intent.getStringExtra(TRACK)
+        val searchHistory = SearchHistory(getSharedPreferences(SEARCH_HISTORY, MODE_PRIVATE))
+        val track = searchHistory.get().find { it.id == trackId }
+
+        if (track != null) {
+            url = track.previewUrl
+        } else {
+            finish()
+            return
+        }
 
         playerToolbar = findViewById<MaterialToolbar>(R.id.player_toolbar)
         albumArtwork = findViewById<ImageView>(R.id.player_album_art)
