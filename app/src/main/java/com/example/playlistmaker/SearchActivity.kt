@@ -237,6 +237,11 @@ class SearchActivity : AppCompatActivity() {
         searchEditText.addTextChangedListener(textWatcher)
     }
 
+    override fun onDestroy() {
+        super.onDestroy()
+        mainThreadHandler.removeCallbacksAndMessages(null)
+    }
+
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
         outState.putString(SEARCH_QUERY, searchInput)
