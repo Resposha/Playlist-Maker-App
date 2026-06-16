@@ -15,8 +15,8 @@ import androidx.core.content.edit
 
 class SettingsActivity : AppCompatActivity() {
     companion object {
-        const val THEME_SETTINGS = "theme_settings"
-        const val THEME_SWITCHER = "theme_switcher"
+        private const val THEME_SETTINGS = "theme_settings"
+        private const val THEME_SWITCHER = "theme_switcher"
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {

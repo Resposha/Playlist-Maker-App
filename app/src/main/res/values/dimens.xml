@@ -14,6 +14,8 @@
     <dimen name="search_ImageView_paddingEnd">12dp</dimen>
     <dimen name="search_field_layout_height">36dp</dimen>
     <dimen name="search_field_layout_marginVertical">8dp</dimen>
+    <dimen name="search_progressbar_layout_width_and_layout_height">44dp</dimen>
+    <dimen name="search_progressbar_layout_marginTop">140dp</dimen>
     <dimen name="search_RecyclerView_layout_marginTop">16dp</dimen>
     <dimen name="search_track_item_paddingHorizontal">12dp</dimen>
     <dimen name="search_track_item_paddingVertical">8dp</dimen>

@@ -1,7 +1,10 @@
 package com.example.playlistmaker
 
 import android.content.Context
+import android.media.MediaPlayer
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.util.TypedValue
 import android.view.View
 import android.widget.ImageButton
@@ -15,16 +18,35 @@ import androidx.core.view.updatePadding
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.google.android.material.appbar.MaterialToolbar
-import com.google.gson.Gson
 import java.text.SimpleDateFormat
 import java.util.Locale
 
 class PlayerActivity : AppCompatActivity() {
     companion object {
-        const val TRACK = "track"
+        private const val TRACK = "track"
+        private const val SEARCH_HISTORY = "search_history"
+        private const val STATE_DEFAULT = 0
+        private const val STATE_PREPARED = 1
+        private const val STATE_PLAYING = 2
+        private const val STATE_PAUSED = 3
+        private const val DELAY = 300L
     }
 
-    private lateinit var track: Track
+    private val mainThreadHandler = Handler(Looper.getMainLooper())
+    private val mediaPlayer = MediaPlayer()
+    private var playerState = STATE_DEFAULT
+    private var url: String? = null
+
+    private val updatePlaybackProgressRunnable = object : Runnable {
+        override fun run() {
+            if (playerState == STATE_PLAYING) {
+                val currentPosition = mediaPlayer.currentPosition
+                playbackProgress.text = formatTime(currentPosition)
+                mainThreadHandler.postDelayed(this, DELAY)
+            }
+        }
+    }
+
     private lateinit var playerToolbar: MaterialToolbar
     private lateinit var albumArtwork: ImageView
     private lateinit var trackName: TextView
@@ -51,7 +73,16 @@ class PlayerActivity : AppCompatActivity() {
             insets
         }
 
-        track = Gson().fromJson(intent.getStringExtra(TRACK), Track::class.java)
+        val trackId = intent.getStringExtra(TRACK)
+        val searchHistory = SearchHistory(getSharedPreferences(SEARCH_HISTORY, MODE_PRIVATE))
+        val track = searchHistory.get().find { it.id == trackId }
+
+        if (track != null) {
+            url = track.previewUrl
+        } else {
+            finish()
+            return
+        }
 
         playerToolbar = findViewById<MaterialToolbar>(R.id.player_toolbar)
         albumArtwork = findViewById<ImageView>(R.id.player_album_art)
@@ -73,10 +104,24 @@ class PlayerActivity : AppCompatActivity() {
             finish()
         }
 
-        // временная заглушка
-        playbackProgress.text = SimpleDateFormat("mm:ss", Locale.getDefault()).format(track.trackTimeMillis.toLong())
-
         setTrackDetails(track)
+
+        preparePlayer()
+
+        playAndPause.setOnClickListener {
+            playbackControl()
+        }
+    }
+
+    override fun onPause() {
+        super.onPause()
+        pausePlayer()
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        mainThreadHandler.removeCallbacks(updatePlaybackProgressRunnable)
+        mediaPlayer.release()
     }
 
     private fun setTrackDetails(track: Track) {
@@ -89,6 +134,7 @@ class PlayerActivity : AppCompatActivity() {
 
         trackName.text = track.trackName
         artistName.text = track.artistName
+        playbackProgress.text = formatTime(0)
         trackTimeValue.text = SimpleDateFormat("mm:ss", Locale.getDefault()).format(track.trackTimeMillis.toLong())
         primaryGenreNameValue.text = track.primaryGenreName
         countryValue.text = track.country
@@ -112,7 +158,59 @@ class PlayerActivity : AppCompatActivity() {
         }
     }
 
-    fun dpToPx(dp: Float, context: Context): Int {
+    private fun preparePlayer() {
+        if (url.isNullOrEmpty()) {
+            playAndPause.isEnabled = false
+            return
+        }
+
+        mediaPlayer.setDataSource(url)
+        mediaPlayer.prepareAsync()
+        mediaPlayer.setOnPreparedListener {
+            playAndPause.isEnabled = true
+            playerState = STATE_PREPARED
+        }
+        mediaPlayer.setOnCompletionListener {
+            playAndPause.setImageResource(R.drawable.button_play)
+            playbackProgress.text = formatTime(0)
+            playerState = STATE_PREPARED
+            mainThreadHandler.removeCallbacks(updatePlaybackProgressRunnable)
+        }
+    }
+
+    private fun startPlayer() {
+        mediaPlayer.start()
+        playAndPause.setImageResource(R.drawable.button_pause)
+        playerState = STATE_PLAYING
+        mainThreadHandler.post(updatePlaybackProgressRunnable)
+    }
+
+    private fun pausePlayer() {
+        mediaPlayer.pause()
+        playAndPause.setImageResource(R.drawable.button_play)
+        playerState = STATE_PAUSED
+        mainThreadHandler.removeCallbacks(updatePlaybackProgressRunnable)
+    }
+
+    private fun playbackControl() {
+        when(playerState) {
+            STATE_PLAYING -> {
+                pausePlayer()
+            }
+            STATE_PREPARED, STATE_PAUSED -> {
+                startPlayer()
+            }
+        }
+    }
+
+    private fun formatTime(millis: Int): String {
+        val totalSeconds = millis / 1000
+        val minutes = totalSeconds / 60
+        val seconds = totalSeconds % 60
+        return String.format(Locale.getDefault(), "%02d:%02d", minutes, seconds)
+    }
+
+    private fun dpToPx(dp: Float, context: Context): Int {
         return TypedValue.applyDimension(
             TypedValue.COMPLEX_UNIT_DIP,
             dp,
