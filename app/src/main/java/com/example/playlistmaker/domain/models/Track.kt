@@ -1,5 +1,8 @@
 package com.example.playlistmaker.domain.models
 
+import android.os.Parcel
+import android.os.Parcelable
+
 data class Track(
     val id: String, // id трека
     val trackName: String, // название композиции
@@ -11,6 +14,39 @@ data class Track(
     val primaryGenreName: String, // жанр трека
     val country: String, // страна исполнителя
     val previewUrl: String? // отрывок трека
-) {
+) : Parcelable {
+    companion object CREATOR : Parcelable.Creator<Track> {
+        override fun createFromParcel(parcel: Parcel): Track {
+            return Track(
+                id = parcel.readString().orEmpty(),
+                trackName = parcel.readString().orEmpty(),
+                artistName = parcel.readString().orEmpty(),
+                trackTime = parcel.readString().orEmpty(),
+                artworkUrl100 = parcel.readString().orEmpty(),
+                collectionName = parcel.readString(),
+                releaseDate = parcel.readString(),
+                primaryGenreName = parcel.readString().orEmpty(),
+                country = parcel.readString().orEmpty(),
+                previewUrl = parcel.readString()
+            )
+        }
+        override fun newArray(size: Int): Array<Track?> = arrayOfNulls(size)
+    }
+
+    override fun describeContents(): Int = 0
+
+    override fun writeToParcel(dest: Parcel, flags: Int) {
+        dest.writeString(id)
+        dest.writeString(trackName)
+        dest.writeString(artistName)
+        dest.writeString(trackTime)
+        dest.writeString(artworkUrl100)
+        dest.writeString(collectionName)
+        dest.writeString(releaseDate)
+        dest.writeString(primaryGenreName)
+        dest.writeString(country)
+        dest.writeString(previewUrl)
+    }
+
     fun getCoverArtworkUrl512() = artworkUrl100.replaceAfterLast('/',"512x512bb.jpg")
 }

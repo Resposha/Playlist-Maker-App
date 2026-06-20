@@ -71,6 +71,8 @@ class SearchActivity : AppCompatActivity() {
             insets
         }
 
+        searchHistoryInteractor = Creator.provideSearchHistoryInteractor(this)
+
         searchToolbar = findViewById<MaterialToolbar>(R.id.search_toolbar)
         searchEditText = findViewById<EditText>(R.id.search_edit_text)
         clearButton = findViewById<ImageView>(R.id.search_icon_clear)
@@ -82,8 +84,6 @@ class SearchActivity : AppCompatActivity() {
         searchHistoryRecyclerView = findViewById<RecyclerView>(R.id.search_recyclerview_history)
         clearHistoryButton = findViewById<Button>(R.id.search_button_clear_history)
         progressBar = findViewById<ProgressBar>(R.id.search_progressbar)
-
-        searchHistoryInteractor = Creator.provideSearchHistoryInteractor(this)
 
         searchHistoryAdapter = TrackAdapter(searchHistoryInteractor.getHistory()) {
             if (clickDebounce()) {
@@ -107,12 +107,12 @@ class SearchActivity : AppCompatActivity() {
         }
 
         searchEditText.setOnFocusChangeListener { view, hasFocus ->
-            searchHistoryMessage.isVisible = hasFocus && searchEditText.text.isNullOrEmpty() && searchHistoryInteractor.getHistory().isNotEmpty()
+            searchHistoryMessage.isVisible = hasFocus && searchEditText.text.isNullOrEmpty() && searchHistoryAdapter.itemCount > 0
         }
 
         clearHistoryButton.setOnClickListener {
             searchHistoryInteractor.clearHistory()
-            searchHistoryAdapter.updateSearchHistory(searchHistoryInteractor.getHistory())
+            searchHistoryAdapter.updateSearchHistory(emptyList())
             searchHistoryMessage.isVisible = false
         }
 
@@ -147,7 +147,7 @@ class SearchActivity : AppCompatActivity() {
 
                 val isSearchFieldEmpty = searchEditText.hasFocus() && s.isNullOrEmpty()
                 clearButton.isVisible = !s.isNullOrEmpty()
-                searchHistoryMessage.isVisible = isSearchFieldEmpty && searchHistoryInteractor.getHistory().isNotEmpty()
+                searchHistoryMessage.isVisible = isSearchFieldEmpty && searchHistoryAdapter.itemCount > 0
 
                 if (isSearchFieldEmpty) {
                     mainThreadHandler.removeCallbacks(searchRunnable)
@@ -259,7 +259,7 @@ class SearchActivity : AppCompatActivity() {
     private fun openTrackPlayer(track: Track) {
         val intent = Intent(this, PlayerActivity::class.java)
             .apply {
-                putExtra(TRACK, track.id)
+                putExtra(TRACK, track)
             }
         startActivity(intent)
     }

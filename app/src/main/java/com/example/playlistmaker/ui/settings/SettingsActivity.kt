@@ -19,6 +19,12 @@ import com.google.android.material.switchmaterial.SwitchMaterial
 class SettingsActivity : AppCompatActivity() {
     private lateinit var settingsInteractor: SettingsInteractor
 
+    private lateinit var settingsToolbar: MaterialToolbar
+    private lateinit var settingsSwitch: SwitchMaterial
+    private lateinit var shareTextView: TextView
+    private lateinit var supportTextView: TextView
+    private lateinit var userAgreementTextView: TextView
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
@@ -31,11 +37,11 @@ class SettingsActivity : AppCompatActivity() {
 
         settingsInteractor = Creator.provideSettingsInteractor(this)
 
-        val settingsToolbar = findViewById<MaterialToolbar>(R.id.settings_toolbar)
-        val settingsSwitch = findViewById<SwitchMaterial>(R.id.settings_switch)
-        val shareTextView = findViewById<TextView>(R.id.settings_share)
-        val supportTextView = findViewById<TextView>(R.id.settings_support)
-        val userAgreementTextView = findViewById<TextView>(R.id.settings_user_agreement)
+        settingsToolbar = findViewById<MaterialToolbar>(R.id.settings_toolbar)
+        settingsSwitch = findViewById<SwitchMaterial>(R.id.settings_switch)
+        shareTextView = findViewById<TextView>(R.id.settings_share)
+        supportTextView = findViewById<TextView>(R.id.settings_support)
+        userAgreementTextView = findViewById<TextView>(R.id.settings_user_agreement)
 
         settingsToolbar.setNavigationOnClickListener {
             finish()

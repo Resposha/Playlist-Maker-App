@@ -1,6 +1,7 @@
 package com.example.playlistmaker.ui.player
 
 import android.content.Context
+import android.os.Build
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
@@ -19,7 +20,6 @@ import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.example.playlistmaker.Creator
 import com.example.playlistmaker.R
 import com.example.playlistmaker.domain.models.Track
-import com.example.playlistmaker.domain.api.SearchHistoryInteractor
 import com.google.android.material.appbar.MaterialToolbar
 import java.util.Locale
 
@@ -43,8 +43,6 @@ class PlayerActivity : AppCompatActivity() {
             }
         }
     }
-
-    private lateinit var searchHistoryInteractor: SearchHistoryInteractor
 
     private lateinit var playerToolbar: MaterialToolbar
     private lateinit var albumArtwork: ImageView
@@ -72,10 +70,12 @@ class PlayerActivity : AppCompatActivity() {
             insets
         }
 
-        searchHistoryInteractor = Creator.provideSearchHistoryInteractor(this)
-
-        val trackId = intent.getStringExtra(TRACK)
-        val track = searchHistoryInteractor.getHistory().find { it.id == trackId }
+        val track = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            intent.getParcelableExtra(TRACK, Track::class.java)
+        } else {
+            @Suppress("DEPRECATION")
+            intent.getParcelableExtra(TRACK)
+        }
 
         if (track == null || track.previewUrl.isNullOrEmpty()) {
             finish()
@@ -98,13 +98,13 @@ class PlayerActivity : AppCompatActivity() {
         primaryGenreNameValue = findViewById<TextView>(R.id.player_primary_genre_name_value)
         countryValue = findViewById<TextView>(R.id.player_country_value)
 
+        playAndPause.isEnabled = false
+
         playerToolbar.setNavigationOnClickListener {
             finish()
         }
 
         setTrackDetails(track)
-
-        playAndPause.isEnabled = false
 
         playerInteractor.preparePlayer(
             url = track.previewUrl,
@@ -202,6 +202,7 @@ class PlayerActivity : AppCompatActivity() {
         return TypedValue.applyDimension(
             TypedValue.COMPLEX_UNIT_DIP,
             dp,
-            context.resources.displayMetrics).toInt()
+            context.resources.displayMetrics
+        ).toInt()
     }
 }

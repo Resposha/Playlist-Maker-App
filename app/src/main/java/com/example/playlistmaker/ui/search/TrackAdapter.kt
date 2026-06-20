@@ -27,7 +27,7 @@ class TrackAdapter(
     }
 
     fun updateSearchHistory(newTracks: List<Track>) {
-        if (newTracks.isNotEmpty()) tracks = newTracks
+        tracks = newTracks
         notifyDataSetChanged()
     }
 }
