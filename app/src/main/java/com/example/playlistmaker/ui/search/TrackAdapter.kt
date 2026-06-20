@@ -1,11 +1,13 @@
-package com.example.playlistmaker
+package com.example.playlistmaker.ui.search
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
+import com.example.playlistmaker.R
+import com.example.playlistmaker.domain.models.Track
 
 class TrackAdapter(
-    private val tracks: ArrayList<Track>,
+    private var tracks: List<Track>,
     private val onTrackClick: (Track) -> Unit
 ) : RecyclerView.Adapter<TrackViewHolder>() {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TrackViewHolder {
@@ -24,9 +26,8 @@ class TrackAdapter(
         return tracks.size
     }
 
-    fun updateSearchHistory(newTracks: ArrayList<Track>) {
-        tracks.clear()
-        if (newTracks.isNotEmpty()) tracks.addAll(newTracks)
+    fun updateSearchHistory(newTracks: List<Track>) {
+        if (newTracks.isNotEmpty()) tracks = newTracks
         notifyDataSetChanged()
     }
 }

@@ -1,23 +1,23 @@
-package com.example.playlistmaker
+package com.example.playlistmaker.ui.settings
 
 import android.content.Intent
 import android.os.Bundle
 import android.widget.TextView
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.net.toUri
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.updatePadding
+import com.example.playlistmaker.Creator
+import com.example.playlistmaker.ui.app.PlaylistMakerApplication
+import com.example.playlistmaker.R
+import com.example.playlistmaker.domain.api.SettingsInteractor
 import com.google.android.material.appbar.MaterialToolbar
-import androidx.core.net.toUri
 import com.google.android.material.switchmaterial.SwitchMaterial
-import androidx.core.content.edit
 
 class SettingsActivity : AppCompatActivity() {
-    companion object {
-        private const val THEME_SETTINGS = "theme_settings"
-        private const val THEME_SWITCHER = "theme_switcher"
-    }
+    private lateinit var settingsInteractor: SettingsInteractor
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -29,7 +29,7 @@ class SettingsActivity : AppCompatActivity() {
             insets
         }
 
-        val sharedPrefs = getSharedPreferences(THEME_SETTINGS, MODE_PRIVATE)
+        settingsInteractor = Creator.provideSettingsInteractor(this)
 
         val settingsToolbar = findViewById<MaterialToolbar>(R.id.settings_toolbar)
         val settingsSwitch = findViewById<SwitchMaterial>(R.id.settings_switch)
@@ -41,13 +41,11 @@ class SettingsActivity : AppCompatActivity() {
             finish()
         }
 
-        settingsSwitch.isChecked = sharedPrefs.getBoolean(THEME_SWITCHER, false)
+        settingsSwitch.isChecked = settingsInteractor.isDarkThemeEnabled()
 
         settingsSwitch.setOnCheckedChangeListener { switcher, checked ->
-            (applicationContext as App).switchTheme(checked)
-            sharedPrefs.edit {
-                putBoolean(THEME_SWITCHER, checked)
-            }
+            (applicationContext as PlaylistMakerApplication).switchTheme(checked)
+            settingsInteractor.switchTheme(checked)
         }
 
         shareTextView.setOnClickListener {
@@ -67,7 +65,8 @@ class SettingsActivity : AppCompatActivity() {
         }
 
         userAgreementTextView.setOnClickListener {
-            val userAgreementIntent = Intent(Intent.ACTION_VIEW, getString(R.string.user_agreement_url).toUri())
+            val userAgreementIntent =
+                Intent(Intent.ACTION_VIEW, getString(R.string.user_agreement_url).toUri())
             startActivity(userAgreementIntent)
         }
     }
