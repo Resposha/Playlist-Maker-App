@@ -20,7 +20,7 @@ class SearchHistoryRepositoryImpl(private val sharedPrefs: SharedPreferences) : 
 
     override fun addTrack(newTrack: Track) {
         val history = getHistory().toMutableList()
-        history.removeIf { it.id == newTrack.id }
+        history.removeIf { it.trackId == newTrack.trackId }
         history.add(0, newTrack)
         if (history.size > MAX_SIZE) history.removeAt(history.size - 1)
         saveHistory(history)

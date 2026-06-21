@@ -17,6 +17,6 @@ class PlayerRepositoryImpl : PlayerRepository {
     override fun startPlayer() = mediaPlayer.start()
     override fun pausePlayer() = mediaPlayer.pause()
     override fun releasePlayer() = mediaPlayer.release()
-    override fun getCurrentPosition(): Int = mediaPlayer.currentPosition
+    override fun getCurrentPosition(): Long = mediaPlayer.currentPosition.toLong()
     override fun isPlaying(): Boolean = mediaPlayer.isPlaying
 }

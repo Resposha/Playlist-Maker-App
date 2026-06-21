@@ -4,10 +4,10 @@ import android.os.Parcel
 import android.os.Parcelable
 
 data class Track(
-    val id: String, // id трека
+    val trackId: String, // id трека
     val trackName: String, // название композиции
     val artistName: String, // имя исполнителя
-    val trackTime: String, // продолжительность трека
+    val trackTimeMillis: Long, // продолжительность трека
     val artworkUrl100: String, // ссылка на изображение обложки
     val collectionName: String?, // название альбома
     val releaseDate: String?, // год релиза трека
@@ -18,10 +18,10 @@ data class Track(
     override fun describeContents(): Int = 0
 
     override fun writeToParcel(dest: Parcel, flags: Int) {
-        dest.writeString(id)
+        dest.writeString(trackId)
         dest.writeString(trackName)
         dest.writeString(artistName)
-        dest.writeString(trackTime)
+        dest.writeLong(trackTimeMillis)
         dest.writeString(artworkUrl100)
         dest.writeString(collectionName)
         dest.writeString(releaseDate)
@@ -35,10 +35,10 @@ data class Track(
     companion object CREATOR : Parcelable.Creator<Track> {
         override fun createFromParcel(parcel: Parcel): Track {
             return Track(
-                id = parcel.readString().orEmpty(),
+                trackId = parcel.readString().orEmpty(),
                 trackName = parcel.readString().orEmpty(),
                 artistName = parcel.readString().orEmpty(),
-                trackTime = parcel.readString().orEmpty(),
+                trackTimeMillis = parcel.readLong(),
                 artworkUrl100 = parcel.readString().orEmpty(),
                 collectionName = parcel.readString(),
                 releaseDate = parcel.readString(),

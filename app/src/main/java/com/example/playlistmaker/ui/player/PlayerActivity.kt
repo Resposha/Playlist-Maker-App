@@ -1,11 +1,9 @@
 package com.example.playlistmaker.ui.player
 
-import android.content.Context
 import android.os.Build
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
-import android.util.TypedValue
 import android.view.View
 import android.widget.ImageButton
 import android.widget.ImageView
@@ -20,8 +18,9 @@ import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.example.playlistmaker.Creator
 import com.example.playlistmaker.R
 import com.example.playlistmaker.domain.models.Track
+import com.example.playlistmaker.util.dpToPx
+import com.example.playlistmaker.util.toFormattedMinutesSeconds
 import com.google.android.material.appbar.MaterialToolbar
-import java.util.Locale
 
 class PlayerActivity : AppCompatActivity() {
     private var isPlayerPrepared = false
@@ -33,7 +32,7 @@ class PlayerActivity : AppCompatActivity() {
         override fun run() {
             if (playerInteractor.isPlaying()) {
                 val currentPosition = playerInteractor.getCurrentPosition()
-                playbackProgress.text = formatTime(currentPosition)
+                playbackProgress.text = currentPosition.toFormattedMinutesSeconds()
                 mainThreadHandler.postDelayed(this, DELAY)
             }
         }
@@ -109,7 +108,7 @@ class PlayerActivity : AppCompatActivity() {
             },
             onCompletion = {
                 playAndPause.setImageResource(R.drawable.button_play)
-                playbackProgress.text = formatTime(0)
+                playbackProgress.text = 0L.toFormattedMinutesSeconds()
                 mainThreadHandler.removeCallbacks(updatePlaybackProgressRunnable)
             }
         )
@@ -135,13 +134,13 @@ class PlayerActivity : AppCompatActivity() {
             .load(track.getCoverArtworkUrl512())
             .placeholder(R.drawable.placeholder_album_art_player)
             .centerCrop()
-            .transform(RoundedCorners(dpToPx(8f, this)))
+            .transform(RoundedCorners(dpToPx(8f)))
             .into(albumArtwork)
 
         trackName.text = track.trackName
         artistName.text = track.artistName
-        playbackProgress.text = formatTime(0)
-        trackTimeValue.text = track.trackTime
+        playbackProgress.text = 0L.toFormattedMinutesSeconds()
+        trackTimeValue.text = track.trackTimeMillis.toFormattedMinutesSeconds()
         primaryGenreNameValue.text = track.primaryGenreName
         countryValue.text = track.country
 
@@ -184,21 +183,6 @@ class PlayerActivity : AppCompatActivity() {
         } else {
             startPlayer()
         }
-    }
-
-    private fun formatTime(millis: Int): String {
-        val totalSeconds = millis / 1000
-        val minutes = totalSeconds / 60
-        val seconds = totalSeconds % 60
-        return String.format(Locale.getDefault(), "%02d:%02d", minutes, seconds)
-    }
-
-    private fun dpToPx(dp: Float, context: Context): Int {
-        return TypedValue.applyDimension(
-            TypedValue.COMPLEX_UNIT_DIP,
-            dp,
-            context.resources.displayMetrics
-        ).toInt()
     }
 
     companion object {
