@@ -24,11 +24,6 @@ import com.google.android.material.appbar.MaterialToolbar
 import java.util.Locale
 
 class PlayerActivity : AppCompatActivity() {
-    companion object {
-        private const val TRACK = "track"
-        private const val DELAY = 300L
-    }
-
     private var isPlayerPrepared = false
 
     private val playerInteractor = Creator.providePlayerInteractor()
@@ -204,5 +199,10 @@ class PlayerActivity : AppCompatActivity() {
             dp,
             context.resources.displayMetrics
         ).toInt()
+    }
+
+    companion object {
+        private const val TRACK = "track"
+        private const val DELAY = 300L
     }
 }

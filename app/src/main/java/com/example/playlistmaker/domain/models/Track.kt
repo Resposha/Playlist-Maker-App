@@ -15,6 +15,23 @@ data class Track(
     val country: String, // страна исполнителя
     val previewUrl: String? // отрывок трека
 ) : Parcelable {
+    override fun describeContents(): Int = 0
+
+    override fun writeToParcel(dest: Parcel, flags: Int) {
+        dest.writeString(id)
+        dest.writeString(trackName)
+        dest.writeString(artistName)
+        dest.writeString(trackTime)
+        dest.writeString(artworkUrl100)
+        dest.writeString(collectionName)
+        dest.writeString(releaseDate)
+        dest.writeString(primaryGenreName)
+        dest.writeString(country)
+        dest.writeString(previewUrl)
+    }
+
+    fun getCoverArtworkUrl512() = artworkUrl100.replaceAfterLast('/',"512x512bb.jpg")
+
     companion object CREATOR : Parcelable.Creator<Track> {
         override fun createFromParcel(parcel: Parcel): Track {
             return Track(
@@ -32,21 +49,4 @@ data class Track(
         }
         override fun newArray(size: Int): Array<Track?> = arrayOfNulls(size)
     }
-
-    override fun describeContents(): Int = 0
-
-    override fun writeToParcel(dest: Parcel, flags: Int) {
-        dest.writeString(id)
-        dest.writeString(trackName)
-        dest.writeString(artistName)
-        dest.writeString(trackTime)
-        dest.writeString(artworkUrl100)
-        dest.writeString(collectionName)
-        dest.writeString(releaseDate)
-        dest.writeString(primaryGenreName)
-        dest.writeString(country)
-        dest.writeString(previewUrl)
-    }
-
-    fun getCoverArtworkUrl512() = artworkUrl100.replaceAfterLast('/',"512x512bb.jpg")
 }

@@ -28,14 +28,6 @@ import com.example.playlistmaker.domain.models.Track
 import com.google.android.material.appbar.MaterialToolbar
 
 class SearchActivity : AppCompatActivity() {
-    companion object {
-        private const val TRACK = "track"
-        private const val SEARCH_QUERY = "SEARCH_QUERY"
-        private const val SEARCH_DEBOUNCE_DELAY = 2000L
-        private const val CLICK_DEBOUNCE_DELAY = 1000L
-        private const val EMPTY_STRING = ""
-    }
-
     private var searchInput = EMPTY_STRING
     private var isClickAllowed = true
 
@@ -262,5 +254,13 @@ class SearchActivity : AppCompatActivity() {
                 putExtra(TRACK, track)
             }
         startActivity(intent)
+    }
+
+    companion object {
+        private const val TRACK = "track"
+        private const val SEARCH_QUERY = "SEARCH_QUERY"
+        private const val SEARCH_DEBOUNCE_DELAY = 2000L
+        private const val CLICK_DEBOUNCE_DELAY = 1000L
+        private const val EMPTY_STRING = ""
     }
 }

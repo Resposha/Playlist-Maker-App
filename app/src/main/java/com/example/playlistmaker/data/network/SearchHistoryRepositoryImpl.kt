@@ -7,11 +7,6 @@ import com.example.playlistmaker.domain.models.Track
 import com.google.gson.Gson
 
 class SearchHistoryRepositoryImpl(private val sharedPrefs: SharedPreferences) : SearchHistoryRepository {
-    companion object {
-        private const val SEARCH_HISTORY = "search_history"
-        private const val MAX_SIZE = 10
-    }
-
     private val gson = Gson()
 
     override fun getHistory(): List<Track> {
@@ -42,5 +37,10 @@ class SearchHistoryRepositoryImpl(private val sharedPrefs: SharedPreferences) : 
         sharedPrefs.edit {
             putString(SEARCH_HISTORY, json)
         }
+    }
+
+    companion object {
+        private const val SEARCH_HISTORY = "search_history"
+        private const val MAX_SIZE = 10
     }
 }
