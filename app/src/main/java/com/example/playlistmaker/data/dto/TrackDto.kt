@@ -1,18 +1,14 @@
-package com.example.playlistmaker
+package com.example.playlistmaker.data.dto
 
-import com.google.gson.annotations.SerializedName
-
-data class Track(
-    @SerializedName("trackId") val id: String, // id трека
+data class TrackDto(
+    val trackId: String, // id трека
     val trackName: String, // название композиции
     val artistName: String, // имя исполнителя
-    val trackTimeMillis: String, // продолжительность трека
+    val trackTimeMillis: Long, // продолжительность трека в миллисекундах
     val artworkUrl100: String, // ссылка на изображение обложки
     val collectionName: String?, // название альбома
     val releaseDate: String?, // год релиза трека
     val primaryGenreName: String, // жанр трека
     val country: String, // страна исполнителя
     val previewUrl: String? // отрывок трека
-) {
-    fun getCoverArtwork() = artworkUrl100.replaceAfterLast('/',"512x512bb.jpg")
-}
+)

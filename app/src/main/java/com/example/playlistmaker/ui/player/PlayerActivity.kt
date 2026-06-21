@@ -1,11 +1,9 @@
-package com.example.playlistmaker
+package com.example.playlistmaker.ui.player
 
-import android.content.Context
-import android.media.MediaPlayer
+import android.os.Build
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
-import android.util.TypedValue
 import android.view.View
 import android.widget.ImageButton
 import android.widget.ImageView
@@ -17,31 +15,25 @@ import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.updatePadding
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
+import com.example.playlistmaker.Creator
+import com.example.playlistmaker.R
+import com.example.playlistmaker.domain.models.Track
+import com.example.playlistmaker.util.dpToPx
+import com.example.playlistmaker.util.getParcelableExtraCompat
+import com.example.playlistmaker.util.toFormattedMinutesSeconds
 import com.google.android.material.appbar.MaterialToolbar
-import java.text.SimpleDateFormat
-import java.util.Locale
 
 class PlayerActivity : AppCompatActivity() {
-    companion object {
-        private const val TRACK = "track"
-        private const val SEARCH_HISTORY = "search_history"
-        private const val STATE_DEFAULT = 0
-        private const val STATE_PREPARED = 1
-        private const val STATE_PLAYING = 2
-        private const val STATE_PAUSED = 3
-        private const val DELAY = 300L
-    }
+    private var isPlayerPrepared = false
 
+    private val playerInteractor = Creator.providePlayerInteractor()
     private val mainThreadHandler = Handler(Looper.getMainLooper())
-    private val mediaPlayer = MediaPlayer()
-    private var playerState = STATE_DEFAULT
-    private var url: String? = null
 
     private val updatePlaybackProgressRunnable = object : Runnable {
         override fun run() {
-            if (playerState == STATE_PLAYING) {
-                val currentPosition = mediaPlayer.currentPosition
-                playbackProgress.text = formatTime(currentPosition)
+            if (playerInteractor.isPlaying()) {
+                val currentPosition = playerInteractor.getCurrentPosition()
+                playbackProgress.text = currentPosition.toFormattedMinutesSeconds()
                 mainThreadHandler.postDelayed(this, DELAY)
             }
         }
@@ -73,13 +65,9 @@ class PlayerActivity : AppCompatActivity() {
             insets
         }
 
-        val trackId = intent.getStringExtra(TRACK)
-        val searchHistory = SearchHistory(getSharedPreferences(SEARCH_HISTORY, MODE_PRIVATE))
-        val track = searchHistory.get().find { it.id == trackId }
+        val track = intent.getParcelableExtraCompat(TRACK, Track::class.java)
 
-        if (track != null) {
-            url = track.previewUrl
-        } else {
+        if (track == null || track.previewUrl.isNullOrEmpty()) {
             finish()
             return
         }
@@ -100,13 +88,26 @@ class PlayerActivity : AppCompatActivity() {
         primaryGenreNameValue = findViewById<TextView>(R.id.player_primary_genre_name_value)
         countryValue = findViewById<TextView>(R.id.player_country_value)
 
+        playAndPause.isEnabled = false
+
         playerToolbar.setNavigationOnClickListener {
             finish()
         }
 
         setTrackDetails(track)
 
-        preparePlayer()
+        playerInteractor.preparePlayer(
+            url = track.previewUrl,
+            onPrepared = {
+                playAndPause.isEnabled = true
+                isPlayerPrepared = true
+            },
+            onCompletion = {
+                playAndPause.setImageResource(R.drawable.button_play)
+                playbackProgress.text = 0L.toFormattedMinutesSeconds()
+                mainThreadHandler.removeCallbacks(updatePlaybackProgressRunnable)
+            }
+        )
 
         playAndPause.setOnClickListener {
             playbackControl()
@@ -121,21 +122,21 @@ class PlayerActivity : AppCompatActivity() {
     override fun onDestroy() {
         super.onDestroy()
         mainThreadHandler.removeCallbacks(updatePlaybackProgressRunnable)
-        mediaPlayer.release()
+        playerInteractor.releasePlayer()
     }
 
     private fun setTrackDetails(track: Track) {
         Glide.with(this)
-            .load(track.getCoverArtwork())
+            .load(track.getCoverArtworkUrl512())
             .placeholder(R.drawable.placeholder_album_art_player)
             .centerCrop()
-            .transform(RoundedCorners(dpToPx(8f,this)))
+            .transform(RoundedCorners(dpToPx(8f)))
             .into(albumArtwork)
 
         trackName.text = track.trackName
         artistName.text = track.artistName
-        playbackProgress.text = formatTime(0)
-        trackTimeValue.text = SimpleDateFormat("mm:ss", Locale.getDefault()).format(track.trackTimeMillis.toLong())
+        playbackProgress.text = 0L.toFormattedMinutesSeconds()
+        trackTimeValue.text = track.trackTimeMillis.toFormattedMinutesSeconds()
         primaryGenreNameValue.text = track.primaryGenreName
         countryValue.text = track.country
 
@@ -158,62 +159,30 @@ class PlayerActivity : AppCompatActivity() {
         }
     }
 
-    private fun preparePlayer() {
-        if (url.isNullOrEmpty()) {
-            playAndPause.isEnabled = false
-            return
-        }
-
-        mediaPlayer.setDataSource(url)
-        mediaPlayer.prepareAsync()
-        mediaPlayer.setOnPreparedListener {
-            playAndPause.isEnabled = true
-            playerState = STATE_PREPARED
-        }
-        mediaPlayer.setOnCompletionListener {
-            playAndPause.setImageResource(R.drawable.button_play)
-            playbackProgress.text = formatTime(0)
-            playerState = STATE_PREPARED
-            mainThreadHandler.removeCallbacks(updatePlaybackProgressRunnable)
-        }
-    }
-
     private fun startPlayer() {
-        mediaPlayer.start()
+        playerInteractor.startPlayer()
         playAndPause.setImageResource(R.drawable.button_pause)
-        playerState = STATE_PLAYING
         mainThreadHandler.post(updatePlaybackProgressRunnable)
     }
 
     private fun pausePlayer() {
-        mediaPlayer.pause()
+        playerInteractor.pausePlayer()
         playAndPause.setImageResource(R.drawable.button_play)
-        playerState = STATE_PAUSED
         mainThreadHandler.removeCallbacks(updatePlaybackProgressRunnable)
     }
 
     private fun playbackControl() {
-        when(playerState) {
-            STATE_PLAYING -> {
-                pausePlayer()
-            }
-            STATE_PREPARED, STATE_PAUSED -> {
-                startPlayer()
-            }
+        if (!isPlayerPrepared) return
+
+        if (playerInteractor.isPlaying()) {
+            pausePlayer()
+        } else {
+            startPlayer()
         }
     }
 
-    private fun formatTime(millis: Int): String {
-        val totalSeconds = millis / 1000
-        val minutes = totalSeconds / 60
-        val seconds = totalSeconds % 60
-        return String.format(Locale.getDefault(), "%02d:%02d", minutes, seconds)
-    }
-
-    private fun dpToPx(dp: Float, context: Context): Int {
-        return TypedValue.applyDimension(
-            TypedValue.COMPLEX_UNIT_DIP,
-            dp,
-            context.resources.displayMetrics).toInt()
+    companion object {
+        private const val TRACK = "track"
+        private const val DELAY = 300L
     }
 }
