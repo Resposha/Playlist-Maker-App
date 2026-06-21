@@ -19,6 +19,7 @@ import com.example.playlistmaker.Creator
 import com.example.playlistmaker.R
 import com.example.playlistmaker.domain.models.Track
 import com.example.playlistmaker.util.dpToPx
+import com.example.playlistmaker.util.getParcelableExtraCompat
 import com.example.playlistmaker.util.toFormattedMinutesSeconds
 import com.google.android.material.appbar.MaterialToolbar
 
@@ -64,12 +65,7 @@ class PlayerActivity : AppCompatActivity() {
             insets
         }
 
-        val track = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-            intent.getParcelableExtra(TRACK, Track::class.java)
-        } else {
-            @Suppress("DEPRECATION")
-            intent.getParcelableExtra(TRACK)
-        }
+        val track = intent.getParcelableExtraCompat(TRACK, Track::class.java)
 
         if (track == null || track.previewUrl.isNullOrEmpty()) {
             finish()
