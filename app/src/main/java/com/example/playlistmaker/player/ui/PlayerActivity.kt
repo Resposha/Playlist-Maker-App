@@ -1,8 +1,6 @@
 package com.example.playlistmaker.player.ui
 
 import android.os.Bundle
-import android.os.Handler
-import android.os.Looper
 import android.view.View
 import android.widget.ImageButton
 import android.widget.ImageView
@@ -12,10 +10,10 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.updatePadding
+import androidx.lifecycle.ViewModelProvider
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.example.playlistmaker.R
-import com.example.playlistmaker.creator.Creator
 import com.example.playlistmaker.search.domain.models.Track
 import com.example.playlistmaker.util.dpToPx
 import com.example.playlistmaker.util.getParcelableExtraCompat
@@ -23,20 +21,7 @@ import com.example.playlistmaker.util.toFormattedMinutesSeconds
 import com.google.android.material.appbar.MaterialToolbar
 
 class PlayerActivity : AppCompatActivity() {
-    private var isPlayerPrepared = false
-
-    private val playerInteractor = Creator.providePlayerInteractor()
-    private val mainThreadHandler = Handler(Looper.getMainLooper())
-
-    private val updatePlaybackProgressRunnable = object : Runnable {
-        override fun run() {
-            if (playerInteractor.isPlaying()) {
-                val currentPosition = playerInteractor.getCurrentPosition()
-                playbackProgress.text = currentPosition.toFormattedMinutesSeconds()
-                mainThreadHandler.postDelayed(this, DELAY)
-            }
-        }
-    }
+    private lateinit var viewModel: PlayerViewModel
 
     private lateinit var playerToolbar: MaterialToolbar
     private lateinit var albumArtwork: ImageView
@@ -65,7 +50,6 @@ class PlayerActivity : AppCompatActivity() {
         }
 
         val track = intent.getParcelableExtraCompat(TRACK, Track::class.java)
-
         if (track == null || track.previewUrl.isNullOrEmpty()) {
             finish()
             return
@@ -87,41 +71,40 @@ class PlayerActivity : AppCompatActivity() {
         primaryGenreNameValue = findViewById<TextView>(R.id.player_primary_genre_name_value)
         countryValue = findViewById<TextView>(R.id.player_country_value)
 
-        playAndPause.isEnabled = false
+        setTrackDetails(track)
+
+        viewModel = ViewModelProvider(this, PlayerViewModel.getFactory(track.previewUrl))[PlayerViewModel::class.java]
+
+        viewModel.observePlayerState().observe(this) { state ->
+            changeButtonIcon(state == PlayerViewModel.STATE_PLAYING)
+            enableButton(state != PlayerViewModel.STATE_DEFAULT)
+        }
+
+        viewModel.observeProgressTime().observe(this) {
+            playbackProgress.text = it
+        }
 
         playerToolbar.setNavigationOnClickListener {
             finish()
         }
 
-        setTrackDetails(track)
-
-        playerInteractor.preparePlayer(
-            url = track.previewUrl,
-            onPrepared = {
-                playAndPause.isEnabled = true
-                isPlayerPrepared = true
-            },
-            onCompletion = {
-                playAndPause.setImageResource(R.drawable.button_play)
-                playbackProgress.text = 0L.toFormattedMinutesSeconds()
-                mainThreadHandler.removeCallbacks(updatePlaybackProgressRunnable)
-            }
-        )
-
         playAndPause.setOnClickListener {
-            playbackControl()
+            viewModel.onPlayButtonClicked()
         }
     }
 
     override fun onPause() {
         super.onPause()
-        pausePlayer()
+        viewModel.onPause()
     }
 
-    override fun onDestroy() {
-        super.onDestroy()
-        mainThreadHandler.removeCallbacks(updatePlaybackProgressRunnable)
-        playerInteractor.releasePlayer()
+    private fun enableButton(isEnabled: Boolean) {
+        playAndPause.isEnabled = isEnabled
+    }
+
+    private fun changeButtonIcon(isPlaying: Boolean) {
+        val buttonIcon = if (isPlaying) R.drawable.button_pause else R.drawable.button_play
+        playAndPause.setImageResource(buttonIcon)
     }
 
     private fun setTrackDetails(track: Track) {
@@ -158,30 +141,7 @@ class PlayerActivity : AppCompatActivity() {
         }
     }
 
-    private fun startPlayer() {
-        playerInteractor.startPlayer()
-        playAndPause.setImageResource(R.drawable.button_pause)
-        mainThreadHandler.post(updatePlaybackProgressRunnable)
-    }
-
-    private fun pausePlayer() {
-        playerInteractor.pausePlayer()
-        playAndPause.setImageResource(R.drawable.button_play)
-        mainThreadHandler.removeCallbacks(updatePlaybackProgressRunnable)
-    }
-
-    private fun playbackControl() {
-        if (!isPlayerPrepared) return
-
-        if (playerInteractor.isPlaying()) {
-            pausePlayer()
-        } else {
-            startPlayer()
-        }
-    }
-
     companion object {
         private const val TRACK = "track"
-        private const val DELAY = 300L
     }
 }
