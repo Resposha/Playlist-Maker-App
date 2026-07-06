@@ -1,23 +1,19 @@
 package com.example.playlistmaker.settings.ui
 
-import android.content.Intent
 import android.os.Bundle
 import android.widget.TextView
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.net.toUri
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.updatePadding
+import androidx.lifecycle.ViewModelProvider
 import com.example.playlistmaker.R
-import com.example.playlistmaker.creator.Creator
-import com.example.playlistmaker.settings.domain.api.SettingsInteractor
-import com.example.playlistmaker.main.ui.PlaylistMakerApplication
 import com.google.android.material.appbar.MaterialToolbar
 import com.google.android.material.switchmaterial.SwitchMaterial
 
 class SettingsActivity : AppCompatActivity() {
-    private lateinit var settingsInteractor: SettingsInteractor
+    private lateinit var viewModel: SettingsViewModel
 
     private lateinit var settingsToolbar: MaterialToolbar
     private lateinit var settingsSwitch: SwitchMaterial
@@ -35,7 +31,7 @@ class SettingsActivity : AppCompatActivity() {
             insets
         }
 
-        settingsInteractor = Creator.provideSettingsInteractor(this)
+        viewModel = ViewModelProvider(this, SettingsViewModel.getFactory())[SettingsViewModel::class.java]
 
         settingsToolbar = findViewById<MaterialToolbar>(R.id.settings_toolbar)
         settingsSwitch = findViewById<SwitchMaterial>(R.id.settings_switch)
@@ -43,37 +39,24 @@ class SettingsActivity : AppCompatActivity() {
         supportTextView = findViewById<TextView>(R.id.settings_support)
         userAgreementTextView = findViewById<TextView>(R.id.settings_user_agreement)
 
+        viewModel.observeThemeSettings().observe(this) { themeSettings ->
+            settingsSwitch.setOnCheckedChangeListener(null)
+            settingsSwitch.isChecked = themeSettings.isDarkThemeEnabled
+            setSwitchListener()
+        }
+
         settingsToolbar.setNavigationOnClickListener {
             finish()
         }
 
-        settingsSwitch.isChecked = settingsInteractor.isDarkThemeEnabled()
+        shareTextView.setOnClickListener { viewModel.shareApp() }
+        supportTextView.setOnClickListener { viewModel.openSupport() }
+        userAgreementTextView.setOnClickListener { viewModel.openTerms() }
+    }
 
+    private fun setSwitchListener() {
         settingsSwitch.setOnCheckedChangeListener { _, checked ->
-            (applicationContext as PlaylistMakerApplication).switchTheme(checked)
-            settingsInteractor.switchTheme(checked)
-        }
-
-        shareTextView.setOnClickListener {
-            val shareIntent = Intent(Intent.ACTION_SEND)
-            shareIntent.type = "text/plain"
-            shareIntent.putExtra(Intent.EXTRA_TEXT, getString(R.string.share_app_link))
-            startActivity(shareIntent)
-        }
-
-        supportTextView.setOnClickListener {
-            val supportIntent = Intent(Intent.ACTION_SENDTO)
-            supportIntent.data = "mailto:".toUri()
-            supportIntent.putExtra(Intent.EXTRA_EMAIL, arrayOf(getString(R.string.contact_support_email)))
-            supportIntent.putExtra(Intent.EXTRA_SUBJECT, getString(R.string.contact_support_subject))
-            supportIntent.putExtra(Intent.EXTRA_TEXT, getString(R.string.contact_support_message))
-            startActivity(supportIntent)
-        }
-
-        userAgreementTextView.setOnClickListener {
-            val userAgreementIntent =
-                Intent(Intent.ACTION_VIEW, getString(R.string.user_agreement_url).toUri())
-            startActivity(userAgreementIntent)
+            viewModel.switchTheme(checked)
         }
     }
 }

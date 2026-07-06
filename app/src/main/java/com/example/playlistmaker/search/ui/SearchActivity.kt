@@ -58,6 +58,8 @@ class SearchActivity : AppCompatActivity() {
             insets
         }
 
+        viewModel = ViewModelProvider(this, TrackViewModel.getFactory())[TrackViewModel::class.java]
+
         searchToolbar = findViewById<MaterialToolbar>(R.id.search_toolbar)
         searchEditText = findViewById<EditText>(R.id.search_edit_text)
         clearButton = findViewById<ImageView>(R.id.search_icon_clear)
@@ -69,8 +71,6 @@ class SearchActivity : AppCompatActivity() {
         searchHistoryRecyclerView = findViewById<RecyclerView>(R.id.search_recyclerview_history)
         clearHistoryButton = findViewById<Button>(R.id.search_button_clear_history)
         progressBar = findViewById<ProgressBar>(R.id.search_progressbar)
-
-        viewModel = ViewModelProvider(this, TrackViewModel.getFactory())[TrackViewModel::class.java]
 
         viewModel.observeSearchState().observe(this) {
             render(it)

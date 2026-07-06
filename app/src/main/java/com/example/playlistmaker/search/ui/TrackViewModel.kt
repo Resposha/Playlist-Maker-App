@@ -15,7 +15,6 @@ import com.example.playlistmaker.search.domain.api.SearchHistoryInteractor
 import com.example.playlistmaker.search.domain.api.TrackInteractor
 import com.example.playlistmaker.search.domain.models.Track
 
-
 class TrackViewModel(
     private val trackInteractor: TrackInteractor,
     private val searchHistoryInteractor: SearchHistoryInteractor
@@ -70,8 +69,9 @@ class TrackViewModel(
 
     fun showHistory() {
         mainThreadHandler.removeCallbacks(searchRunnable)
-        val history = searchHistoryInteractor.getHistory()
-        searchStateLiveData.value = SearchState.History(history)
+        searchHistoryInteractor.getHistory {
+            searchStateLiveData.value = SearchState.History(it)
+        }
     }
 
     fun addTrackToHistory(track: Track) {

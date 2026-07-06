@@ -15,6 +15,7 @@ data class Track(
     val country: String, // страна исполнителя
     val previewUrl: String? // отрывок трека
 ) : Parcelable {
+
     override fun describeContents(): Int = 0
 
     override fun writeToParcel(dest: Parcel, flags: Int) {

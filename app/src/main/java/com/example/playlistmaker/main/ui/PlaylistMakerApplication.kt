@@ -9,8 +9,9 @@ class PlaylistMakerApplication : Application() {
 
     override fun onCreate() {
         super.onCreate()
-        val settingsInteractor = Creator.provideSettingsInteractor(this)
-        switchTheme(settingsInteractor.isDarkThemeEnabled())
+        val settingsInteractor = Creator.provideSettingsInteractor(applicationContext)
+        val themeSettings = settingsInteractor.getThemeSettings()
+        switchTheme(themeSettings.isDarkThemeEnabled)
     }
 
     fun switchTheme(darkThemeEnabled: Boolean) {

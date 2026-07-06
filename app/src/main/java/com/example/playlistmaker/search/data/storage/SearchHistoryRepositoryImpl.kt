@@ -1,47 +1,31 @@
 package com.example.playlistmaker.search.data.storage
 
-import android.content.SharedPreferences
-import androidx.core.content.edit
+import com.example.playlistmaker.search.data.StorageClient
 import com.example.playlistmaker.search.domain.models.Track
 import com.example.playlistmaker.search.domain.api.SearchHistoryRepository
-import com.google.gson.Gson
-
-class SearchHistoryRepositoryImpl(private val sharedPrefs: SharedPreferences) :
-    SearchHistoryRepository {
-    private val gson = Gson()
+class SearchHistoryRepositoryImpl(
+    private val storage: StorageClient<List<Track>>
+) : SearchHistoryRepository {
 
     override fun getHistory(): List<Track> {
-        val json = sharedPrefs.getString(SEARCH_HISTORY, "")
-        return if (json.isNullOrEmpty()) {
-            emptyList()
-        } else {
-            gson.fromJson(json, Array<Track>::class.java).toList()
-        }
+        return storage.getData() ?: emptyList()
     }
 
     override fun addTrack(newTrack: Track) {
-        val history = getHistory().toMutableList()
+        val history = storage.getData()?.toMutableList() ?: arrayListOf()
         history.removeIf { it.trackId == newTrack.trackId }
         history.add(0, newTrack)
-        if (history.size > MAX_SIZE) history.removeAt(history.size - 1)
-        saveHistory(history)
+        if (history.size > MAX_SIZE) {
+            history.removeAt(history.size - 1)
+        }
+        storage.storeData(history)
     }
 
     override fun clearHistory() {
-        sharedPrefs.edit {
-            remove(SEARCH_HISTORY)
-        }
-    }
-
-    private fun saveHistory(tracks: List<Track>) {
-        val json = gson.toJson(tracks)
-        sharedPrefs.edit {
-            putString(SEARCH_HISTORY, json)
-        }
+        storage.storeData(emptyList())
     }
 
     companion object {
-        private const val SEARCH_HISTORY = "search_history"
         private const val MAX_SIZE = 10
     }
 }

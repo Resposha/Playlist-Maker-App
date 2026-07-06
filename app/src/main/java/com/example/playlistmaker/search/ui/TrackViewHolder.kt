@@ -11,7 +11,9 @@ import com.example.playlistmaker.search.domain.models.Track
 import com.example.playlistmaker.util.dpToPx
 import com.example.playlistmaker.util.toFormattedMinutesSeconds
 
-class TrackViewHolder(itemView: View): RecyclerView.ViewHolder(itemView) {
+class TrackViewHolder(
+    itemView: View
+): RecyclerView.ViewHolder(itemView) {
     private val trackName = itemView.findViewById<TextView>(R.id.track_name)
     private val artistName = itemView.findViewById<TextView>(R.id.artist_name)
     private val trackTime = itemView.findViewById<TextView>(R.id.track_time)
