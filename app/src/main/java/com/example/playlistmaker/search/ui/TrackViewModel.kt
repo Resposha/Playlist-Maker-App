@@ -76,9 +76,6 @@ class TrackViewModel(
 
     fun addTrackToHistory(track: Track) {
         searchHistoryInteractor.addTrack(track)
-        if (searchStateLiveData.value is SearchState.History) {
-            showHistory()
-        }
     }
 
     fun clearHistory() {

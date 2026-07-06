@@ -149,6 +149,13 @@ class SearchActivity : AppCompatActivity() {
         searchEditText.addTextChangedListener(textWatcher)
     }
 
+    override fun onResume() {
+        super.onResume()
+        if (searchEditText.hasFocus() && searchEditText.text.isNullOrEmpty()) {
+            viewModel.showHistory()
+        }
+    }
+
     override fun onDestroy() {
         super.onDestroy()
         mainThreadHandler.removeCallbacksAndMessages(null)
