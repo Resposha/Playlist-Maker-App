@@ -53,7 +53,7 @@ class PlayerViewModel(
 
     private fun preparePlayer() {
         playerInteractor.preparePlayer(
-            url = url,
+            url,
             onPrepared = {
                 playerStateLiveData.postValue(STATE_PREPARED)
             },

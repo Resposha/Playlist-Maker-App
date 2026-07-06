@@ -8,8 +8,8 @@ import java.lang.reflect.Type
 import androidx.core.content.edit
 
 class SharedPrefsStorageClient<T>(
-    private val context: Context,
-    private val sharedPrefsKey: String,
+    context: Context,
+    sharedPrefsKey: String,
     private val dataKey: String,
     private val type: Type
 ) : StorageClient<T> {

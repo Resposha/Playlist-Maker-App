@@ -75,9 +75,9 @@ class PlayerActivity : AppCompatActivity() {
 
         viewModel = ViewModelProvider(this, PlayerViewModel.getFactory(track.previewUrl))[PlayerViewModel::class.java]
 
-        viewModel.observePlayerState().observe(this) { state ->
-            changeButtonIcon(state == PlayerViewModel.STATE_PLAYING)
-            enableButton(state != PlayerViewModel.STATE_DEFAULT)
+        viewModel.observePlayerState().observe(this) {
+            changeButtonIcon(it == PlayerViewModel.STATE_PLAYING)
+            enableButton(it != PlayerViewModel.STATE_DEFAULT)
         }
 
         viewModel.observeProgressTime().observe(this) {
