@@ -19,7 +19,7 @@ class PlayerViewModel(
     private val playerStateLiveData = MutableLiveData(STATE_DEFAULT)
     fun observePlayerState(): LiveData<Int> = playerStateLiveData
 
-    private val progressTimeLiveData = MutableLiveData("00:00")
+    private val progressTimeLiveData = MutableLiveData(0L.toFormattedMinutesSeconds())
     fun observeProgressTime(): LiveData<String> = progressTimeLiveData
 
     private val mainThreadHandler = Handler(Looper.getMainLooper())
@@ -88,7 +88,7 @@ class PlayerViewModel(
 
     private fun resetTimer() {
         mainThreadHandler.removeCallbacks(timerRunnable)
-        progressTimeLiveData.postValue("00:00")
+        progressTimeLiveData.postValue(0L.toFormattedMinutesSeconds())
     }
 
     companion object {
