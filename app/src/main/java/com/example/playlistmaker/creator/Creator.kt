@@ -44,9 +44,9 @@ object Creator {
     }
 
     private fun getSettingsRepository(context: Context): SettingsRepository {
+        val sharedPrefs = context.getSharedPreferences(SETTINGS_PREFS, Context.MODE_PRIVATE)
         val storageClient = SharedPrefsStorageClient<ThemeSettings>(
-            context,
-            SETTINGS_PREFS,
+            sharedPrefs,
             THEME_SWITCHER,
             ThemeSettings::class.java
         )
@@ -67,9 +67,9 @@ object Creator {
 
     private fun getSearchHistoryRepository(context: Context): SearchHistoryRepository {
         val type = object : TypeToken<List<Track>>() {}.type
+        val sharedPrefs = context.getSharedPreferences(SEARCH_HISTORY_PREFS, Context.MODE_PRIVATE)
         val storageClient = SharedPrefsStorageClient<List<Track>>(
-            context,
-            SEARCH_HISTORY_PREFS,
+            sharedPrefs,
             SEARCH_HISTORY,
             type
         )
