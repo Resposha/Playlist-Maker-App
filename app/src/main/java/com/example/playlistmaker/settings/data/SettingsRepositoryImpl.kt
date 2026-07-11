@@ -1,5 +1,6 @@
 package com.example.playlistmaker.settings.data
 
+import androidx.appcompat.app.AppCompatDelegate
 import com.example.playlistmaker.search.data.StorageClient
 import com.example.playlistmaker.settings.domain.api.SettingsRepository
 import com.example.playlistmaker.settings.domain.models.ThemeSettings
@@ -14,5 +15,13 @@ class SettingsRepositoryImpl(
 
     override fun updateThemeSetting(settings: ThemeSettings) {
         storage.storeData(settings)
+
+        AppCompatDelegate.setDefaultNightMode(
+            if (settings.isDarkThemeEnabled) {
+                AppCompatDelegate.MODE_NIGHT_YES
+            } else {
+                AppCompatDelegate.MODE_NIGHT_NO
+            }
+        )
     }
 }
