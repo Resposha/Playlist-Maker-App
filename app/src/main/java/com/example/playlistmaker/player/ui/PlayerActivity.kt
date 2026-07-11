@@ -78,12 +78,7 @@ class PlayerActivity : AppCompatActivity() {
         setTrackDetails(track)
 
         viewModel.observePlayerState().observe(this) {
-            changeButtonIcon(it == PlayerViewModel.STATE_PLAYING)
-            enableButton(it != PlayerViewModel.STATE_DEFAULT)
-        }
-
-        viewModel.observeProgressTime().observe(this) {
-            playbackProgress.text = it
+            render(it)
         }
 
         playerToolbar.setNavigationOnClickListener {
@@ -100,13 +95,27 @@ class PlayerActivity : AppCompatActivity() {
         viewModel.onPause()
     }
 
-    private fun enableButton(isEnabled: Boolean) {
-        playAndPause.isEnabled = isEnabled
-    }
+    private fun render(state: PlayerState) {
+        playbackProgress.text = state.progressTime
 
-    private fun changeButtonIcon(isPlaying: Boolean) {
-        val buttonIcon = if (isPlaying) R.drawable.button_pause else R.drawable.button_play
-        playAndPause.setImageResource(buttonIcon)
+        when (state.status) {
+            PlayerStatus.DEFAULT -> {
+                playAndPause.isEnabled = false
+                playAndPause.setImageResource(R.drawable.button_play)
+            }
+            PlayerStatus.PREPARED -> {
+                playAndPause.isEnabled = true
+                playAndPause.setImageResource(R.drawable.button_play)
+            }
+            PlayerStatus.PLAYING -> {
+                playAndPause.isEnabled = true
+                playAndPause.setImageResource(R.drawable.button_pause)
+            }
+            PlayerStatus.PAUSED -> {
+                playAndPause.isEnabled = true
+                playAndPause.setImageResource(R.drawable.button_play)
+            }
+        }
     }
 
     private fun setTrackDetails(track: Track) {

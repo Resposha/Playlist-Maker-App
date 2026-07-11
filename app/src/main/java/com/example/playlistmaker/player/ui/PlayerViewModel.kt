@@ -12,16 +12,18 @@ class PlayerViewModel(
     private val playerInteractor: PlayerInteractor,
     private val url: String
 ) : ViewModel() {
-    private val playerStateLiveData = MutableLiveData(STATE_DEFAULT)
-    fun observePlayerState(): LiveData<Int> = playerStateLiveData
-
-    private val progressTimeLiveData = MutableLiveData(0L.toFormattedMinutesSeconds())
-    fun observeProgressTime(): LiveData<String> = progressTimeLiveData
+    private val playerStateLiveData = MutableLiveData<PlayerState>(
+        PlayerState(
+            PlayerStatus.DEFAULT,
+            0L.toFormattedMinutesSeconds()
+        )
+    )
+    fun observePlayerState(): LiveData<PlayerState> = playerStateLiveData
 
     private val mainThreadHandler = Handler(Looper.getMainLooper())
 
     private val timerRunnable = Runnable {
-        if (playerStateLiveData.value == STATE_PLAYING) {
+        if (playerStateLiveData.value?.status == PlayerStatus.PLAYING) {
             startTimerUpdate()
         }
     }
@@ -37,44 +39,74 @@ class PlayerViewModel(
     }
 
     fun onPlayButtonClicked() {
-        when (playerStateLiveData.value) {
-            STATE_PLAYING -> pausePlayer()
-            STATE_PREPARED, STATE_PAUSED -> startPlayer()
+        when (playerStateLiveData.value?.status) {
+            PlayerStatus.PLAYING -> pausePlayer()
+            PlayerStatus.PREPARED, PlayerStatus.PAUSED -> startPlayer()
+            else -> { }
         }
     }
 
     fun onPause() {
-        pausePlayer()
+        if (playerStateLiveData.value?.status == PlayerStatus.PLAYING) {
+            pausePlayer()
+        }
     }
 
     private fun preparePlayer() {
         playerInteractor.preparePlayer(
             url,
             onPrepared = {
-                playerStateLiveData.postValue(STATE_PREPARED)
+                playerStateLiveData.postValue(
+                    PlayerState(
+                        PlayerStatus.PREPARED,
+                        0L.toFormattedMinutesSeconds()
+                    )
+                )
             },
             onCompletion = {
-                playerStateLiveData.postValue(STATE_PREPARED)
-                resetTimer()
+                playerStateLiveData.postValue(
+                    PlayerState(
+                        PlayerStatus.PREPARED,
+                        0L.toFormattedMinutesSeconds()
+                    )
+                )
+                pauseTimer()
             }
         )
     }
 
     private fun startPlayer() {
         playerInteractor.startPlayer()
-        playerStateLiveData.postValue(STATE_PLAYING)
+        val currentTime = playerStateLiveData.value?.progressTime ?: 0L.toFormattedMinutesSeconds()
+        playerStateLiveData.postValue(
+            PlayerState(
+                PlayerStatus.PLAYING,
+                currentTime
+            )
+        )
         startTimerUpdate()
     }
 
     private fun pausePlayer() {
         pauseTimer()
         playerInteractor.pausePlayer()
-        playerStateLiveData.postValue(STATE_PAUSED)
+        val currentTime = playerStateLiveData.value?.progressTime ?: 0L.toFormattedMinutesSeconds()
+        playerStateLiveData.postValue(
+            PlayerState(
+                PlayerStatus.PAUSED,
+                currentTime
+            )
+        )
     }
 
     private fun startTimerUpdate() {
         val currentPosition = playerInteractor.getCurrentPosition()
-        progressTimeLiveData.postValue(currentPosition.toFormattedMinutesSeconds())
+        playerStateLiveData.postValue(
+            PlayerState(
+                PlayerStatus.PLAYING,
+                currentPosition.toFormattedMinutesSeconds()
+            )
+        )
         mainThreadHandler.postDelayed(timerRunnable, DELAY)
     }
 
@@ -82,16 +114,7 @@ class PlayerViewModel(
         mainThreadHandler.removeCallbacks(timerRunnable)
     }
 
-    private fun resetTimer() {
-        mainThreadHandler.removeCallbacks(timerRunnable)
-        progressTimeLiveData.postValue(0L.toFormattedMinutesSeconds())
-    }
-
     companion object {
-        const val STATE_DEFAULT = 0
-        const val STATE_PREPARED = 1
-        const val STATE_PLAYING = 2
-        const val STATE_PAUSED = 3
         const val DELAY = 200L
     }
 }
