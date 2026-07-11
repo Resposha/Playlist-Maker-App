@@ -3,11 +3,6 @@ package com.example.playlistmaker.settings.ui
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.ViewModelProvider.AndroidViewModelFactory.Companion.APPLICATION_KEY
-import androidx.lifecycle.viewmodel.initializer
-import androidx.lifecycle.viewmodel.viewModelFactory
-import com.example.playlistmaker.creator.Creator
 import com.example.playlistmaker.main.ui.PlaylistMakerApplication
 import com.example.playlistmaker.settings.domain.api.SettingsInteractor
 import com.example.playlistmaker.sharing.domain.api.SharingInteractor
@@ -35,17 +30,4 @@ class SettingsViewModel(
     fun shareApp() = sharingInteractor.shareApp()
     fun openSupport() = sharingInteractor.openSupport()
     fun openTerms() = sharingInteractor.openTerms()
-
-    companion object {
-        fun getFactory(): ViewModelProvider.Factory = viewModelFactory {
-            initializer {
-                val app = this[APPLICATION_KEY] as PlaylistMakerApplication
-                SettingsViewModel(
-                    Creator.provideSharingInteractor(app.applicationContext),
-                    Creator.provideSettingsInteractor(app.applicationContext),
-                    app
-                )
-            }
-        }
-    }
 }

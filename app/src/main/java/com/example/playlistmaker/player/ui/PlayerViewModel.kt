@@ -5,10 +5,6 @@ import android.os.Looper
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.viewmodel.initializer
-import androidx.lifecycle.viewmodel.viewModelFactory
-import com.example.playlistmaker.creator.Creator
 import com.example.playlistmaker.player.domain.api.PlayerInteractor
 import com.example.playlistmaker.util.toFormattedMinutesSeconds
 
@@ -97,11 +93,5 @@ class PlayerViewModel(
         const val STATE_PLAYING = 2
         const val STATE_PAUSED = 3
         const val DELAY = 200L
-
-        fun getFactory(trackUrl: String): ViewModelProvider.Factory = viewModelFactory {
-            initializer {
-                PlayerViewModel(Creator.providePlayerInteractor(), trackUrl)
-            }
-        }
     }
 }

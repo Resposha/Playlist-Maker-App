@@ -10,7 +10,6 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.updatePadding
-import androidx.lifecycle.ViewModelProvider
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.example.playlistmaker.R
@@ -19,9 +18,14 @@ import com.example.playlistmaker.util.dpToPx
 import com.example.playlistmaker.util.getParcelableExtraCompat
 import com.example.playlistmaker.util.toFormattedMinutesSeconds
 import com.google.android.material.appbar.MaterialToolbar
+import org.koin.androidx.viewmodel.ext.android.viewModel
+import org.koin.core.parameter.parametersOf
+import kotlin.getValue
 
 class PlayerActivity : AppCompatActivity() {
-    private lateinit var viewModel: PlayerViewModel
+    private val viewModel: PlayerViewModel by viewModel {
+        parametersOf(intent.getParcelableExtraCompat(TRACK, Track::class.java)?.previewUrl ?: "")
+    }
 
     private lateinit var playerToolbar: MaterialToolbar
     private lateinit var albumArtwork: ImageView
@@ -72,8 +76,6 @@ class PlayerActivity : AppCompatActivity() {
         countryValue = findViewById<TextView>(R.id.player_country_value)
 
         setTrackDetails(track)
-
-        viewModel = ViewModelProvider(this, PlayerViewModel.getFactory(track.previewUrl))[PlayerViewModel::class.java]
 
         viewModel.observePlayerState().observe(this) {
             changeButtonIcon(it == PlayerViewModel.STATE_PLAYING)
