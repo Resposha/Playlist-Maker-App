@@ -9,9 +9,9 @@ import androidx.core.content.edit
 class SharedPrefsStorageClient<T>(
     private val sharedPrefs: SharedPreferences,
     private val dataKey: String,
-    private val type: Type
+    private val type: Type,
+    private val gson: Gson
 ) : StorageClient<T> {
-    private val gson = Gson()
 
     override fun storeData(data: T) {
         sharedPrefs.edit { putString(dataKey, gson.toJson(data, type)) }

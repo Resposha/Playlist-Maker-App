@@ -19,20 +19,21 @@ import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.isVisible
 import androidx.core.view.updatePadding
-import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.RecyclerView
 import com.example.playlistmaker.R
 import com.example.playlistmaker.search.domain.models.Track
 import com.example.playlistmaker.player.ui.PlayerActivity
 import com.google.android.material.appbar.MaterialToolbar
+import org.koin.androidx.viewmodel.ext.android.viewModel
+import kotlin.getValue
 
 class SearchActivity : AppCompatActivity() {
     private var searchInput = EMPTY_STRING
     private var isClickAllowed = true
 
     private val mainThreadHandler = Handler(Looper.getMainLooper())
+    private val viewModel: TrackViewModel by viewModel()
 
-    private lateinit var viewModel: TrackViewModel
     private lateinit var trackAdapter: TrackAdapter
     private lateinit var searchHistoryAdapter: TrackAdapter
 
@@ -57,8 +58,6 @@ class SearchActivity : AppCompatActivity() {
             view.updatePadding(top = statusBar.top)
             insets
         }
-
-        viewModel = ViewModelProvider(this, TrackViewModel.getFactory())[TrackViewModel::class.java]
 
         searchToolbar = findViewById<MaterialToolbar>(R.id.search_toolbar)
         searchEditText = findViewById<EditText>(R.id.search_edit_text)

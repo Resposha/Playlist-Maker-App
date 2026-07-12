@@ -7,13 +7,13 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.updatePadding
-import androidx.lifecycle.ViewModelProvider
 import com.example.playlistmaker.R
 import com.google.android.material.appbar.MaterialToolbar
 import com.google.android.material.switchmaterial.SwitchMaterial
+import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class SettingsActivity : AppCompatActivity() {
-    private lateinit var viewModel: SettingsViewModel
+    private val viewModel: SettingsViewModel by viewModel()
 
     private lateinit var settingsToolbar: MaterialToolbar
     private lateinit var settingsSwitch: SwitchMaterial
@@ -30,8 +30,6 @@ class SettingsActivity : AppCompatActivity() {
             view.updatePadding(top = statusBar.top)
             insets
         }
-
-        viewModel = ViewModelProvider(this, SettingsViewModel.getFactory())[SettingsViewModel::class.java]
 
         settingsToolbar = findViewById<MaterialToolbar>(R.id.settings_toolbar)
         settingsSwitch = findViewById<SwitchMaterial>(R.id.settings_switch)

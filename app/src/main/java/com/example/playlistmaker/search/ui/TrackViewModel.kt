@@ -5,12 +5,6 @@ import android.os.Looper
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.ViewModelProvider.AndroidViewModelFactory.Companion.APPLICATION_KEY
-import androidx.lifecycle.viewmodel.initializer
-import androidx.lifecycle.viewmodel.viewModelFactory
-import com.example.playlistmaker.creator.Creator
-import com.example.playlistmaker.main.ui.PlaylistMakerApplication
 import com.example.playlistmaker.search.domain.api.SearchHistoryInteractor
 import com.example.playlistmaker.search.domain.api.TrackInteractor
 import com.example.playlistmaker.search.domain.models.Track
@@ -90,15 +84,5 @@ class TrackViewModel(
 
     companion object {
         private const val SEARCH_DEBOUNCE_DELAY = 2000L
-
-        fun getFactory(): ViewModelProvider.Factory = viewModelFactory {
-            initializer {
-                val app = (this[APPLICATION_KEY] as PlaylistMakerApplication)
-                TrackViewModel(
-                    Creator.provideTrackInteractor(),
-                    Creator.provideSearchHistoryInteractor(app)
-                )
-            }
-        }
     }
 }

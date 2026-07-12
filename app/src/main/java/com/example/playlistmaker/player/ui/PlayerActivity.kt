@@ -10,7 +10,6 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.updatePadding
-import androidx.lifecycle.ViewModelProvider
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.example.playlistmaker.R
@@ -19,9 +18,14 @@ import com.example.playlistmaker.util.dpToPx
 import com.example.playlistmaker.util.getParcelableExtraCompat
 import com.example.playlistmaker.util.toFormattedMinutesSeconds
 import com.google.android.material.appbar.MaterialToolbar
+import org.koin.androidx.viewmodel.ext.android.viewModel
+import org.koin.core.parameter.parametersOf
+import kotlin.getValue
 
 class PlayerActivity : AppCompatActivity() {
-    private lateinit var viewModel: PlayerViewModel
+    private val viewModel: PlayerViewModel by viewModel {
+        parametersOf(intent.getParcelableExtraCompat(TRACK, Track::class.java)?.previewUrl ?: "")
+    }
 
     private lateinit var playerToolbar: MaterialToolbar
     private lateinit var albumArtwork: ImageView
@@ -73,15 +77,8 @@ class PlayerActivity : AppCompatActivity() {
 
         setTrackDetails(track)
 
-        viewModel = ViewModelProvider(this, PlayerViewModel.getFactory(track.previewUrl))[PlayerViewModel::class.java]
-
         viewModel.observePlayerState().observe(this) {
-            changeButtonIcon(it == PlayerViewModel.STATE_PLAYING)
-            enableButton(it != PlayerViewModel.STATE_DEFAULT)
-        }
-
-        viewModel.observeProgressTime().observe(this) {
-            playbackProgress.text = it
+            render(it)
         }
 
         playerToolbar.setNavigationOnClickListener {
@@ -98,13 +95,27 @@ class PlayerActivity : AppCompatActivity() {
         viewModel.onPause()
     }
 
-    private fun enableButton(isEnabled: Boolean) {
-        playAndPause.isEnabled = isEnabled
-    }
+    private fun render(state: PlayerState) {
+        playbackProgress.text = state.progressTime
 
-    private fun changeButtonIcon(isPlaying: Boolean) {
-        val buttonIcon = if (isPlaying) R.drawable.button_pause else R.drawable.button_play
-        playAndPause.setImageResource(buttonIcon)
+        when (state.status) {
+            PlayerStatus.DEFAULT -> {
+                playAndPause.isEnabled = false
+                playAndPause.setImageResource(R.drawable.button_play)
+            }
+            PlayerStatus.PREPARED -> {
+                playAndPause.isEnabled = true
+                playAndPause.setImageResource(R.drawable.button_play)
+            }
+            PlayerStatus.PLAYING -> {
+                playAndPause.isEnabled = true
+                playAndPause.setImageResource(R.drawable.button_pause)
+            }
+            PlayerStatus.PAUSED -> {
+                playAndPause.isEnabled = true
+                playAndPause.setImageResource(R.drawable.button_play)
+            }
+        }
     }
 
     private fun setTrackDetails(track: Track) {
