@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    style="@style/LibraryActivityStyle">
+
+    <com.google.android.material.appbar.MaterialToolbar
+        android:id="@+id/library_toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:title="@string/library"
+        app:navigationIcon="@drawable/ic_arrow_back"
+        style="@style/ToolbarStyle"/>
+
+    <com.google.android.material.tabs.TabLayout
+        android:id="@+id/library_tablayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="@dimen/library_tablayout_layout_marginHorizontal"
+        app:tabMode="fixed"
+        app:tabTextAppearance="@style/LibraryTabLayoutTextAppearance"
+        style="@style/LibraryTabLayoutStyle"/>
+
+    <androidx.viewpager2.widget.ViewPager2
+        android:id="@+id/library_viewpager"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"/>
+</LinearLayout>

@@ -89,7 +89,7 @@
                 android:paddingHorizontal="@dimen/search_placeholder_TextView_paddingHorizontal"
                 android:gravity="center"
                 android:text="@string/no_results"
-                style="@style/SearchPlaceholderTextViewStyle"/>
+                style="@style/PlaceholderTextViewStyle"/>
         </LinearLayout>
 
         <LinearLayout
@@ -113,7 +113,7 @@
                 android:paddingHorizontal="@dimen/search_placeholder_TextView_paddingHorizontal"
                 android:gravity="center"
                 android:text="@string/connection_issues"
-                style="@style/SearchPlaceholderTextViewStyle"/>
+                style="@style/PlaceholderTextViewStyle"/>
 
             <Button
                 android:id="@+id/search_button_reload"
@@ -122,7 +122,7 @@
                 android:layout_marginTop="@dimen/search_placeholder_Button_layout_marginTop"
                 android:layout_gravity="center"
                 android:text="@string/reload"
-                style="@style/SearchReloadAndClearHistoryButtonsStyle"/>
+                style="@style/SearchReloadClearHistoryAndNewPlaylistButtonsStyle"/>
         </LinearLayout>
 
         <LinearLayout
@@ -156,7 +156,7 @@
                 android:layout_marginTop="@dimen/search_history_Button_layout_marginTop"
                 android:layout_gravity="center"
                 android:text="@string/clear_history"
-                style="@style/SearchReloadAndClearHistoryButtonsStyle"/>
+                style="@style/SearchReloadClearHistoryAndNewPlaylistButtonsStyle"/>
         </LinearLayout>
     </FrameLayout>
 </LinearLayout>
