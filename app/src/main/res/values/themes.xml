@@ -65,13 +65,13 @@
     <style name="SearchImageViewArrowForwardStyle">
         <item name="tint">@color/text_gray</item>
     </style>
-    <style name="SearchPlaceholderTextViewStyle">
+    <style name="PlaceholderTextViewStyle">
         <item name="android:textColor">@color/black</item>
-        <item name="android:textSize">@dimen/search_placeholder_and_history_TextView_textSize</item>
+        <item name="android:textSize">@dimen/placeholder_and_history_TextView_textSize</item>
         <item name="android:fontFamily">@font/ys_display_medium</item>
         <item name="android:textFontWeight">400</item>
     </style>
-    <style name="SearchReloadAndClearHistoryButtonsStyle">
+    <style name="SearchReloadClearHistoryAndNewPlaylistButtonsStyle">
         <item name="android:textColor">@color/white</item>
         <item name="android:textSize">@dimen/search_placeholder_Button_textSize</item>
         <item name="android:fontFamily">@font/ys_display_medium</item>
@@ -82,7 +82,7 @@
     </style>
     <style name="SearchHistoryTextViewStyle">
         <item name="android:textColor">@color/black</item>
-        <item name="android:textSize">@dimen/search_placeholder_and_history_TextView_textSize</item>
+        <item name="android:textSize">@dimen/placeholder_and_history_TextView_textSize</item>
         <item name="android:fontFamily">@font/ys_display_medium</item>
         <item name="android:textFontWeight">500</item>
     </style>
@@ -118,5 +118,16 @@
         <item name="android:textSize">@dimen/player_track_details_textSize</item>
         <item name="android:fontFamily">@font/ys_display_regular</item>
         <item name="android:textFontWeight">400</item>
+    </style>
+    <style name="LibraryActivityStyle">
+        <item name="android:background">@color/white</item>
+    </style>
+    <style name="LibraryTabLayoutStyle">
+        <item name="android:background">@color/white</item>
+        <item name="tabTextColor">@color/black</item>
+        <item name="tabIndicatorColor">@color/black</item>
+    </style>
+    <style name="LibraryTabLayoutTextAppearance" parent="TextAppearance.Design.Tab">
+        <item name="textAllCaps">false</item>
     </style>
 </resources>

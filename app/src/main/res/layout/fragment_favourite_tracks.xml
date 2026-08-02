@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    style="@style/LibraryActivityStyle">
+
+    <LinearLayout
+        android:id="@+id/library_empty_library"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:visibility="visible">
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/library_empty_library_image_layout_marginTop"
+            android:layout_marginBottom="@dimen/library_empty_library_and_no_playlists_images_layout_marginBottom"
+            android:layout_gravity="center"
+            android:src="@drawable/placeholder_no_results"/>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:text="@string/empty_library"
+            style="@style/PlaceholderTextViewStyle"/>
+    </LinearLayout>
+</LinearLayout>
