@@ -13,6 +13,8 @@ class TrackViewModel(
     private val trackInteractor: TrackInteractor,
     private val searchHistoryInteractor: SearchHistoryInteractor
 ): ViewModel() {
+    var searchInput: String = EMPTY_STRING
+
     private var latestSearchText: String? = null
 
     private val searchStateLiveData = MutableLiveData<SearchState>()
@@ -84,5 +86,6 @@ class TrackViewModel(
 
     companion object {
         private const val SEARCH_DEBOUNCE_DELAY = 2000L
+        private const val EMPTY_STRING = ""
     }
 }
