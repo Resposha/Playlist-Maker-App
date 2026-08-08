@@ -4,8 +4,6 @@ import android.content.Context.INPUT_METHOD_SERVICE
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
-import android.text.Editable
-import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -13,6 +11,7 @@ import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
 import androidx.core.os.bundleOf
 import androidx.core.view.isVisible
+import androidx.core.widget.doOnTextChanged
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import com.example.playlistmaker.R
@@ -29,10 +28,10 @@ class SearchFragment : Fragment() {
 
     private val viewModel: TrackViewModel by viewModel()
     private val mainThreadHandler = Handler(Looper.getMainLooper())
+    private val clickRunnable = Runnable { isClickAllowed = true }
 
     private lateinit var trackAdapter: TrackAdapter
     private lateinit var searchHistoryAdapter: TrackAdapter
-    private lateinit var textWatcher: TextWatcher
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -54,19 +53,8 @@ class SearchFragment : Fragment() {
             render(it)
         }
 
-        searchHistoryAdapter = TrackAdapter(emptyList()) {
-            if (clickDebounce()) {
-                viewModel.addTrackToHistory(it)
-                openTrackPlayer(it)
-            }
-        }
-
-        trackAdapter = TrackAdapter(emptyList()) {
-            if (clickDebounce()) {
-                viewModel.addTrackToHistory(it)
-                openTrackPlayer(it)
-            }
-        }
+        searchHistoryAdapter = TrackAdapter(emptyList(), ::onTrackClick)
+        trackAdapter = TrackAdapter(emptyList(), ::onTrackClick)
 
         binding.searchRecyclerviewFoundTracks.adapter = trackAdapter
         binding.searchRecyclerviewHistory.adapter = searchHistoryAdapter
@@ -101,27 +89,16 @@ class SearchFragment : Fragment() {
             viewModel.searchRequest(viewModel.searchInput)
         }
 
-        textWatcher = object : TextWatcher {
-            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
-                // empty
-            }
+        binding.searchEditText.doOnTextChanged { s, _, _, _ ->
+            viewModel.searchInput = s?.toString()?.trim() ?: EMPTY_STRING
+            binding.searchIconClear.isVisible = !s.isNullOrEmpty()
 
-            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-                viewModel.searchInput = s?.toString()?.trim() ?: EMPTY_STRING
-                binding.searchIconClear.isVisible = !s.isNullOrEmpty()
-
-                if (binding.searchEditText.hasFocus() && s.isNullOrEmpty()) {
-                    viewModel.showHistory()
-                } else {
-                    viewModel.searchDebounce(viewModel.searchInput)
-                }
-            }
-
-            override fun afterTextChanged(s: Editable?) {
-                // empty
+            if (binding.searchEditText.hasFocus() && s.isNullOrEmpty()) {
+                viewModel.showHistory()
+            } else {
+                viewModel.searchDebounce(viewModel.searchInput)
             }
         }
-        binding.searchEditText.addTextChangedListener(textWatcher)
     }
 
     override fun onResume() {
@@ -134,7 +111,6 @@ class SearchFragment : Fragment() {
     }
 
     override fun onDestroyView() {
-        binding.searchEditText.removeTextChangedListener(textWatcher)
         super.onDestroyView()
         _binding = null
         mainThreadHandler.removeCallbacksAndMessages(null)
@@ -214,14 +190,18 @@ class SearchFragment : Fragment() {
         if (isClickAllowed) {
             isClickAllowed = false
             mainThreadHandler.apply {
-                removeCallbacksAndMessages(null)
-                postDelayed(
-                    { isClickAllowed = true },
-                    CLICK_DEBOUNCE_DELAY
-                )
+                removeCallbacks(clickRunnable)
+                postDelayed(clickRunnable, CLICK_DEBOUNCE_DELAY)
             }
         }
         return current
+    }
+
+    private fun onTrackClick(track: Track) {
+        if (clickDebounce()) {
+            viewModel.addTrackToHistory(track)
+            openTrackPlayer(track)
+        }
     }
 
     companion object {
