@@ -117,4 +117,7 @@
     <style name="LibraryTabLayoutTextAppearance" parent="TextAppearance.Design.Tab">
         <item name="textAllCaps">false</item>
     </style>
+    <style name="BottomNavigationViewStyle">
+        <item name="android:background">@color/white</item>
+    </style>
 </resources>
