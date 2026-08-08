@@ -1,11 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    style="@style/SettingsActivityStyle">
+    tools:context=".settings.ui.SettingsFragment"
+    style="@style/SettingsFragmentStyle">
     
     <com.google.android.material.appbar.MaterialToolbar
         android:id="@+id/settings_toolbar"
@@ -13,7 +15,6 @@
         android:layout_height="wrap_content"
         android:layout_marginBottom="24dp"
         app:title="@string/settings"
-        app:navigationIcon="@drawable/ic_arrow_back"
         style="@style/ToolbarStyle"/>
 
     <com.google.android.material.switchmaterial.SwitchMaterial
