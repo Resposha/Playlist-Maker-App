@@ -5,9 +5,11 @@ import android.os.Looper
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.example.playlistmaker.search.domain.api.SearchHistoryInteractor
 import com.example.playlistmaker.search.domain.api.TrackInteractor
 import com.example.playlistmaker.search.domain.models.Track
+import com.example.playlistmaker.util.debounce
 
 class TrackViewModel(
     private val trackInteractor: TrackInteractor,
@@ -16,6 +18,15 @@ class TrackViewModel(
     var searchInput: String = EMPTY_STRING
 
     private var latestSearchText: String? = null
+
+    private val trackSearchDebounce = debounce<String>(
+        SEARCH_DEBOUNCE_DELAY,
+        viewModelScope,
+        true
+    ) {
+        changedText ->
+        searchRequest(changedText)
+    }
 
     private val searchStateLiveData = MutableLiveData<SearchState>()
     fun observeSearchState(): LiveData<SearchState> = searchStateLiveData
@@ -29,16 +40,10 @@ class TrackViewModel(
     }
 
     fun searchDebounce(changedText: String) {
-        if (changedText.isEmpty()) {
-            mainThreadHandler.removeCallbacks(searchRunnable)
-            return
+        if (latestSearchText != changedText) {
+            latestSearchText = changedText
+            trackSearchDebounce(changedText)
         }
-
-        if (latestSearchText == changedText) return
-        this.latestSearchText = changedText
-
-        mainThreadHandler.removeCallbacks(searchRunnable)
-        mainThreadHandler.postDelayed(searchRunnable, SEARCH_DEBOUNCE_DELAY)
     }
 
     fun searchRequest(newSearchText: String) {
