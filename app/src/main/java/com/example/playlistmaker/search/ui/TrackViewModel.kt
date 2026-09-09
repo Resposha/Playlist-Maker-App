@@ -1,7 +1,5 @@
 package com.example.playlistmaker.search.ui
 
-import android.os.Handler
-import android.os.Looper
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -10,6 +8,7 @@ import com.example.playlistmaker.search.domain.api.SearchHistoryInteractor
 import com.example.playlistmaker.search.domain.api.TrackInteractor
 import com.example.playlistmaker.search.domain.models.Track
 import com.example.playlistmaker.util.debounce
+import kotlinx.coroutines.launch
 
 class TrackViewModel(
     private val trackInteractor: TrackInteractor,
@@ -23,21 +22,12 @@ class TrackViewModel(
         SEARCH_DEBOUNCE_DELAY,
         viewModelScope,
         true
-    ) {
-        changedText ->
+    ) { changedText ->
         searchRequest(changedText)
     }
 
     private val searchStateLiveData = MutableLiveData<SearchState>()
     fun observeSearchState(): LiveData<SearchState> = searchStateLiveData
-
-    private val mainThreadHandler = Handler(Looper.getMainLooper())
-    private val searchRunnable = Runnable {
-        val text = latestSearchText
-        if (!text.isNullOrEmpty()) {
-            searchRequest(text)
-        }
-    }
 
     fun searchDebounce(changedText: String) {
         if (latestSearchText != changedText) {
@@ -51,42 +41,45 @@ class TrackViewModel(
 
         searchStateLiveData.value = SearchState.Loading
 
-        trackInteractor.searchTracks(newSearchText) { foundTracks ->
-            mainThreadHandler.post {
-                when {
-                    foundTracks == null -> {
-                        searchStateLiveData.value = SearchState.ConnectionIssues
-                    }
-                    foundTracks.isEmpty() -> {
-                        searchStateLiveData.value = SearchState.NoResults
-                    }
-                    else -> {
-                        searchStateLiveData.value = SearchState.Content(foundTracks)
+        viewModelScope.launch {
+            trackInteractor
+                .searchTracks(newSearchText)
+                .collect { foundTracks ->
+                    when {
+                        foundTracks == null -> {
+                            searchStateLiveData.value = SearchState.ConnectionIssues
+                        }
+                        foundTracks.isEmpty() -> {
+                            searchStateLiveData.value = SearchState.NoResults
+                        }
+                        else -> {
+                            searchStateLiveData.value = SearchState.Content(foundTracks)
+                        }
                     }
                 }
-            }
+
         }
     }
 
     fun showHistory() {
-        mainThreadHandler.removeCallbacks(searchRunnable)
-        searchHistoryInteractor.getHistory {
-            searchStateLiveData.value = SearchState.History(it)
+        viewModelScope.launch {
+            searchStateLiveData.value = SearchState.History(
+                searchHistoryInteractor.getHistory()
+            )
         }
     }
 
     fun addTrackToHistory(track: Track) {
-        searchHistoryInteractor.addTrack(track)
+        viewModelScope.launch {
+            searchHistoryInteractor.addTrack(track)
+        }
     }
 
     fun clearHistory() {
-        searchHistoryInteractor.clearHistory()
-        searchStateLiveData.value = SearchState.History(emptyList())
-    }
-
-    override fun onCleared() {
-        super.onCleared()
-        mainThreadHandler.removeCallbacksAndMessages(null)
+        viewModelScope.launch {
+            searchHistoryInteractor.clearHistory()
+            searchStateLiveData.value = SearchState.History(emptyList())
+        }
     }
 
     companion object {

@@ -2,8 +2,6 @@ package com.example.playlistmaker.search.ui
 
 import android.content.Context.INPUT_METHOD_SERVICE
 import android.os.Bundle
-import android.os.Handler
-import android.os.Looper
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -26,10 +24,7 @@ class SearchFragment : Fragment() {
     private var _binding: FragmentSearchBinding? = null
     private val binding get() = _binding!!
 
-    private var isClickAllowed = true
-
     private val viewModel: TrackViewModel by viewModel()
-    private val mainThreadHandler = Handler(Looper.getMainLooper())
 
     private lateinit var trackAdapter: TrackAdapter
     private lateinit var searchHistoryAdapter: TrackAdapter
@@ -53,6 +48,15 @@ class SearchFragment : Fragment() {
 
         viewModel.observeSearchState().observe(viewLifecycleOwner) {
             render(it)
+        }
+
+        onTrackClickDebounce = debounce<Track>(
+            CLICK_DEBOUNCE_DELAY,
+            viewLifecycleOwner.lifecycleScope,
+            false
+        ) { track ->
+            viewModel.addTrackToHistory(track)
+            openTrackPlayer(track)
         }
 
         searchHistoryAdapter = TrackAdapter(emptyList(), onTrackClickDebounce)
@@ -96,26 +100,16 @@ class SearchFragment : Fragment() {
             binding.searchIconClear.isVisible = !s.isNullOrEmpty()
 
             if (binding.searchEditText.hasFocus() && s.isNullOrEmpty()) {
+                viewModel.searchDebounce(EMPTY_STRING)
                 viewModel.showHistory()
             } else {
                 viewModel.searchDebounce(viewModel.searchInput)
             }
         }
-
-        onTrackClickDebounce = debounce<Track>(
-            CLICK_DEBOUNCE_DELAY,
-            viewLifecycleOwner.lifecycleScope,
-            false
-        ) { track ->
-            viewModel.addTrackToHistory(track)
-            openTrackPlayer(track)
-        }
     }
 
     override fun onResume() {
         super.onResume()
-        isClickAllowed = true
-
         if (binding.searchEditText.hasFocus() && binding.searchEditText.text.isNullOrEmpty()) {
             viewModel.showHistory()
         }
@@ -124,7 +118,6 @@ class SearchFragment : Fragment() {
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
-        mainThreadHandler.removeCallbacksAndMessages(null)
     }
 
     private fun render(state: SearchState) {
