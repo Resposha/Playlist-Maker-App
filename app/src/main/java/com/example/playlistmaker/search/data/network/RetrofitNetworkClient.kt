@@ -6,8 +6,7 @@ import android.net.NetworkCapabilities
 import com.example.playlistmaker.search.data.NetworkClient
 import com.example.playlistmaker.search.data.dto.Response
 import com.example.playlistmaker.search.data.dto.TrackSearchRequest
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.withContext
+import kotlin.coroutines.cancellation.CancellationException
 
 class RetrofitNetworkClient(
     private val iTunesSearchService: TrackSearchApi,
@@ -23,13 +22,13 @@ class RetrofitNetworkClient(
             return Response().apply { resultCode = 400 }
         }
 
-        return withContext(Dispatchers.IO) {
-            try {
-                val response = iTunesSearchService.search(dto.expression)
-                response.apply { resultCode = 200 }
-            } catch (e: Throwable) {
-                Response().apply { resultCode = 500 }
-            }
+        return try {
+            val response = iTunesSearchService.search(dto.expression)
+            response.apply { resultCode = 200 }
+        } catch (e: CancellationException) {
+            throw e
+        } catch (e: Exception) {
+            Response().apply { resultCode = 500 }
         }
     }
 
