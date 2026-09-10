@@ -1,32 +1,23 @@
 package com.example.playlistmaker.player.ui
 
-import android.os.Handler
-import android.os.Looper
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.example.playlistmaker.player.domain.api.PlayerInteractor
 import com.example.playlistmaker.util.toFormattedMinutesSeconds
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 
 class PlayerViewModel(
     private val playerInteractor: PlayerInteractor,
     private val url: String
 ) : ViewModel() {
-    private val playerStateLiveData = MutableLiveData<PlayerState>(
-        PlayerState(
-            PlayerStatus.DEFAULT,
-            0L.toFormattedMinutesSeconds()
-        )
-    )
+    private val playerStateLiveData = MutableLiveData<PlayerState>(PlayerState.Default())
     fun observePlayerState(): LiveData<PlayerState> = playerStateLiveData
 
-    private val mainThreadHandler = Handler(Looper.getMainLooper())
-
-    private val timerRunnable = Runnable {
-        if (playerStateLiveData.value?.status == PlayerStatus.PLAYING) {
-            startTimerUpdate()
-        }
-    }
+    private var timerJob: Job? = null
 
     init {
         preparePlayer()
@@ -34,20 +25,23 @@ class PlayerViewModel(
 
     override fun onCleared() {
         super.onCleared()
-        mainThreadHandler.removeCallbacksAndMessages(null)
         playerInteractor.releasePlayer()
     }
 
     fun onPlayButtonClicked() {
-        when (playerStateLiveData.value?.status) {
-            PlayerStatus.PLAYING -> pausePlayer()
-            PlayerStatus.PREPARED, PlayerStatus.PAUSED -> startPlayer()
+        when (playerStateLiveData.value) {
+            is PlayerState.Playing -> {
+                pausePlayer()
+            }
+            is PlayerState.Prepared, is PlayerState.Paused -> {
+                startPlayer()
+            }
             else -> { }
         }
     }
 
     fun onPause() {
-        if (playerStateLiveData.value?.status == PlayerStatus.PLAYING) {
+        if (playerStateLiveData.value is PlayerState.Playing) {
             pausePlayer()
         }
     }
@@ -56,65 +50,51 @@ class PlayerViewModel(
         playerInteractor.preparePlayer(
             url,
             onPrepared = {
-                playerStateLiveData.postValue(
-                    PlayerState(
-                        PlayerStatus.PREPARED,
-                        0L.toFormattedMinutesSeconds()
-                    )
-                )
+                playerStateLiveData.postValue(PlayerState.Prepared())
             },
             onCompletion = {
-                playerStateLiveData.postValue(
-                    PlayerState(
-                        PlayerStatus.PREPARED,
-                        0L.toFormattedMinutesSeconds()
-                    )
-                )
                 pauseTimer()
+                playerStateLiveData.postValue(PlayerState.Prepared())
             }
         )
     }
 
     private fun startPlayer() {
         playerInteractor.startPlayer()
-        val currentTime = playerStateLiveData.value?.progressTime ?: 0L.toFormattedMinutesSeconds()
         playerStateLiveData.postValue(
-            PlayerState(
-                PlayerStatus.PLAYING,
-                currentTime
-            )
+            PlayerState.Playing(getCurrentPlayerPosition())
         )
-        startTimerUpdate()
+        startTimer()
     }
 
     private fun pausePlayer() {
-        pauseTimer()
         playerInteractor.pausePlayer()
-        val currentTime = playerStateLiveData.value?.progressTime ?: 0L.toFormattedMinutesSeconds()
+        pauseTimer()
         playerStateLiveData.postValue(
-            PlayerState(
-                PlayerStatus.PAUSED,
-                currentTime
-            )
+            PlayerState.Paused(getCurrentPlayerPosition())
         )
     }
 
-    private fun startTimerUpdate() {
-        val currentPosition = playerInteractor.getCurrentPosition()
-        playerStateLiveData.postValue(
-            PlayerState(
-                PlayerStatus.PLAYING,
-                currentPosition.toFormattedMinutesSeconds()
-            )
-        )
-        mainThreadHandler.postDelayed(timerRunnable, DELAY)
+    private fun startTimer() {
+        timerJob = viewModelScope.launch {
+            while (playerInteractor.isPlaying()) {
+                delay(DELAY)
+                playerStateLiveData.postValue(
+                    PlayerState.Playing(getCurrentPlayerPosition())
+                )
+            }
+        }
     }
 
     private fun pauseTimer() {
-        mainThreadHandler.removeCallbacks(timerRunnable)
+        timerJob?.cancel()
+    }
+
+    private fun getCurrentPlayerPosition(): String {
+        return playerInteractor.getCurrentPosition().toFormattedMinutesSeconds()
     }
 
     companion object {
-        const val DELAY = 200L
+        const val DELAY = 300L
     }
 }

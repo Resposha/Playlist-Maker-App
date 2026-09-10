@@ -2,8 +2,6 @@ package com.example.playlistmaker.search.ui
 
 import android.content.Context.INPUT_METHOD_SERVICE
 import android.os.Bundle
-import android.os.Handler
-import android.os.Looper
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -13,10 +11,12 @@ import androidx.core.os.bundleOf
 import androidx.core.view.isVisible
 import androidx.core.widget.doOnTextChanged
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.example.playlistmaker.R
 import com.example.playlistmaker.databinding.FragmentSearchBinding
 import com.example.playlistmaker.search.domain.models.Track
+import com.example.playlistmaker.util.debounce
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import kotlin.getValue
 
@@ -24,14 +24,11 @@ class SearchFragment : Fragment() {
     private var _binding: FragmentSearchBinding? = null
     private val binding get() = _binding!!
 
-    private var isClickAllowed = true
-
     private val viewModel: TrackViewModel by viewModel()
-    private val mainThreadHandler = Handler(Looper.getMainLooper())
-    private val clickRunnable = Runnable { isClickAllowed = true }
 
     private lateinit var trackAdapter: TrackAdapter
     private lateinit var searchHistoryAdapter: TrackAdapter
+    private lateinit var onTrackClickDebounce: (Track) -> Unit
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -53,8 +50,17 @@ class SearchFragment : Fragment() {
             render(it)
         }
 
-        searchHistoryAdapter = TrackAdapter(emptyList(), ::onTrackClick)
-        trackAdapter = TrackAdapter(emptyList(), ::onTrackClick)
+        onTrackClickDebounce = debounce<Track>(
+            CLICK_DEBOUNCE_DELAY,
+            viewLifecycleOwner.lifecycleScope,
+            false
+        ) { track ->
+            viewModel.addTrackToHistory(track)
+            openTrackPlayer(track)
+        }
+
+        searchHistoryAdapter = TrackAdapter(emptyList(), onTrackClickDebounce)
+        trackAdapter = TrackAdapter(emptyList(), onTrackClickDebounce)
 
         binding.searchRecyclerviewFoundTracks.adapter = trackAdapter
         binding.searchRecyclerviewHistory.adapter = searchHistoryAdapter
@@ -82,6 +88,7 @@ class SearchFragment : Fragment() {
             binding.searchEditText.setText(EMPTY_STRING)
             val inputMethodManager = requireContext().getSystemService(INPUT_METHOD_SERVICE) as? InputMethodManager
             inputMethodManager?.hideSoftInputFromWindow(binding.searchIconClear.windowToken, 0)
+            viewModel.clearSearch()
             viewModel.showHistory()
         }
 
@@ -94,6 +101,7 @@ class SearchFragment : Fragment() {
             binding.searchIconClear.isVisible = !s.isNullOrEmpty()
 
             if (binding.searchEditText.hasFocus() && s.isNullOrEmpty()) {
+                viewModel.clearSearch()
                 viewModel.showHistory()
             } else {
                 viewModel.searchDebounce(viewModel.searchInput)
@@ -103,8 +111,6 @@ class SearchFragment : Fragment() {
 
     override fun onResume() {
         super.onResume()
-        isClickAllowed = true
-
         if (binding.searchEditText.hasFocus() && binding.searchEditText.text.isNullOrEmpty()) {
             viewModel.showHistory()
         }
@@ -113,7 +119,6 @@ class SearchFragment : Fragment() {
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
-        mainThreadHandler.removeCallbacksAndMessages(null)
     }
 
     private fun render(state: SearchState) {
@@ -182,25 +187,6 @@ class SearchFragment : Fragment() {
             )
         } catch (e: IllegalArgumentException) {
             // empty
-        }
-    }
-
-    private fun clickDebounce() : Boolean {
-        val current = isClickAllowed
-        if (isClickAllowed) {
-            isClickAllowed = false
-            mainThreadHandler.apply {
-                removeCallbacks(clickRunnable)
-                postDelayed(clickRunnable, CLICK_DEBOUNCE_DELAY)
-            }
-        }
-        return current
-    }
-
-    private fun onTrackClick(track: Track) {
-        if (clickDebounce()) {
-            viewModel.addTrackToHistory(track)
-            openTrackPlayer(track)
         }
     }
 

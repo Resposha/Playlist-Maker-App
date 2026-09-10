@@ -66,30 +66,30 @@ class PlayerFragment : Fragment() {
     }
 
     private fun render(state: PlayerState) {
-        binding.playerPlaybackProgress.text = state.progressTime
+        binding.playerPlaybackProgress.text = state.progress
 
-        when (state.status) {
-            PlayerStatus.DEFAULT -> {
+        when (state) {
+            is PlayerState.Default -> {
                 binding.playerButtonPlayAndPause.apply {
-                    isEnabled = false
+                    isEnabled = state.isPlayButtonEnabled
                     setImageResource(R.drawable.button_play)
                 }
             }
-            PlayerStatus.PREPARED -> {
+            is PlayerState.Prepared -> {
                 binding.playerButtonPlayAndPause.apply {
-                    isEnabled = true
+                    isEnabled = state.isPlayButtonEnabled
                     setImageResource(R.drawable.button_play)
                 }
             }
-            PlayerStatus.PLAYING -> {
+            is PlayerState.Playing -> {
                 binding.playerButtonPlayAndPause.apply {
-                    isEnabled = true
+                    isEnabled = state.isPlayButtonEnabled
                     setImageResource(R.drawable.button_pause)
                 }
             }
-            PlayerStatus.PAUSED -> {
+            is PlayerState.Paused -> {
                 binding.playerButtonPlayAndPause.apply {
-                    isEnabled = true
+                    isEnabled = state.isPlayButtonEnabled
                     setImageResource(R.drawable.button_play)
                 }
             }

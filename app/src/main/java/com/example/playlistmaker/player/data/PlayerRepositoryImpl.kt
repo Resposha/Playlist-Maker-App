@@ -13,6 +13,8 @@ class PlayerRepositoryImpl(
         onCompletion: () -> Unit
     ) {
         if (url.isEmpty()) return
+
+        mediaPlayer.reset()
         mediaPlayer.setDataSource(url)
         mediaPlayer.prepareAsync()
         mediaPlayer.setOnPreparedListener { onPrepared() }
@@ -22,6 +24,14 @@ class PlayerRepositoryImpl(
     override fun startPlayer() = mediaPlayer.start()
     override fun pausePlayer() = mediaPlayer.pause()
     override fun releasePlayer() = mediaPlayer.release()
-    override fun getCurrentPosition(): Long = mediaPlayer.currentPosition.toLong()
+
+    override fun getCurrentPosition(): Long {
+        return try {
+            mediaPlayer.currentPosition.toLong()
+        } catch (e: IllegalStateException) {
+            0L
+        }
+    }
+
     override fun isPlaying(): Boolean = mediaPlayer.isPlaying
 }

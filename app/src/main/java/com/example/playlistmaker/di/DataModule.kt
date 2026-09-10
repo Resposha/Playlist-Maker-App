@@ -37,7 +37,10 @@ val dataModule = module {
     }
 
     single<NetworkClient> {
-        RetrofitNetworkClient(get())
+        RetrofitNetworkClient(
+            get(),
+            androidContext()
+        )
     }
 
     single<SharedPreferences>(named(SEARCH_HISTORY_PREFS)) {

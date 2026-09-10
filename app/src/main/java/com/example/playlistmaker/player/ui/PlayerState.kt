@@ -1,13 +1,14 @@
 package com.example.playlistmaker.player.ui
 
-enum class PlayerStatus {
-    DEFAULT,
-    PREPARED,
-    PLAYING,
-    PAUSED
-}
+sealed class PlayerState(
+    val isPlayButtonEnabled: Boolean,
+    val progress: String
+) {
+    class Default : PlayerState(false, "00:00")
 
-data class PlayerState(
-    val status: PlayerStatus,
-    val progressTime: String
-)
+    class Prepared : PlayerState(true, "00:00")
+
+    class Playing(progress: String) : PlayerState(true, progress)
+
+    class Paused(progress: String) : PlayerState(true, progress)
+}

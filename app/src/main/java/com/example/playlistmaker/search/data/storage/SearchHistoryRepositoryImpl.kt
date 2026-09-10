@@ -3,15 +3,18 @@ package com.example.playlistmaker.search.data.storage
 import com.example.playlistmaker.search.data.StorageClient
 import com.example.playlistmaker.search.domain.models.Track
 import com.example.playlistmaker.search.domain.api.SearchHistoryRepository
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
+
 class SearchHistoryRepositoryImpl(
     private val storage: StorageClient<List<Track>>
 ) : SearchHistoryRepository {
 
-    override fun getHistory(): List<Track> {
-        return storage.getData() ?: emptyList()
+    override suspend fun getHistory(): List<Track> = withContext(Dispatchers.IO) {
+        storage.getData() ?: emptyList()
     }
 
-    override fun addTrack(newTrack: Track) {
+    override suspend fun addTrack(newTrack: Track) = withContext(Dispatchers.IO) {
         val history = storage.getData()?.toMutableList() ?: arrayListOf()
         history.removeIf { it.trackId == newTrack.trackId }
         history.add(0, newTrack)
@@ -21,7 +24,7 @@ class SearchHistoryRepositoryImpl(
         storage.storeData(history)
     }
 
-    override fun clearHistory() {
+    override suspend fun clearHistory() = withContext(Dispatchers.IO) {
         storage.storeData(emptyList())
     }
 
