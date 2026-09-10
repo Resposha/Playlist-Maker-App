@@ -7,7 +7,8 @@ import androidx.lifecycle.viewModelScope
 import com.example.playlistmaker.search.domain.api.SearchHistoryInteractor
 import com.example.playlistmaker.search.domain.api.TrackInteractor
 import com.example.playlistmaker.search.domain.models.Track
-import com.example.playlistmaker.util.debounce
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 class TrackViewModel(
@@ -17,14 +18,7 @@ class TrackViewModel(
     var searchInput: String = EMPTY_STRING
 
     private var latestSearchText: String? = null
-
-    private val trackSearchDebounce = debounce<String>(
-        SEARCH_DEBOUNCE_DELAY,
-        viewModelScope,
-        true
-    ) { changedText ->
-        searchRequest(changedText)
-    }
+    private var searchJob: Job? = null
 
     private val searchStateLiveData = MutableLiveData<SearchState>()
     fun observeSearchState(): LiveData<SearchState> = searchStateLiveData
@@ -32,33 +26,46 @@ class TrackViewModel(
     fun searchDebounce(changedText: String) {
         if (latestSearchText != changedText) {
             latestSearchText = changedText
-            trackSearchDebounce(changedText)
+            searchJob?.cancel()
+            searchJob = viewModelScope.launch {
+                delay(SEARCH_DEBOUNCE_DELAY)
+                startSearch(changedText)
+            }
         }
     }
 
     fun searchRequest(newSearchText: String) {
         if (newSearchText.isEmpty()) return
 
+        searchJob?.cancel()
+        searchJob = viewModelScope.launch {
+            startSearch(newSearchText)
+        }
+    }
+
+    fun clearSearch() {
+        latestSearchText = EMPTY_STRING
+        searchJob?.cancel()
+    }
+
+    private suspend fun startSearch(text: String) {
         searchStateLiveData.value = SearchState.Loading
 
-        viewModelScope.launch {
-            trackInteractor
-                .searchTracks(newSearchText)
-                .collect { foundTracks ->
-                    when {
-                        foundTracks == null -> {
-                            searchStateLiveData.value = SearchState.ConnectionIssues
-                        }
-                        foundTracks.isEmpty() -> {
-                            searchStateLiveData.value = SearchState.NoResults
-                        }
-                        else -> {
-                            searchStateLiveData.value = SearchState.Content(foundTracks)
-                        }
+        trackInteractor
+            .searchTracks(text)
+            .collect { foundTracks ->
+                when {
+                    foundTracks == null -> {
+                        searchStateLiveData.value = SearchState.ConnectionIssues
+                    }
+                    foundTracks.isEmpty() -> {
+                        searchStateLiveData.value = SearchState.NoResults
+                    }
+                    else -> {
+                        searchStateLiveData.value = SearchState.Content(foundTracks)
                     }
                 }
-
-        }
+            }
     }
 
     fun showHistory() {
