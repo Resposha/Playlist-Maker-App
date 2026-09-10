@@ -100,10 +100,10 @@ class SearchFragment : Fragment() {
             viewModel.searchInput = s?.toString()?.trim() ?: EMPTY_STRING
             binding.searchIconClear.isVisible = !s.isNullOrEmpty()
 
-            if (binding.searchEditText.hasFocus() && s.isNullOrEmpty()) {
+            if (binding.searchEditText.hasFocus() && viewModel.searchInput.isEmpty()) {
                 viewModel.clearSearch()
                 viewModel.showHistory()
-            } else {
+            } else if (viewModel.searchInput.isNotEmpty()) {
                 viewModel.searchDebounce(viewModel.searchInput)
             }
         }
