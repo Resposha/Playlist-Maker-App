@@ -1,5 +1,8 @@
 package com.example.playlistmaker.di
 
+import com.example.playlistmaker.library.data.converters.TrackDbConverter
+import com.example.playlistmaker.library.data.FavouriteTracksRepositoryImpl
+import com.example.playlistmaker.library.domain.api.FavouriteTracksRepository
 import com.example.playlistmaker.player.data.PlayerRepositoryImpl
 import com.example.playlistmaker.player.domain.api.PlayerRepository
 import com.example.playlistmaker.search.data.network.TrackRepositoryImpl
@@ -17,11 +20,14 @@ private const val SETTINGS_PREFS = "settings_prefs"
 val repositoryModule = module {
 
     single<TrackRepository> {
-        TrackRepositoryImpl(get())
+        TrackRepositoryImpl(get(), get())
     }
 
     single<SearchHistoryRepository> {
-        SearchHistoryRepositoryImpl(get(named(SEARCH_HISTORY_PREFS)))
+        SearchHistoryRepositoryImpl(
+            get(named(SEARCH_HISTORY_PREFS)),
+            get()
+        )
     }
 
     single<SettingsRepository> {
@@ -30,6 +36,12 @@ val repositoryModule = module {
 
     factory<PlayerRepository> {
         PlayerRepositoryImpl(get())
+    }
+
+    factory { TrackDbConverter() }
+
+    single<FavouriteTracksRepository> {
+        FavouriteTracksRepositoryImpl(get(), get())
     }
 
 }

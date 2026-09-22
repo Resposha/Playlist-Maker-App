@@ -88,7 +88,7 @@ class SearchFragment : Fragment() {
             binding.searchEditText.setText(EMPTY_STRING)
             val inputMethodManager = requireContext().getSystemService(INPUT_METHOD_SERVICE) as? InputMethodManager
             inputMethodManager?.hideSoftInputFromWindow(binding.searchIconClear.windowToken, 0)
-            viewModel.clearSearch()
+            viewModel.cancelSearch()
             viewModel.showHistory()
         }
 
@@ -101,7 +101,7 @@ class SearchFragment : Fragment() {
             binding.searchIconClear.isVisible = !s.isNullOrEmpty()
 
             if (binding.searchEditText.hasFocus() && viewModel.searchInput.isEmpty()) {
-                viewModel.clearSearch()
+                viewModel.cancelSearch()
                 viewModel.showHistory()
             } else if (viewModel.searchInput.isNotEmpty()) {
                 viewModel.searchDebounce(viewModel.searchInput)

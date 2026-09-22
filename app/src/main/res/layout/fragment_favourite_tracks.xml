@@ -1,16 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
     style="@style/LibraryFragmentStyle">
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/library_recyclerview_favourite_tracks"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/library_RecyclerView_favourite_tracks_layout_marginTop"
+        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"/>
 
     <LinearLayout
         android:id="@+id/library_empty_library"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:visibility="visible">
+        android:visibility="gone">
 
         <ImageView
             android:layout_width="wrap_content"
@@ -27,4 +35,4 @@
             android:text="@string/empty_library"
             style="@style/PlaceholderTextViewStyle"/>
     </LinearLayout>
-</LinearLayout>
+</FrameLayout>
