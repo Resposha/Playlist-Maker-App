@@ -43,7 +43,7 @@ class TrackViewModel(
         }
     }
 
-    fun clearSearch() {
+    fun cancelSearch() {
         latestSearchText = EMPTY_STRING
         searchJob?.cancel()
     }

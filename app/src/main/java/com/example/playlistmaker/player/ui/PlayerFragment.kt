@@ -23,7 +23,21 @@ class PlayerFragment : Fragment() {
     private val binding get() = _binding!!
 
     private val viewModel: PlayerViewModel by viewModel {
-        parametersOf(arguments?.getParcelableCompat(TRACK, Track::class.java)?.previewUrl ?: "")
+        val track = arguments?.getParcelableCompat(TRACK, Track::class.java)
+        parametersOf(
+            track ?: Track(
+                EMPTY_STRING,
+                EMPTY_STRING,
+                EMPTY_STRING,
+                0L,
+                EMPTY_STRING,
+                null,
+                null,
+                EMPTY_STRING,
+                EMPTY_STRING,
+                null
+            )
+        )
     }
 
     override fun onCreateView(
@@ -53,6 +67,10 @@ class PlayerFragment : Fragment() {
         binding.playerButtonPlayAndPause.setOnClickListener {
             viewModel.onPlayButtonClicked()
         }
+
+        binding.playerButtonAddToFavouriteOrRemove.setOnClickListener {
+            viewModel.onFavoriteClicked()
+        }
     }
 
     override fun onPause() {
@@ -74,24 +92,34 @@ class PlayerFragment : Fragment() {
                     isEnabled = state.isPlayButtonEnabled
                     setImageResource(R.drawable.button_play)
                 }
+                binding.playerButtonAddToFavouriteOrRemove.apply {
+                    isEnabled = false
+                    setImageResource(R.drawable.button_add_to_favourite)
+                }
             }
             is PlayerState.Prepared -> {
                 binding.playerButtonPlayAndPause.apply {
                     isEnabled = state.isPlayButtonEnabled
                     setImageResource(R.drawable.button_play)
                 }
+                binding.playerButtonAddToFavouriteOrRemove.isEnabled = true
+                setFavoriteIcon(state.track.isFavorite)
             }
             is PlayerState.Playing -> {
                 binding.playerButtonPlayAndPause.apply {
                     isEnabled = state.isPlayButtonEnabled
                     setImageResource(R.drawable.button_pause)
                 }
+                binding.playerButtonAddToFavouriteOrRemove.isEnabled = true
+                setFavoriteIcon(state.track.isFavorite)
             }
             is PlayerState.Paused -> {
                 binding.playerButtonPlayAndPause.apply {
                     isEnabled = state.isPlayButtonEnabled
                     setImageResource(R.drawable.button_play)
                 }
+                binding.playerButtonAddToFavouriteOrRemove.isEnabled = true
+                setFavoriteIcon(state.track.isFavorite)
             }
         }
     }
@@ -135,7 +163,16 @@ class PlayerFragment : Fragment() {
         }
     }
 
+    private fun setFavoriteIcon(isFavorite: Boolean) {
+        if (isFavorite) {
+            binding.playerButtonAddToFavouriteOrRemove.setImageResource(R.drawable.button_added_to_favourite)
+        } else {
+            binding.playerButtonAddToFavouriteOrRemove.setImageResource(R.drawable.button_add_to_favourite)
+        }
+    }
+
     companion object {
         private const val TRACK = "track"
+        private const val EMPTY_STRING = ""
     }
 }

@@ -13,7 +13,8 @@ data class Track(
     val releaseDate: String?, // год релиза трека
     val primaryGenreName: String, // жанр трека
     val country: String, // страна исполнителя
-    val previewUrl: String? // отрывок трека
+    val previewUrl: String?, // отрывок трека
+    var isFavorite: Boolean = false // добавлен ли трек в избранное
 ) : Parcelable {
 
     override fun describeContents(): Int = 0

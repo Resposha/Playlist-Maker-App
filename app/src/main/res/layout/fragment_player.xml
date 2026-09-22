@@ -103,14 +103,14 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/player_button_play_and_pause_layout_marginTop"
             app:layout_constraintStart_toEndOf="@id/player_button_add_to_playlist"
-            app:layout_constraintEnd_toStartOf="@id/player_button_add_to_favourite"
+            app:layout_constraintEnd_toStartOf="@id/player_button_add_to_favourite_or_remove"
             app:layout_constraintTop_toBottomOf="@id/player_artist_name"
             android:background="@android:color/transparent"
             app:srcCompat="@drawable/button_play"/>
 
         <!-- Add to favourite button -->
         <ImageButton
-            android:id="@+id/player_button_add_to_favourite"
+            android:id="@+id/player_button_add_to_favourite_or_remove"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             app:layout_constraintEnd_toEndOf="@id/right_border"
