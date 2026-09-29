@@ -125,7 +125,7 @@ class PlayerViewModel(
             if (newFavoriteStatus) {
                 favoriteTracksInteractor.addTrackToFavorites(track)
             } else {
-                favoriteTracksInteractor.removeTrackFromFavorites(track)
+                favoriteTracksInteractor.removeTrackFromFavorites(track.trackId)
             }
 
             val newState = when (currentState) {

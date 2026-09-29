@@ -10,5 +10,5 @@ interface FavoriteTracksRepository {
 
     suspend fun addTrackToFavorites(track: Track)
 
-    suspend fun removeTrackFromFavorites(track: Track)
+    suspend fun removeTrackFromFavorites(trackId: String)
 }

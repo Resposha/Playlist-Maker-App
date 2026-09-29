@@ -21,7 +21,7 @@ class FavoriteTracksInteractorImpl(
         favoriteTracksRepository.addTrackToFavorites(track)
     }
 
-    override suspend fun removeTrackFromFavorites(track: Track) {
-        favoriteTracksRepository.removeTrackFromFavorites(track)
+    override suspend fun removeTrackFromFavorites(trackId: String) {
+        favoriteTracksRepository.removeTrackFromFavorites(trackId)
     }
 }
