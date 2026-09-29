@@ -4,7 +4,9 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.playlistmaker.library.domain.api.FavoriteTracksInteractor
 import com.example.playlistmaker.player.domain.api.PlayerInteractor
+import com.example.playlistmaker.search.domain.models.Track
 import com.example.playlistmaker.util.toFormattedMinutesSeconds
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
@@ -12,7 +14,8 @@ import kotlinx.coroutines.launch
 
 class PlayerViewModel(
     private val playerInteractor: PlayerInteractor,
-    private val url: String
+    private val favoriteTracksInteractor: FavoriteTracksInteractor,
+    private var track: Track
 ) : ViewModel() {
     private val playerStateLiveData = MutableLiveData<PlayerState>(PlayerState.Default())
     fun observePlayerState(): LiveData<PlayerState> = playerStateLiveData
@@ -20,7 +23,7 @@ class PlayerViewModel(
     private var timerJob: Job? = null
 
     init {
-        preparePlayer()
+        checkFavoriteStatusAndPrepare()
     }
 
     override fun onCleared() {
@@ -48,21 +51,33 @@ class PlayerViewModel(
 
     private fun preparePlayer() {
         playerInteractor.preparePlayer(
-            url,
+            track.previewUrl ?: "",
             onPrepared = {
-                playerStateLiveData.postValue(PlayerState.Prepared())
+                playerStateLiveData.postValue(PlayerState.Prepared(track.isFavorite))
             },
             onCompletion = {
                 pauseTimer()
-                playerStateLiveData.postValue(PlayerState.Prepared())
+                playerStateLiveData.postValue(PlayerState.Prepared(track.isFavorite))
             }
         )
+    }
+
+    private fun checkFavoriteStatusAndPrepare() {
+        viewModelScope.launch {
+            val favoriteTracksIds = favoriteTracksInteractor.getFavoriteTracksIds()
+            val isFavorite = track.trackId in favoriteTracksIds
+            track = track.copy(isFavorite = isFavorite)
+            preparePlayer()
+        }
     }
 
     private fun startPlayer() {
         playerInteractor.startPlayer()
         playerStateLiveData.postValue(
-            PlayerState.Playing(getCurrentPlayerPosition())
+            PlayerState.Playing(
+                track.isFavorite,
+                getCurrentPlayerPosition()
+            )
         )
         startTimer()
     }
@@ -71,7 +86,10 @@ class PlayerViewModel(
         playerInteractor.pausePlayer()
         pauseTimer()
         playerStateLiveData.postValue(
-            PlayerState.Paused(getCurrentPlayerPosition())
+            PlayerState.Paused(
+                track.isFavorite,
+                getCurrentPlayerPosition()
+            )
         )
     }
 
@@ -80,7 +98,10 @@ class PlayerViewModel(
             while (playerInteractor.isPlaying()) {
                 delay(DELAY)
                 playerStateLiveData.postValue(
-                    PlayerState.Playing(getCurrentPlayerPosition())
+                    PlayerState.Playing(
+                        track.isFavorite,
+                        getCurrentPlayerPosition()
+                    )
                 )
             }
         }
@@ -92,6 +113,30 @@ class PlayerViewModel(
 
     private fun getCurrentPlayerPosition(): String {
         return playerInteractor.getCurrentPosition().toFormattedMinutesSeconds()
+    }
+
+    fun onFavoriteClicked() {
+        val currentState = playerStateLiveData.value ?: return
+
+        viewModelScope.launch {
+            val newFavoriteStatus = !track.isFavorite
+            track = track.copy(isFavorite = newFavoriteStatus)
+
+            if (newFavoriteStatus) {
+                favoriteTracksInteractor.addTrackToFavorites(track)
+            } else {
+                favoriteTracksInteractor.removeTrackFromFavorites(track.trackId)
+            }
+
+            val newState = when (currentState) {
+                is PlayerState.Prepared -> PlayerState.Prepared(track.isFavorite)
+                is PlayerState.Playing -> PlayerState.Playing(track.isFavorite, currentState.progress)
+                is PlayerState.Paused -> PlayerState.Paused(track.isFavorite, currentState.progress)
+                else -> currentState
+            }
+
+            playerStateLiveData.value = newState
+        }
     }
 
     companion object {

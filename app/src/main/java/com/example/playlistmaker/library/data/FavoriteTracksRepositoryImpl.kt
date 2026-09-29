@@ -1,0 +1,39 @@
+package com.example.playlistmaker.library.data
+
+import com.example.playlistmaker.library.data.converters.TrackDbConverter
+import com.example.playlistmaker.library.data.db.AppDatabase
+import com.example.playlistmaker.library.data.db.entity.TrackEntity
+import com.example.playlistmaker.library.domain.api.FavoriteTracksRepository
+import com.example.playlistmaker.search.domain.models.Track
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.map
+
+class FavoriteTracksRepositoryImpl(
+    private val appDatabase: AppDatabase,
+    private val movieDbConvertor: TrackDbConverter
+) : FavoriteTracksRepository
+{
+    override fun getFavoriteTracks(): Flow<List<Track>> {
+        return appDatabase.trackDao().getTracks().map { tracks ->
+            val reversedTracks = tracks.reversed()
+            convertFromTrackEntity(reversedTracks)
+        }
+    }
+
+    override suspend fun getFavoriteTracksIds(): List<String> {
+        return appDatabase.trackDao().getTracksIds()
+    }
+
+    override suspend fun addTrackToFavorites(track: Track) {
+        val trackEntity = movieDbConvertor.map(track)
+        appDatabase.trackDao().insertTrack(trackEntity)
+    }
+
+    override suspend fun removeTrackFromFavorites(trackId: String) {
+        appDatabase.trackDao().deleteTrackById(trackId)
+    }
+
+    private fun convertFromTrackEntity(tracks: List<TrackEntity>): List<Track> {
+        return tracks.map { movieDbConvertor.map(it) }
+    }
+}

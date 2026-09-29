@@ -19,7 +19,7 @@
         android:id="@+id/library_tablayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginHorizontal="@dimen/library_tablayout_layout_marginHorizontal"
+        android:layout_marginHorizontal="@dimen/library_TabLayout_layout_marginHorizontal"
         app:tabMode="fixed"
         app:tabTextAppearance="@style/LibraryTabLayoutTextAppearance"
         style="@style/LibraryTabLayoutStyle"/>

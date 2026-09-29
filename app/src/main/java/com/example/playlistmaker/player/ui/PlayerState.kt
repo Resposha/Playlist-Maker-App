@@ -6,9 +6,9 @@ sealed class PlayerState(
 ) {
     class Default : PlayerState(false, "00:00")
 
-    class Prepared : PlayerState(true, "00:00")
+    class Prepared(val isFavorite: Boolean) : PlayerState(true, "00:00")
 
-    class Playing(progress: String) : PlayerState(true, progress)
+    class Playing(val isFavorite: Boolean, progress: String) : PlayerState(true, progress)
 
-    class Paused(progress: String) : PlayerState(true, progress)
+    class Paused(val isFavorite: Boolean, progress: String) : PlayerState(true, progress)
 }

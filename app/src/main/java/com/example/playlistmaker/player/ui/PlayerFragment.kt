@@ -23,7 +23,21 @@ class PlayerFragment : Fragment() {
     private val binding get() = _binding!!
 
     private val viewModel: PlayerViewModel by viewModel {
-        parametersOf(arguments?.getParcelableCompat(TRACK, Track::class.java)?.previewUrl ?: "")
+        val track = arguments?.getParcelableCompat(TRACK, Track::class.java)
+        parametersOf(
+            track ?: Track(
+                EMPTY_STRING,
+                EMPTY_STRING,
+                EMPTY_STRING,
+                0L,
+                EMPTY_STRING,
+                null,
+                null,
+                EMPTY_STRING,
+                EMPTY_STRING,
+                null
+            )
+        )
     }
 
     override fun onCreateView(
@@ -53,6 +67,10 @@ class PlayerFragment : Fragment() {
         binding.playerButtonPlayAndPause.setOnClickListener {
             viewModel.onPlayButtonClicked()
         }
+
+        binding.playerButtonAddToFavoriteOrRemove.setOnClickListener {
+            viewModel.onFavoriteClicked()
+        }
     }
 
     override fun onPause() {
@@ -70,28 +88,38 @@ class PlayerFragment : Fragment() {
 
         when (state) {
             is PlayerState.Default -> {
-                binding.playerButtonPlayAndPause.apply {
+                with(binding.playerButtonPlayAndPause) {
                     isEnabled = state.isPlayButtonEnabled
                     setImageResource(R.drawable.button_play)
+                }
+                with(binding.playerButtonAddToFavoriteOrRemove) {
+                    isEnabled = false
+                    setImageResource(R.drawable.button_add_to_favorite)
                 }
             }
             is PlayerState.Prepared -> {
-                binding.playerButtonPlayAndPause.apply {
+                with(binding.playerButtonPlayAndPause) {
                     isEnabled = state.isPlayButtonEnabled
                     setImageResource(R.drawable.button_play)
                 }
+                binding.playerButtonAddToFavoriteOrRemove.isEnabled = true
+                setFavoriteIcon(state.isFavorite)
             }
             is PlayerState.Playing -> {
-                binding.playerButtonPlayAndPause.apply {
+                with(binding.playerButtonPlayAndPause) {
                     isEnabled = state.isPlayButtonEnabled
                     setImageResource(R.drawable.button_pause)
                 }
+                binding.playerButtonAddToFavoriteOrRemove.isEnabled = true
+                setFavoriteIcon(state.isFavorite)
             }
             is PlayerState.Paused -> {
-                binding.playerButtonPlayAndPause.apply {
+                with(binding.playerButtonPlayAndPause) {
                     isEnabled = state.isPlayButtonEnabled
                     setImageResource(R.drawable.button_play)
                 }
+                binding.playerButtonAddToFavoriteOrRemove.isEnabled = true
+                setFavoriteIcon(state.isFavorite)
             }
         }
     }
@@ -113,7 +141,7 @@ class PlayerFragment : Fragment() {
 
         if (track.collectionName != null) {
             binding.playerCollectionName.visibility = View.VISIBLE
-            binding.playerCollectionNameValue.apply {
+            with(binding.playerCollectionNameValue) {
                 visibility = View.VISIBLE
                 text = track.collectionName
             }
@@ -124,7 +152,7 @@ class PlayerFragment : Fragment() {
 
         if (track.releaseDate != null) {
             binding.playerReleaseDate.visibility = View.VISIBLE
-            binding.playerReleaseDateValue.apply {
+            with(binding.playerReleaseDateValue) {
                 visibility = View.VISIBLE
                 text = track.releaseDate.take(4)
 
@@ -135,7 +163,16 @@ class PlayerFragment : Fragment() {
         }
     }
 
+    private fun setFavoriteIcon(isFavorite: Boolean) {
+        if (isFavorite) {
+            binding.playerButtonAddToFavoriteOrRemove.setImageResource(R.drawable.button_added_to_favorite)
+        } else {
+            binding.playerButtonAddToFavoriteOrRemove.setImageResource(R.drawable.button_add_to_favorite)
+        }
+    }
+
     companion object {
         private const val TRACK = "track"
+        private const val EMPTY_STRING = ""
     }
 }
