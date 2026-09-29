@@ -14,9 +14,9 @@ class SearchHistoryRepositoryImpl(
 
     override suspend fun getHistory(): List<Track> = withContext(Dispatchers.IO) {
         val history = storage.getData() ?: emptyList()
-        val favouriteTracksIds = appDatabase.trackDao().getTracksIds()
+        val favoriteTracksIds = appDatabase.trackDao().getTracksIds()
         val historyWithFavoriteTracksMarked = history.map { track ->
-            track.isFavorite = track.trackId in favouriteTracksIds
+            track.isFavorite = track.trackId in favoriteTracksIds
             track
         }
         historyWithFavoriteTracksMarked

@@ -39,9 +39,9 @@ class TrackRepositoryImpl(
                             it.previewUrl
                         )
                     }
-                    val favouriteTracksIds = appDatabase.trackDao().getTracksIds()
+                    val favoriteTracksIds = appDatabase.trackDao().getTracksIds()
                     val dataWithFavoriteTracksMarked = data.map { track ->
-                        track.isFavorite = track.trackId in favouriteTracksIds
+                        track.isFavorite = track.trackId in favoriteTracksIds
                         track
                     }
                     emit(Resource.Success(dataWithFavoriteTracksMarked))

@@ -68,7 +68,7 @@ class PlayerFragment : Fragment() {
             viewModel.onPlayButtonClicked()
         }
 
-        binding.playerButtonAddToFavouriteOrRemove.setOnClickListener {
+        binding.playerButtonAddToFavoriteOrRemove.setOnClickListener {
             viewModel.onFavoriteClicked()
         }
     }
@@ -92,9 +92,9 @@ class PlayerFragment : Fragment() {
                     isEnabled = state.isPlayButtonEnabled
                     setImageResource(R.drawable.button_play)
                 }
-                binding.playerButtonAddToFavouriteOrRemove.apply {
+                binding.playerButtonAddToFavoriteOrRemove.apply {
                     isEnabled = false
-                    setImageResource(R.drawable.button_add_to_favourite)
+                    setImageResource(R.drawable.button_add_to_favorite)
                 }
             }
             is PlayerState.Prepared -> {
@@ -102,24 +102,24 @@ class PlayerFragment : Fragment() {
                     isEnabled = state.isPlayButtonEnabled
                     setImageResource(R.drawable.button_play)
                 }
-                binding.playerButtonAddToFavouriteOrRemove.isEnabled = true
-                setFavoriteIcon(state.track.isFavorite)
+                binding.playerButtonAddToFavoriteOrRemove.isEnabled = true
+                setFavoriteIcon(state.isFavorite)
             }
             is PlayerState.Playing -> {
                 binding.playerButtonPlayAndPause.apply {
                     isEnabled = state.isPlayButtonEnabled
                     setImageResource(R.drawable.button_pause)
                 }
-                binding.playerButtonAddToFavouriteOrRemove.isEnabled = true
-                setFavoriteIcon(state.track.isFavorite)
+                binding.playerButtonAddToFavoriteOrRemove.isEnabled = true
+                setFavoriteIcon(state.isFavorite)
             }
             is PlayerState.Paused -> {
                 binding.playerButtonPlayAndPause.apply {
                     isEnabled = state.isPlayButtonEnabled
                     setImageResource(R.drawable.button_play)
                 }
-                binding.playerButtonAddToFavouriteOrRemove.isEnabled = true
-                setFavoriteIcon(state.track.isFavorite)
+                binding.playerButtonAddToFavoriteOrRemove.isEnabled = true
+                setFavoriteIcon(state.isFavorite)
             }
         }
     }
@@ -165,9 +165,9 @@ class PlayerFragment : Fragment() {
 
     private fun setFavoriteIcon(isFavorite: Boolean) {
         if (isFavorite) {
-            binding.playerButtonAddToFavouriteOrRemove.setImageResource(R.drawable.button_added_to_favourite)
+            binding.playerButtonAddToFavoriteOrRemove.setImageResource(R.drawable.button_added_to_favorite)
         } else {
-            binding.playerButtonAddToFavouriteOrRemove.setImageResource(R.drawable.button_add_to_favourite)
+            binding.playerButtonAddToFavoriteOrRemove.setImageResource(R.drawable.button_add_to_favorite)
         }
     }
 

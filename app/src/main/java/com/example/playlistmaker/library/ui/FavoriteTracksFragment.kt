@@ -10,19 +10,19 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.example.playlistmaker.R
-import com.example.playlistmaker.databinding.FragmentFavouriteTracksBinding
+import com.example.playlistmaker.databinding.FragmentFavoriteTracksBinding
 import com.example.playlistmaker.search.domain.models.Track
 import com.example.playlistmaker.search.ui.TrackAdapter
 import com.example.playlistmaker.util.debounce
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
-class FavouriteTracksFragment : Fragment() {
-    private var _binding: FragmentFavouriteTracksBinding? = null
+class FavoriteTracksFragment : Fragment() {
+    private var _binding: FragmentFavoriteTracksBinding? = null
     private val binding get() = _binding!!
 
-    private val viewModel: FavouriteTracksViewModel by viewModel()
+    private val viewModel: FavoriteTracksViewModel by viewModel()
 
-    private lateinit var favouriteTracksAdapter: TrackAdapter
+    private lateinit var favoriteTracksAdapter: TrackAdapter
     private lateinit var onTrackClickDebounce: (Track) -> Unit
 
     override fun onCreateView(
@@ -30,14 +30,14 @@ class FavouriteTracksFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?,
     ): View {
-        _binding = FragmentFavouriteTracksBinding.inflate(inflater, container, false)
+        _binding = FragmentFavoriteTracksBinding.inflate(inflater, container, false)
         return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        viewModel.observeFavouriteTracksState().observe(viewLifecycleOwner) {
+        viewModel.observeFavoriteTracksState().observe(viewLifecycleOwner) {
             render(it)
         }
 
@@ -49,8 +49,8 @@ class FavouriteTracksFragment : Fragment() {
             openTrackPlayer(track)
         }
 
-        favouriteTracksAdapter = TrackAdapter(emptyList(), onTrackClickDebounce)
-        binding.libraryRecyclerviewFavouriteTracks.adapter = favouriteTracksAdapter
+        favoriteTracksAdapter = TrackAdapter(emptyList(), onTrackClickDebounce)
+        binding.libraryRecyclerviewFavoriteTracks.adapter = favoriteTracksAdapter
     }
 
     override fun onDestroyView() {
@@ -58,22 +58,22 @@ class FavouriteTracksFragment : Fragment() {
         _binding = null
     }
 
-    private fun render(state: FavouriteTracksState) {
+    private fun render(state: FavoriteTracksState) {
         when (state) {
-            is FavouriteTracksState.Empty -> showNoFavouriteTracksMessage()
-            is FavouriteTracksState.Content -> showFavouriteTracks(state.tracks)
+            is FavoriteTracksState.Empty -> showNoFavoriteTracksMessage()
+            is FavoriteTracksState.Content -> showFavoriteTracks(state.tracks)
         }
     }
 
-    private fun showNoFavouriteTracksMessage() {
-        binding.libraryRecyclerviewFavouriteTracks.isVisible = false
+    private fun showNoFavoriteTracksMessage() {
+        binding.libraryRecyclerviewFavoriteTracks.isVisible = false
         binding.libraryEmptyLibrary.isVisible = true
     }
 
-    private fun showFavouriteTracks(tracks: List<Track>) {
+    private fun showFavoriteTracks(tracks: List<Track>) {
         binding.libraryEmptyLibrary.isVisible = false
-        binding.libraryRecyclerviewFavouriteTracks.isVisible = true
-        favouriteTracksAdapter.updateTracks(tracks)
+        binding.libraryRecyclerviewFavoriteTracks.isVisible = true
+        favoriteTracksAdapter.updateTracks(tracks)
     }
 
     private fun openTrackPlayer(track: Track) {

@@ -7,10 +7,10 @@
     style="@style/LibraryFragmentStyle">
 
     <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/library_recyclerview_favourite_tracks"
+        android:id="@+id/library_recyclerview_favorite_tracks"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/library_RecyclerView_favourite_tracks_layout_marginTop"
+        android:layout_marginTop="@dimen/library_RecyclerView_favorite_tracks_layout_marginTop"
         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"/>
 
     <LinearLayout

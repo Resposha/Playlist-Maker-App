@@ -3,24 +3,24 @@ package com.example.playlistmaker.library.data
 import com.example.playlistmaker.library.data.converters.TrackDbConverter
 import com.example.playlistmaker.library.data.db.AppDatabase
 import com.example.playlistmaker.library.data.db.entity.TrackEntity
-import com.example.playlistmaker.library.domain.api.FavouriteTracksRepository
+import com.example.playlistmaker.library.domain.api.FavoriteTracksRepository
 import com.example.playlistmaker.search.domain.models.Track
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 
-class FavouriteTracksRepositoryImpl(
+class FavoriteTracksRepositoryImpl(
     private val appDatabase: AppDatabase,
     private val movieDbConvertor: TrackDbConverter
-) : FavouriteTracksRepository
+) : FavoriteTracksRepository
 {
-    override fun getFavouriteTracks(): Flow<List<Track>> {
+    override fun getFavoriteTracks(): Flow<List<Track>> {
         return appDatabase.trackDao().getTracks().map { tracks ->
             val reversedTracks = tracks.reversed()
             convertFromTrackEntity(reversedTracks)
         }
     }
 
-    override suspend fun getFavouriteTracksIds(): List<String> {
+    override suspend fun getFavoriteTracksIds(): List<String> {
         return appDatabase.trackDao().getTracksIds()
     }
 

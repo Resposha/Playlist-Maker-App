@@ -54,5 +54,5 @@
     <dimen name="library_empty_library_image_layout_marginTop">106dp</dimen>
     <dimen name="library_no_playlists_image_layout_marginTop">46dp</dimen>
     <dimen name="library_empty_library_and_no_playlists_images_layout_marginBottom">16dp</dimen>
-    <dimen name="library_RecyclerView_favourite_tracks_layout_marginTop">16dp</dimen>
+    <dimen name="library_RecyclerView_favorite_tracks_layout_marginTop">16dp</dimen>
 </resources>
