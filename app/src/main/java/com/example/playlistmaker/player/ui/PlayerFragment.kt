@@ -88,17 +88,17 @@ class PlayerFragment : Fragment() {
 
         when (state) {
             is PlayerState.Default -> {
-                binding.playerButtonPlayAndPause.apply {
+                with(binding.playerButtonPlayAndPause) {
                     isEnabled = state.isPlayButtonEnabled
                     setImageResource(R.drawable.button_play)
                 }
-                binding.playerButtonAddToFavoriteOrRemove.apply {
+                with(binding.playerButtonAddToFavoriteOrRemove) {
                     isEnabled = false
                     setImageResource(R.drawable.button_add_to_favorite)
                 }
             }
             is PlayerState.Prepared -> {
-                binding.playerButtonPlayAndPause.apply {
+                with(binding.playerButtonPlayAndPause) {
                     isEnabled = state.isPlayButtonEnabled
                     setImageResource(R.drawable.button_play)
                 }
@@ -106,7 +106,7 @@ class PlayerFragment : Fragment() {
                 setFavoriteIcon(state.isFavorite)
             }
             is PlayerState.Playing -> {
-                binding.playerButtonPlayAndPause.apply {
+                with(binding.playerButtonPlayAndPause) {
                     isEnabled = state.isPlayButtonEnabled
                     setImageResource(R.drawable.button_pause)
                 }
@@ -114,7 +114,7 @@ class PlayerFragment : Fragment() {
                 setFavoriteIcon(state.isFavorite)
             }
             is PlayerState.Paused -> {
-                binding.playerButtonPlayAndPause.apply {
+                with(binding.playerButtonPlayAndPause) {
                     isEnabled = state.isPlayButtonEnabled
                     setImageResource(R.drawable.button_play)
                 }
@@ -141,7 +141,7 @@ class PlayerFragment : Fragment() {
 
         if (track.collectionName != null) {
             binding.playerCollectionName.visibility = View.VISIBLE
-            binding.playerCollectionNameValue.apply {
+            with(binding.playerCollectionNameValue) {
                 visibility = View.VISIBLE
                 text = track.collectionName
             }
@@ -152,7 +152,7 @@ class PlayerFragment : Fragment() {
 
         if (track.releaseDate != null) {
             binding.playerReleaseDate.visibility = View.VISIBLE
-            binding.playerReleaseDateValue.apply {
+            with(binding.playerReleaseDateValue) {
                 visibility = View.VISIBLE
                 text = track.releaseDate.take(4)
 
