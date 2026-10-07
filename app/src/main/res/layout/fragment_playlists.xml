@@ -5,35 +5,46 @@
     android:orientation="vertical"
     style="@style/LibraryFragmentStyle">
 
-    <LinearLayout
-        android:id="@+id/library_no_playlists"
-        android:layout_width="match_parent"
+    <Button
+        android:id="@+id/library_button_new_playlist"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:visibility="visible">
+        android:layout_marginTop="@dimen/library_button_new_playlist_layout_marginTop"
+        android:layout_gravity="center"
+        android:text="@string/new_playlist"
+        style="@style/SearchReloadClearHistoryAndNewPlaylistButtonsStyle"/>
 
-        <Button
-            android:id="@+id/library_button_new_playlist"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/library_button_new_playlist_layout_marginTop"
-            android:layout_gravity="center"
-            android:text="@string/new_playlist"
-            style="@style/SearchReloadClearHistoryAndNewPlaylistButtonsStyle"/>
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
 
-        <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/library_no_playlists_image_layout_marginTop"
-            android:layout_marginBottom="@dimen/library_empty_library_and_no_playlists_images_layout_marginBottom"
-            android:layout_gravity="center"
-            android:src="@drawable/placeholder_no_results"/>
-
-        <TextView
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/library_recyclerview_playlists"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:gravity="center"
-            android:text="@string/no_playlists"
-            style="@style/PlaceholderTextViewStyle"/>
-    </LinearLayout>
+            android:layout_marginTop="@dimen/library_RecyclerView_playlists_layout_marginTop"/>
+
+        <LinearLayout
+            android:id="@+id/library_no_playlists"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:visibility="gone">
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/library_no_playlists_image_layout_marginTop"
+                android:layout_marginBottom="@dimen/library_empty_library_and_no_playlists_images_layout_marginBottom"
+                android:layout_gravity="center"
+                android:src="@drawable/placeholder_no_results"/>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:text="@string/no_playlists"
+                style="@style/PlaceholderTextViewStyle"/>
+        </LinearLayout>
+    </FrameLayout>
 </LinearLayout>

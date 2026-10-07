@@ -64,8 +64,8 @@ class PlayerViewModel(
 
     private fun checkFavoriteStatusAndPrepare() {
         viewModelScope.launch {
-            val favoriteTracksIds = favoriteTracksInteractor.getFavoriteTracksIds()
-            val isFavorite = track.trackId in favoriteTracksIds
+            val favoriteTrackIds = favoriteTracksInteractor.getFavoriteTrackIds()
+            val isFavorite = track.trackId in favoriteTrackIds
             track = track.copy(isFavorite = isFavorite)
             preparePlayer()
         }

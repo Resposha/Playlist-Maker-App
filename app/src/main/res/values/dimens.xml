@@ -55,4 +55,20 @@
     <dimen name="library_no_playlists_image_layout_marginTop">46dp</dimen>
     <dimen name="library_empty_library_and_no_playlists_images_layout_marginBottom">16dp</dimen>
     <dimen name="library_RecyclerView_favorite_tracks_layout_marginTop">16dp</dimen>
+    <dimen name="library_RecyclerView_playlists_layout_marginTop">16dp</dimen>
+    <dimen name="new_playlist_art_container_layout_width_and_height">312dp</dimen>
+    <dimen name="new_playlist_art_container_layout_marginHorizontal">24dp</dimen>
+    <dimen name="new_playlist_art_container_layout_marginTop">26dp</dimen>
+    <dimen name="new_playlist_hintTextAppearance_textSize">12sp</dimen>
+    <dimen name="new_playlist_TextInputEditText_textSize">16sp</dimen>
+    <dimen name="new_playlist_TextInputEditText_paddingHorizontal">16dp</dimen>
+    <dimen name="new_playlist_TextInputEditText_paddingVertical">18dp</dimen>
+    <dimen name="new_playlist_TextInputLayout_marginHorizontal">16dp</dimen>
+    <dimen name="new_playlist_name_TextInputLayout_marginTop">32dp</dimen>
+    <dimen name="new_playlist_description_TextInputLayout_layout_marginTop">16dp</dimen>
+    <dimen name="new_playlist_button_create_textSize">16sp</dimen>
+    <dimen name="new_playlist_button_create_cornerRadius">8dp</dimen>
+    <dimen name="new_playlist_button_create_paddingVertical">12.5dp</dimen>
+    <dimen name="new_playlist_button_create_layout_marginHorizontal">17dp</dimen>
+    <dimen name="new_playlist_button_create_layout_marginBottom">32dp</dimen>
 </resources>

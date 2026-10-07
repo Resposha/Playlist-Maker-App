@@ -13,8 +13,8 @@ class FavoriteTracksInteractorImpl(
         return favoriteTracksRepository.getFavoriteTracks()
     }
 
-    override suspend fun getFavoriteTracksIds(): List<String> {
-        return favoriteTracksRepository.getFavoriteTracksIds()
+    override suspend fun getFavoriteTrackIds(): List<String> {
+        return favoriteTracksRepository.getFavoriteTrackIds()
     }
 
     override suspend fun addTrackToFavorites(track: Track) {

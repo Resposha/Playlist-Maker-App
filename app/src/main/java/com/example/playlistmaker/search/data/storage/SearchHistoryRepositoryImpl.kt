@@ -1,6 +1,6 @@
 package com.example.playlistmaker.search.data.storage
 
-import com.example.playlistmaker.library.data.db.AppDatabase
+import com.example.playlistmaker.library.data.db.TrackDatabase
 import com.example.playlistmaker.search.data.StorageClient
 import com.example.playlistmaker.search.domain.models.Track
 import com.example.playlistmaker.search.domain.api.SearchHistoryRepository
@@ -9,14 +9,14 @@ import kotlinx.coroutines.withContext
 
 class SearchHistoryRepositoryImpl(
     private val storage: StorageClient<List<Track>>,
-    private val appDatabase: AppDatabase
+    private val trackDatabase: TrackDatabase
 ) : SearchHistoryRepository {
 
     override suspend fun getHistory(): List<Track> = withContext(Dispatchers.IO) {
         val history = storage.getData() ?: emptyList()
-        val favoriteTracksIds = appDatabase.trackDao().getTracksIds()
+        val favoriteTrackIds = trackDatabase.trackDao().getTrackIds()
         val historyWithFavoriteTracksMarked = history.map { track ->
-            track.isFavorite = track.trackId in favoriteTracksIds
+            track.isFavorite = track.trackId in favoriteTrackIds
             track
         }
         historyWithFavoriteTracksMarked

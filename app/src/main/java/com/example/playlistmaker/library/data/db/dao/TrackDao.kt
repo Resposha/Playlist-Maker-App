@@ -16,7 +16,7 @@ interface TrackDao {
     suspend fun deleteTrackById(trackId: String)
 
     @Query("SELECT track_id FROM track_table")
-    suspend fun getTracksIds(): List<String>
+    suspend fun getTrackIds(): List<String>
 
     @Query("SELECT * FROM track_table")
     fun getTracks(): Flow<List<TrackEntity>>

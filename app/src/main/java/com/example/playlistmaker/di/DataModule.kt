@@ -4,7 +4,8 @@ import android.content.Context
 import android.content.SharedPreferences
 import android.media.MediaPlayer
 import androidx.room.Room
-import com.example.playlistmaker.library.data.db.AppDatabase
+import com.example.playlistmaker.library.data.db.PlaylistDatabase
+import com.example.playlistmaker.library.data.db.TrackDatabase
 import com.example.playlistmaker.search.data.NetworkClient
 import com.example.playlistmaker.search.data.StorageClient
 import com.example.playlistmaker.search.data.network.RetrofitNetworkClient
@@ -20,7 +21,6 @@ import org.koin.core.qualifier.named
 import org.koin.dsl.module
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
-
 
 private const val ITUNES = "https://itunes.apple.com"
 private const val SEARCH_HISTORY_PREFS = "search_history_prefs"
@@ -89,8 +89,17 @@ val dataModule = module {
     single {
         Room.databaseBuilder(
             androidContext(),
-            AppDatabase::class.java,
-            "database.db"
+            TrackDatabase::class.java,
+            "track_database.db"
+        )
+            .build()
+    }
+
+    single {
+        Room.databaseBuilder(
+            androidContext(),
+            PlaylistDatabase::class.java,
+            "playlist_database.db"
         )
             .build()
     }
