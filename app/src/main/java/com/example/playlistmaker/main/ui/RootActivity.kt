@@ -1,11 +1,11 @@
 package com.example.playlistmaker.main.ui
 
 import android.os.Bundle
-import android.view.View
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import androidx.core.view.isVisible
 import androidx.core.view.updatePadding
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.setupWithNavController
@@ -34,10 +34,10 @@ class RootActivity : AppCompatActivity() {
         navController.addOnDestinationChangedListener { _, destination, _ ->
             when (destination.id) {
                 R.id.playerFragment, R.id.newPlaylistFragment -> {
-                    binding.rootFragmentBottomNavigationView.visibility = View.GONE
+                    binding.rootFragmentBottomNavigationView.isVisible = false
                 }
                 else -> {
-                    binding.rootFragmentBottomNavigationView.visibility = View.VISIBLE
+                    binding.rootFragmentBottomNavigationView.isVisible = true
                 }
             }
         }

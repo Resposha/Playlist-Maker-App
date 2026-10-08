@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginHorizontal="@dimen/library_playlist_item_big_layout_marginHorizontal"
+    android:layout_marginVertical="@dimen/library_playlist_item_big_layout_marginVertical">
+
+    <ImageView
+        android:id="@+id/playlist_art"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintDimensionRatio="1:1"
+        android:scaleType="centerCrop"
+        tools:src="@drawable/placeholder_album_and_playlist_art"/>
+
+    <TextView
+        android:id="@+id/playlist_name"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/library_playlist_item_big_name_layout_marginTop"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/playlist_art"
+        android:maxLines="1"
+        android:ellipsize="end"
+        style="@style/LibraryBigPlaylistItemNameAndNumberOfTracksStyle"
+        tools:text="Summer Party"/>
+
+    <TextView
+        android:id="@+id/number_of_tracks"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/playlist_name"
+        style="@style/LibraryBigPlaylistItemNameAndNumberOfTracksStyle"
+        tools:text="157 треков"/>
+</androidx.constraintlayout.widget.ConstraintLayout>

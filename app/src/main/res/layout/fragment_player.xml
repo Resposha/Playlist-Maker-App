@@ -61,7 +61,7 @@
             app:layout_constraintStart_toStartOf="@id/left_border"
             app:layout_constraintEnd_toEndOf="@id/right_border"
             app:layout_constraintTop_toBottomOf="@id/player_toolbar"
-            tools:src="@drawable/placeholder_album_art_player"/>
+            tools:src="@drawable/placeholder_album_and_playlist_art"/>
 
         <!-- Track name -->
         <TextView

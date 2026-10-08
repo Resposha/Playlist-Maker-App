@@ -97,7 +97,6 @@
         android:layout_height="wrap_content"
         android:layout_marginHorizontal="@dimen/new_playlist_button_create_layout_marginHorizontal"
         android:layout_marginBottom="@dimen/new_playlist_button_create_layout_marginBottom"
-        android:paddingVertical="@dimen/new_playlist_button_create_paddingVertical"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"

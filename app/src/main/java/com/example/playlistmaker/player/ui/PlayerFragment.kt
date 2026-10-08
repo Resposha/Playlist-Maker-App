@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import com.bumptech.glide.Glide
@@ -127,7 +128,7 @@ class PlayerFragment : Fragment() {
     private fun setTrackDetails(track: Track) {
         Glide.with(requireContext())
             .load(track.getCoverArtworkUrl512())
-            .placeholder(R.drawable.placeholder_album_art_player)
+            .placeholder(R.drawable.placeholder_album_and_playlist_art)
             .centerCrop()
             .transform(RoundedCorners(requireContext().dpToPx(8f)))
             .into(binding.playerAlbumArt)
@@ -140,26 +141,26 @@ class PlayerFragment : Fragment() {
         binding.playerCountryValue.text = track.country
 
         if (track.collectionName != null) {
-            binding.playerCollectionName.visibility = View.VISIBLE
+            binding.playerCollectionName.isVisible = true
             with(binding.playerCollectionNameValue) {
-                visibility = View.VISIBLE
+                isVisible = true
                 text = track.collectionName
             }
         } else {
-            binding.playerCollectionName.visibility = View.GONE
-            binding.playerCollectionNameValue.visibility = View.GONE
+            binding.playerCollectionName.isVisible = false
+            binding.playerCollectionNameValue.isVisible = false
         }
 
         if (track.releaseDate != null) {
-            binding.playerReleaseDate.visibility = View.VISIBLE
+            binding.playerReleaseDate.isVisible = true
             with(binding.playerReleaseDateValue) {
-                visibility = View.VISIBLE
+                isVisible = true
                 text = track.releaseDate.take(4)
 
             }
         } else {
-            binding.playerReleaseDate.visibility = View.GONE
-            binding.playerReleaseDateValue.visibility = View.GONE
+            binding.playerReleaseDate.isVisible = false
+            binding.playerReleaseDateValue.isVisible = false
         }
     }
 

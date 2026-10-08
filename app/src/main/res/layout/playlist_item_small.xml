@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:paddingHorizontal="@dimen/library_playlist_item_small_paddingHorizontal"
+    android:paddingVertical="@dimen/library_playlist_item_small_paddingVertical">
+
+    <ImageView
+        android:id="@+id/playlist_art"
+        android:layout_width="@dimen/library_playlist_item_small_art_layout_width_and_height"
+        android:layout_height="@dimen/library_playlist_item_small_art_layout_width_and_height"
+        android:layout_gravity="center_vertical"
+        android:scaleType="centerCrop"
+        tools:src="@drawable/placeholder_album_and_playlist_art"/>
+
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:paddingHorizontal="@dimen/library_playlist_item_small_info_paddingHorizontal"
+        android:layout_gravity="center_vertical"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/playlist_name"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:maxLines="1"
+            android:ellipsize="end"
+            style="@style/LibrarySmallPlaylistItemNameStyle"
+            tools:text="Summer Party"/>
+
+        <TextView
+            android:id="@+id/number_of_tracks"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            style="@style/LibrarySmallPlaylistItemNumberOfTracksStyle"
+            tools:text="157 треков"/>
+    </LinearLayout>
+</LinearLayout>

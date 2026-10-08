@@ -2,13 +2,13 @@ package com.example.playlistmaker.library.data
 
 import com.example.playlistmaker.library.data.converters.PlaylistDbConverter
 import com.example.playlistmaker.library.data.db.PlaylistDatabase
-import com.example.playlistmaker.library.domain.api.NewPlaylistRepository
+import com.example.playlistmaker.library.domain.api.PlaylistRepository
 import com.example.playlistmaker.library.domain.models.Playlist
 
-class NewPlaylistRepositoryImpl(
+class PlaylistRepositoryImpl(
     private val playlistDatabase: PlaylistDatabase,
     private val playlistDbConverter: PlaylistDbConverter
-) : NewPlaylistRepository {
+) : PlaylistRepository {
 
     override suspend fun createPlaylist(playlist: Playlist) {
         val playlistEntity = playlistDbConverter.map(playlist)

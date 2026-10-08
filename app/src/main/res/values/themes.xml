@@ -153,4 +153,22 @@
         <item name="backgroundTint">@null</item>
         <item name="cornerRadius">@dimen/new_playlist_button_create_cornerRadius</item>
     </style>
+    <style name="LibrarySmallPlaylistItemNameStyle">
+        <item name="android:textColor">@color/black</item>
+        <item name="android:textSize">@dimen/library_playlist_item_small_name_textSize</item>
+        <item name="android:fontFamily">@font/ys_display_regular</item>
+        <item name="android:textFontWeight">400</item>
+    </style>
+    <style name="LibrarySmallPlaylistItemNumberOfTracksStyle">
+        <item name="android:textColor">@color/text_gray</item>
+        <item name="android:textSize">@dimen/library_playlist_item_small_number_of_tracks_textSize</item>
+        <item name="android:fontFamily">@font/ys_display_regular</item>
+        <item name="android:textFontWeight">400</item>
+    </style>
+    <style name="LibraryBigPlaylistItemNameAndNumberOfTracksStyle">
+        <item name="android:textColor">@color/black</item>
+        <item name="android:textSize">@dimen/library_playlist_item_big_name_and_number_of_tracks_textSize</item>
+        <item name="android:fontFamily">@font/ys_display_regular</item>
+        <item name="android:textFontWeight">400</item>
+    </style>
 </resources>

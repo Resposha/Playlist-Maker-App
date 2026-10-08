@@ -12,12 +12,13 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.core.view.isVisible
 import androidx.core.widget.doOnTextChanged
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import com.bumptech.glide.Glide
-import com.bumptech.glide.load.resource.bitmap.CenterCrop
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
+import com.example.playlistmaker.R
 import com.example.playlistmaker.databinding.FragmentNewPlaylistBinding
 import com.example.playlistmaker.util.dpToPx
 import org.koin.androidx.viewmodel.ext.android.viewModel
@@ -59,11 +60,13 @@ class NewPlaylistFragment : Fragment() {
                 if (uri != null) {
                     artUri = uri
 
-                    binding.newPlaylistArtPlaceholder.visibility = View.GONE
+                    binding.newPlaylistArtPlaceholder.isVisible = false
 
                     Glide.with(this)
                         .load(uri)
-                        .transform(CenterCrop(), RoundedCorners(requireContext().dpToPx(8f)))
+                        .placeholder(R.drawable.placeholder_album_and_playlist_art)
+                        .centerCrop()
+                        .transform(RoundedCorners(requireContext().dpToPx(8f)))
                         .into(binding.newPlaylistArt)
                 } else {
                     Log.d("PhotoPicker", "Ничего не выбрано")
