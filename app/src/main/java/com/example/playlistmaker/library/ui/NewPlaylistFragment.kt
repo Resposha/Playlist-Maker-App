@@ -10,6 +10,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.activity.OnBackPressedCallback
 import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.view.isVisible
@@ -21,6 +22,7 @@ import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.example.playlistmaker.R
 import com.example.playlistmaker.databinding.FragmentNewPlaylistBinding
 import com.example.playlistmaker.util.dpToPx
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import java.io.File
 import java.io.FileOutputStream
@@ -29,9 +31,11 @@ class NewPlaylistFragment : Fragment() {
     private var _binding: FragmentNewPlaylistBinding? = null
     private val binding get() = _binding!!
 
+    private val viewModel: NewPlaylistViewModel by viewModel()
+
     private var artUri: Uri? = null
 
-    private val viewModel: NewPlaylistViewModel by viewModel()
+    private lateinit var confirmDialog: MaterialAlertDialogBuilder
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -54,6 +58,15 @@ class NewPlaylistFragment : Fragment() {
 
             findNavController().popBackStack()
         }
+
+        confirmDialog = MaterialAlertDialogBuilder(requireContext())
+            .setTitle(R.string.new_playlist_dialog_title)
+            .setMessage(R.string.new_playlist_dialog_message)
+            .setNeutralButton(R.string.new_playlist_dialog_neutral_button) { _, _ ->
+                // empty
+            }.setPositiveButton(R.string.new_playlist_dialog_positive_button) { _, _ ->
+                findNavController().popBackStack()
+            }
 
         val pickMedia =
             registerForActivityResult(ActivityResultContracts.PickVisualMedia()) { uri ->
@@ -93,11 +106,29 @@ class NewPlaylistFragment : Fragment() {
 
             viewModel.createPlaylist(name, description, artPath)
         }
+
+        requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner, object: OnBackPressedCallback(true) {
+            override fun handleOnBackPressed() {
+                if (hasUnsavedChanges()) {
+                    confirmDialog.show()
+                } else {
+                    findNavController().popBackStack()
+                }
+            }
+        })
     }
 
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
+    }
+
+    private fun hasUnsavedChanges(): Boolean {
+        val isArtSelected = artUri != null
+        val isNameFilled = !binding.newPlaylistNameEditText.text.isNullOrBlank()
+        val isDescriptionFilled = !binding.newPlaylistDescriptionEditText.text.isNullOrBlank()
+
+        return isArtSelected || isNameFilled || isDescriptionFilled
     }
 
     private fun saveImageToPrivateStorage(uri: Uri): String {
