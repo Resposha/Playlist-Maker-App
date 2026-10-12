@@ -5,7 +5,7 @@ import android.content.SharedPreferences
 import android.media.MediaPlayer
 import androidx.room.Room
 import com.example.playlistmaker.library.data.db.PlaylistDatabase
-import com.example.playlistmaker.library.data.db.TrackDatabase
+import com.example.playlistmaker.library.data.db.FavoriteTrackDatabase
 import com.example.playlistmaker.search.data.NetworkClient
 import com.example.playlistmaker.search.data.StorageClient
 import com.example.playlistmaker.search.data.network.RetrofitNetworkClient
@@ -89,7 +89,7 @@ val dataModule = module {
     single {
         Room.databaseBuilder(
             androidContext(),
-            TrackDatabase::class.java,
+            FavoriteTrackDatabase::class.java,
             "track_database.db"
         )
             .build()

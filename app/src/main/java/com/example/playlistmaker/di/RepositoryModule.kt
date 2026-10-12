@@ -1,10 +1,10 @@
 package com.example.playlistmaker.di
 
 import com.example.playlistmaker.library.data.converters.TrackDbConverter
-import com.example.playlistmaker.library.data.FavoriteTracksRepositoryImpl
+import com.example.playlistmaker.library.data.FavoriteTrackRepositoryImpl
 import com.example.playlistmaker.library.data.PlaylistRepositoryImpl
 import com.example.playlistmaker.library.data.converters.PlaylistDbConverter
-import com.example.playlistmaker.library.domain.api.FavoriteTracksRepository
+import com.example.playlistmaker.library.domain.api.FavoriteTrackRepository
 import com.example.playlistmaker.library.domain.api.PlaylistRepository
 import com.example.playlistmaker.player.data.PlayerRepositoryImpl
 import com.example.playlistmaker.player.domain.api.PlayerRepository
@@ -43,14 +43,14 @@ val repositoryModule = module {
 
     factory { TrackDbConverter() }
 
-    single<FavoriteTracksRepository> {
-        FavoriteTracksRepositoryImpl(get(), get())
+    single<FavoriteTrackRepository> {
+        FavoriteTrackRepositoryImpl(get(), get())
     }
 
     factory { PlaylistDbConverter() }
 
     single<PlaylistRepository> {
-        PlaylistRepositoryImpl(get(), get())
+        PlaylistRepositoryImpl(get(), get(), get())
     }
 
 }

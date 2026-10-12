@@ -13,7 +13,7 @@
         android:layout_marginTop="@dimen/library_button_new_playlist_layout_marginTop"
         android:layout_gravity="center"
         android:text="@string/new_playlist"
-        style="@style/SearchReloadClearHistoryAndNewPlaylistButtonsStyle"/>
+        style="@style/ReloadClearHistoryAndNewPlaylistButtonStyle"/>
 
     <FrameLayout
         android:layout_width="match_parent"
@@ -48,7 +48,7 @@
                 android:layout_height="wrap_content"
                 android:gravity="center"
                 android:text="@string/no_playlists"
-                style="@style/PlaceholderTextViewStyle"/>
+                style="@style/SearchHistoryAndPlaylistsTextViewStyle"/>
         </LinearLayout>
     </FrameLayout>
 </LinearLayout>

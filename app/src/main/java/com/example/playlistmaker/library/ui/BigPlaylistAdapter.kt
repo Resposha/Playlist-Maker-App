@@ -27,8 +27,8 @@ class BigPlaylistAdapter(
         return playlists.size
     }
 
-    fun updatePlaylists(changedPlaylists: List<Playlist>) {
-        playlists = changedPlaylists
+    fun updatePlaylists(updatedPlaylists: List<Playlist>) {
+        playlists = updatedPlaylists
         notifyDataSetChanged()
     }
 }

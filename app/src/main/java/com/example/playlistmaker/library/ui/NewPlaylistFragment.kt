@@ -18,6 +18,7 @@ import androidx.core.widget.doOnTextChanged
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import com.bumptech.glide.Glide
+import com.bumptech.glide.load.resource.bitmap.CenterCrop
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.example.playlistmaker.R
 import com.example.playlistmaker.databinding.FragmentNewPlaylistBinding
@@ -78,13 +79,19 @@ class NewPlaylistFragment : Fragment() {
                     Glide.with(this)
                         .load(uri)
                         .placeholder(R.drawable.placeholder_album_and_playlist_art)
-                        .centerCrop()
-                        .transform(RoundedCorners(requireContext().dpToPx(8f)))
+                        .transform(
+                            CenterCrop(),
+                            RoundedCorners(requireContext().dpToPx(8f))
+                        )
                         .into(binding.newPlaylistArt)
                 } else {
                     Log.d("PhotoPicker", "Ничего не выбрано")
                 }
             }
+
+        binding.newPlaylistToolbar.setNavigationOnClickListener {
+            findNavController().popBackStack()
+        }
 
         binding.newPlaylistArt.setOnClickListener {
             pickMedia.launch(PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly))

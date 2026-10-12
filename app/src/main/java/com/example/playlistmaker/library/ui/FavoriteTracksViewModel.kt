@@ -4,11 +4,11 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.playlistmaker.library.domain.api.FavoriteTracksInteractor
+import com.example.playlistmaker.library.domain.api.FavoriteTrackInteractor
 import kotlinx.coroutines.launch
 
 class FavoriteTracksViewModel(
-    private val favoriteTracksInteractor: FavoriteTracksInteractor
+    private val favoriteTrackInteractor: FavoriteTrackInteractor
 ) : ViewModel() {
     private val favoriteTracksLiveData = MutableLiveData<FavoriteTracksState>()
     fun observeFavoriteTracksState(): LiveData<FavoriteTracksState> = favoriteTracksLiveData
@@ -19,7 +19,7 @@ class FavoriteTracksViewModel(
 
     private fun getFavoriteTracks() {
         viewModelScope.launch {
-            favoriteTracksInteractor
+            favoriteTrackInteractor
                 .getFavoriteTracks()
                 .collect { tracks ->
                     if (tracks.isEmpty()) {

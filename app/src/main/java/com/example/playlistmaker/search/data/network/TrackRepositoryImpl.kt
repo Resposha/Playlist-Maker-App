@@ -1,7 +1,7 @@
 package com.example.playlistmaker.search.data.network
 
 import android.util.Log
-import com.example.playlistmaker.library.data.db.TrackDatabase
+import com.example.playlistmaker.library.data.db.FavoriteTrackDatabase
 import com.example.playlistmaker.search.domain.models.Track
 import com.example.playlistmaker.search.data.NetworkClient
 import com.example.playlistmaker.search.data.dto.TrackSearchRequest
@@ -13,7 +13,7 @@ import kotlinx.coroutines.flow.flow
 
 class TrackRepositoryImpl(
     private val networkClient: NetworkClient,
-    private val trackDatabase: TrackDatabase
+    private val favoriteTrackDatabase: FavoriteTrackDatabase
 ) : TrackRepository {
 
     override fun searchTracks(expression: String): Flow<Resource<List<Track>>> = flow {
@@ -39,7 +39,7 @@ class TrackRepositoryImpl(
                             it.previewUrl
                         )
                     }
-                    val favoriteTrackIds = trackDatabase.trackDao().getTrackIds()
+                    val favoriteTrackIds = favoriteTrackDatabase.favoriteTrackDao().getTrackIds()
                     val dataWithFavoriteTracksMarked = data.map { track ->
                         track.isFavorite = track.trackId in favoriteTrackIds
                         track

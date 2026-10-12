@@ -22,6 +22,7 @@
     <string name="release_date">Год</string>
     <string name="primary_genre_name">Жанр</string>
     <string name="country">Страна</string>
+    <string name="add_to_playlist">Добавить в плейлист</string>
     <string name="favorite_tracks">Избранные треки</string>
     <string name="playlists">Плейлисты</string>
     <string name="empty_library">Ваша медиатека пуста</string>
