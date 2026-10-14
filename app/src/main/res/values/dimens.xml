@@ -50,7 +50,10 @@
     <dimen name="player_artist_name_textSize">14sp</dimen>
     <dimen name="player_playback_progress_textSize">14sp</dimen>
     <dimen name="player_track_details_textSize">13sp</dimen>
-    <dimen name="player_bottom_sheet_TextView_layout_marginTop">24dp</dimen>
+    <dimen name="player_bottom_sheet_drag_handle_layout_width">50dp</dimen>
+    <dimen name="player_bottom_sheet_drag_handle_layout_height">4dp</dimen>
+    <dimen name="player_bottom_sheet_drag_handle_layout_marginTop">8dp</dimen>
+    <dimen name="player_bottom_sheet_TextView_layout_marginTop">12dp</dimen>
     <dimen name="player_bottom_sheet_TextView_paddingTop">18dp</dimen>
     <dimen name="player_bottom_sheet_TextView_paddingBottom">12dp</dimen>
     <dimen name="player_bottom_sheet_button_new_playlist_layout_marginTop">16dp</dimen>
