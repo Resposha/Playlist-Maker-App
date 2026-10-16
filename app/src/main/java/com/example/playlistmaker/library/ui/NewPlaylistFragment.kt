@@ -50,10 +50,11 @@ class NewPlaylistFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        viewModel.observePlaylistCreated().observe(viewLifecycleOwner) {
+        viewModel.observePlaylistCreated().observe(viewLifecycleOwner) { name ->
+            val message = getString(R.string.playlist_created, name)
             Toast.makeText(
                 requireContext(),
-                it,
+                message,
                 Toast.LENGTH_LONG
             ).show()
 

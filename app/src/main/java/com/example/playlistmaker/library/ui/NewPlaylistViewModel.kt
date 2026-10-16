@@ -29,7 +29,7 @@ class NewPlaylistViewModel(
                         artPath = artPath
                     )
                 )
-            playlistCreatedLiveData.postValue("Плейлист $name создан")
+            playlistCreatedLiveData.postValue(name)
         }
     }
 }

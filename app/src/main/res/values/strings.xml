@@ -35,6 +35,7 @@
     <string name="new_playlist_dialog_message">Все несохраненные данные будут потеряны</string>
     <string name="new_playlist_dialog_neutral_button">Отмена</string>
     <string name="new_playlist_dialog_positive_button">Завершить</string>
+    <string name="playlist_created">Плейлист %1$s создан</string>
     <plurals name="tracks_count">
         <item quantity="one">%d трек</item>
         <item quantity="few">%d трека</item>
