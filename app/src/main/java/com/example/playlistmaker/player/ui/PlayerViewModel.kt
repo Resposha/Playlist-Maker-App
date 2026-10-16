@@ -4,9 +4,12 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.playlistmaker.library.domain.api.FavoriteTracksInteractor
+import com.example.playlistmaker.library.domain.api.FavoriteTrackInteractor
+import com.example.playlistmaker.library.domain.api.PlaylistInteractor
+import com.example.playlistmaker.library.domain.models.Playlist
 import com.example.playlistmaker.player.domain.api.PlayerInteractor
 import com.example.playlistmaker.search.domain.models.Track
+import com.example.playlistmaker.util.SingleLiveEvent
 import com.example.playlistmaker.util.toFormattedMinutesSeconds
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
@@ -14,16 +17,27 @@ import kotlinx.coroutines.launch
 
 class PlayerViewModel(
     private val playerInteractor: PlayerInteractor,
-    private val favoriteTracksInteractor: FavoriteTracksInteractor,
+    private val favoriteTrackInteractor: FavoriteTrackInteractor,
+    private val playlistInteractor: PlaylistInteractor,
     private var track: Track
 ) : ViewModel() {
     private val playerStateLiveData = MutableLiveData<PlayerState>(PlayerState.Default())
     fun observePlayerState(): LiveData<PlayerState> = playerStateLiveData
 
+    private val playlistsLiveData = MutableLiveData<List<Playlist>>()
+    fun observePlaylists(): LiveData<List<Playlist>> = playlistsLiveData
+
+    private val playlistAddingStatusLiveData = SingleLiveEvent<Pair<String, Boolean>>()
+    fun observePlaylistAddingStatus(): LiveData<Pair<String, Boolean>> = playlistAddingStatusLiveData
+
     private var timerJob: Job? = null
 
     init {
-        checkFavoriteStatusAndPrepare()
+        viewModelScope.launch {
+            checkFavoriteStatus()
+            checkPlaylists()
+            preparePlayer()
+        }
     }
 
     override fun onCleared() {
@@ -62,13 +76,15 @@ class PlayerViewModel(
         )
     }
 
-    private fun checkFavoriteStatusAndPrepare() {
-        viewModelScope.launch {
-            val favoriteTracksIds = favoriteTracksInteractor.getFavoriteTracksIds()
-            val isFavorite = track.trackId in favoriteTracksIds
-            track = track.copy(isFavorite = isFavorite)
-            preparePlayer()
-        }
+    private suspend fun checkFavoriteStatus() {
+        val favoriteTrackIds = favoriteTrackInteractor.getFavoriteTrackIds()
+        val isFavorite = track.trackId in favoriteTrackIds
+        track = track.copy(isFavorite = isFavorite)
+    }
+
+    private suspend fun checkPlaylists() {
+        val playlists = playlistInteractor.getPlaylists()
+        playlistsLiveData.postValue(playlists)
     }
 
     private fun startPlayer() {
@@ -123,9 +139,9 @@ class PlayerViewModel(
             track = track.copy(isFavorite = newFavoriteStatus)
 
             if (newFavoriteStatus) {
-                favoriteTracksInteractor.addTrackToFavorites(track)
+                favoriteTrackInteractor.addTrackToFavorites(track)
             } else {
-                favoriteTracksInteractor.removeTrackFromFavorites(track.trackId)
+                favoriteTrackInteractor.removeTrackFromFavorites(track.trackId)
             }
 
             val newState = when (currentState) {
@@ -136,6 +152,26 @@ class PlayerViewModel(
             }
 
             playerStateLiveData.value = newState
+        }
+    }
+
+    fun addTrackToPlaylist(playlist: Playlist) {
+        val trackId = track.trackId.toIntOrNull() ?: 0
+
+        if (playlist.trackIds.contains(trackId)) {
+            playlistAddingStatusLiveData.postValue(Pair(playlist.name, false))
+        } else {
+            viewModelScope.launch {
+                playlistInteractor.addTrackToPlaylist(track, playlist)
+                checkPlaylists()
+                playlistAddingStatusLiveData.postValue(Pair(playlist.name, true))
+            }
+        }
+    }
+
+    fun updatePlaylists() {
+        viewModelScope.launch {
+            checkPlaylists()
         }
     }
 
