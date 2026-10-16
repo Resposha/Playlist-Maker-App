@@ -20,7 +20,7 @@ class TrackRepositoryImpl(
         val response = networkClient.doRequest(TrackSearchRequest(expression))
         when (response.resultCode) {
             -1 -> {
-                Log.e("ErrorLogTag", "Отсутствует сетевое подключение")
+                Log.e(TAG, "Поиск треков: отсутствует сетевое подключение")
                 emit(Resource.Error())
             }
             200 -> {
@@ -48,13 +48,17 @@ class TrackRepositoryImpl(
                 }
             }
             400 -> {
-                Log.e("ErrorLogTag", "Ошибка запроса")
+                Log.e(TAG, "Поиск треков: ошибка запроса (400)")
                 emit(Resource.Error())
             }
             else -> {
-                Log.e("ErrorLogTag", "Ошибка сервера")
+                Log.e(TAG, "Поиск треков: ошибка сервера (${response.resultCode})")
                 emit(Resource.Error())
             }
         }
+    }
+
+    companion object {
+        private const val TAG = "TrackRepository"
     }
 }

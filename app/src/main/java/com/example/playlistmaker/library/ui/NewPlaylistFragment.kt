@@ -16,6 +16,7 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.view.isVisible
 import androidx.core.widget.doOnTextChanged
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.CenterCrop
@@ -24,6 +25,9 @@ import com.example.playlistmaker.R
 import com.example.playlistmaker.databinding.FragmentNewPlaylistBinding
 import com.example.playlistmaker.util.dpToPx
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import java.io.File
 import java.io.FileOutputStream
@@ -86,12 +90,12 @@ class NewPlaylistFragment : Fragment() {
                         )
                         .into(binding.newPlaylistArt)
                 } else {
-                    Log.d("PhotoPicker", "Ничего не выбрано")
+                    Log.d(TAG, "PhotoPicker: ничего не выбрано")
                 }
             }
 
         binding.newPlaylistToolbar.setNavigationOnClickListener {
-            findNavController().popBackStack()
+            requireActivity().onBackPressedDispatcher.onBackPressed()
         }
 
         binding.newPlaylistArt.setOnClickListener {
@@ -106,13 +110,15 @@ class NewPlaylistFragment : Fragment() {
             val name = binding.newPlaylistNameEditText.text.toString()
             val description = binding.newPlaylistDescriptionEditText.text.toString()
 
-            val artPath = if (artUri != null) {
-                saveImageToPrivateStorage(artUri!!)
-            } else {
-                null
-            }
+            viewLifecycleOwner.lifecycleScope.launch {
+                val artPath = if (artUri != null) {
+                    saveImageToPrivateStorage(artUri!!)
+                } else {
+                    null
+                }
 
-            viewModel.createPlaylist(name, description, artPath)
+                viewModel.createPlaylist(name, description, artPath)
+            }
         }
 
         requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner, object: OnBackPressedCallback(true) {
@@ -139,7 +145,7 @@ class NewPlaylistFragment : Fragment() {
         return isArtSelected || isNameFilled || isDescriptionFilled
     }
 
-    private fun saveImageToPrivateStorage(uri: Uri): String {
+    private suspend fun saveImageToPrivateStorage(uri: Uri): String? = withContext(Dispatchers.IO) {
         val filePath = File(requireActivity().getExternalFilesDir(Environment.DIRECTORY_PICTURES), "playlist_arts")
 
         if (!filePath.exists()){
@@ -149,16 +155,26 @@ class NewPlaylistFragment : Fragment() {
         val uniqueFileName = "playlist_art_${System.currentTimeMillis()}.jpg"
         val file = File(filePath, uniqueFileName)
 
-        val inputStream = requireContext().contentResolver.openInputStream(uri)
-        val outputStream = FileOutputStream(file)
+        try {
+            val bitmap = requireContext().contentResolver.openInputStream(uri).use { inputStream ->
+                BitmapFactory.decodeStream(inputStream)
+            }
+            if (bitmap != null) {
+                FileOutputStream(file).use { outputStream ->
+                    bitmap.compress(Bitmap.CompressFormat.JPEG, 30, outputStream)
+                }
+                file.absolutePath
+            } else {
+                Log.e(TAG, "Сохранение обложки: BitmapFactory вернул null")
+                null
+            }
+        } catch (e: Exception) {
+            Log.e(TAG, "Сохранение обложки: ошибка при записи файла", e)
+            null
+        }
+    }
 
-        BitmapFactory
-            .decodeStream(inputStream)
-            .compress(Bitmap.CompressFormat.JPEG, 30, outputStream)
-
-        inputStream?.close()
-        outputStream.close()
-
-        return file.absolutePath
+    companion object {
+        private const val TAG = "NewPlaylistFragment"
     }
 }
