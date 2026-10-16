@@ -12,8 +12,4 @@ data class PlaylistEntity(
     val description: String?, // описание плейлиста
     @ColumnInfo("art_path")
     val artPath: String?, // путь к файлу изображения для обложки
-    @ColumnInfo("tracks_ids")
-    val trackIds: String, // список идентификаторов треков плейлиста
-    @ColumnInfo("number_of_tracks")
-    val numberOfTracks: Int // количество треков в плейлисте
 )

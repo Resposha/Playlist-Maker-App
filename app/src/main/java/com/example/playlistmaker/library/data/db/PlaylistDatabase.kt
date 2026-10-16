@@ -5,9 +5,10 @@ import androidx.room.RoomDatabase
 import com.example.playlistmaker.library.data.db.dao.PlaylistTrackDao
 import com.example.playlistmaker.library.data.db.dao.PlaylistDao
 import com.example.playlistmaker.library.data.db.entity.PlaylistEntity
+import com.example.playlistmaker.library.data.db.entity.PlaylistTrackCrossRef
 import com.example.playlistmaker.library.data.db.entity.PlaylistTrackEntity
 
-@Database(version = 1, entities = [PlaylistEntity::class, PlaylistTrackEntity::class])
+@Database(version = 2, entities = [PlaylistEntity::class, PlaylistTrackEntity::class, PlaylistTrackCrossRef::class])
 abstract class PlaylistDatabase : RoomDatabase() {
     abstract fun playlistDao(): PlaylistDao
 
