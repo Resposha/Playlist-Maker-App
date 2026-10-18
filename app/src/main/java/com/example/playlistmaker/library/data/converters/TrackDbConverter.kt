@@ -1,11 +1,12 @@
 package com.example.playlistmaker.library.data.converters
 
-import com.example.playlistmaker.library.data.db.entity.TrackEntity
+import com.example.playlistmaker.library.data.db.entity.FavoriteTrackEntity
+import com.example.playlistmaker.library.data.db.entity.PlaylistTrackEntity
 import com.example.playlistmaker.search.domain.models.Track
 
 class TrackDbConverter {
-    fun map(track: Track): TrackEntity {
-        return TrackEntity(
+    fun mapTrackToFavoriteTrackEntity(track: Track): FavoriteTrackEntity {
+        return FavoriteTrackEntity(
             track.trackId,
             track.trackName,
             track.artistName,
@@ -19,18 +20,33 @@ class TrackDbConverter {
         )
     }
 
-    fun map(trackEntity: TrackEntity): Track {
+    fun mapFavoriteTrackEntityToTrack(favoriteTrackEntity: FavoriteTrackEntity): Track {
         return Track(
-            trackEntity.trackId,
-            trackEntity.trackName,
-            trackEntity.artistName,
-            trackEntity.trackTimeMillis,
-            trackEntity.artworkUrl100,
-            trackEntity.collectionName,
-            trackEntity.releaseDate,
-            trackEntity.primaryGenreName,
-            trackEntity.country,
-            trackEntity.previewUrl
+            favoriteTrackEntity.trackId,
+            favoriteTrackEntity.trackName,
+            favoriteTrackEntity.artistName,
+            favoriteTrackEntity.trackTimeMillis,
+            favoriteTrackEntity.artworkUrl100,
+            favoriteTrackEntity.collectionName,
+            favoriteTrackEntity.releaseDate,
+            favoriteTrackEntity.primaryGenreName,
+            favoriteTrackEntity.country,
+            favoriteTrackEntity.previewUrl
+        )
+    }
+
+    fun mapTrackToPlaylistTrackEntity(track: Track): PlaylistTrackEntity {
+        return PlaylistTrackEntity(
+            track.trackId,
+            track.trackName,
+            track.artistName,
+            track.trackTimeMillis,
+            track.artworkUrl100,
+            track.collectionName,
+            track.releaseDate,
+            track.primaryGenreName,
+            track.country,
+            track.previewUrl
         )
     }
 }

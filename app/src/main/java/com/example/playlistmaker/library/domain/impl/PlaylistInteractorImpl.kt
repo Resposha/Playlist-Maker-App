@@ -1,0 +1,30 @@
+package com.example.playlistmaker.library.domain.impl
+
+import com.example.playlistmaker.library.domain.api.PlaylistInteractor
+import com.example.playlistmaker.library.domain.api.PlaylistRepository
+import com.example.playlistmaker.library.domain.models.Playlist
+import com.example.playlistmaker.search.domain.models.Track
+
+class PlaylistInteractorImpl(
+    private val playlistRepository: PlaylistRepository
+) : PlaylistInteractor {
+
+    override suspend fun createPlaylist(playlist: Playlist) {
+        playlistRepository.createPlaylist(playlist)
+    }
+
+    override suspend fun updatePlaylist(playlist: Playlist) {
+        playlistRepository.updatePlaylist(playlist)
+    }
+
+    override suspend fun getPlaylists(): List<Playlist> {
+        return playlistRepository.getPlaylists()
+    }
+
+    override suspend fun addTrackToPlaylist(
+        track: Track,
+        playlist: Playlist
+    ) {
+        playlistRepository.addTrackToPlaylist(track, playlist)
+    }
+}
