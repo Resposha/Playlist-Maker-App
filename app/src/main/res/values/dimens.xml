@@ -22,6 +22,7 @@
     <dimen name="search_track_info_paddingHorizontal">8dp</dimen>
     <dimen name="search_track_name_textSize">16sp</dimen>
     <dimen name="search_artist_name_and_track_time_textSize">11sp</dimen>
+    <dimen name="ellipse_separator_padding">5dp</dimen>
     <dimen name="placeholder_search_history_and_playlists_TextView_textSize">19sp</dimen>
     <dimen name="search_placeholder_TextView_paddingHorizontal">24dp</dimen>
     <dimen name="search_placeholder_ImageView_paddingTop">102dp</dimen>
@@ -50,9 +51,9 @@
     <dimen name="player_artist_name_textSize">14sp</dimen>
     <dimen name="player_playback_progress_textSize">14sp</dimen>
     <dimen name="player_track_details_textSize">13sp</dimen>
-    <dimen name="player_bottom_sheet_drag_handle_layout_width">50dp</dimen>
-    <dimen name="player_bottom_sheet_drag_handle_layout_height">4dp</dimen>
-    <dimen name="player_bottom_sheet_drag_handle_layout_marginTop">8dp</dimen>
+    <dimen name="bottom_sheet_drag_handle_layout_width">50dp</dimen>
+    <dimen name="bottom_sheet_drag_handle_layout_height">4dp</dimen>
+    <dimen name="bottom_sheet_drag_handle_layout_marginTop">8dp</dimen>
     <dimen name="player_bottom_sheet_TextView_layout_marginTop">12dp</dimen>
     <dimen name="player_bottom_sheet_TextView_paddingTop">18dp</dimen>
     <dimen name="player_bottom_sheet_TextView_paddingBottom">12dp</dimen>
@@ -89,4 +90,12 @@
     <dimen name="library_playlist_item_big_layout_marginVertical">8dp</dimen>
     <dimen name="library_playlist_item_big_name_layout_marginTop">4dp</dimen>
     <dimen name="library_playlist_item_big_name_and_number_of_tracks_textSize">12sp</dimen>
+    <dimen name="playlist_elements_layout_marginStart">16dp</dimen>
+    <dimen name="playlist_name_layout_marginTop">24dp</dimen>
+    <dimen name="playlist_name_textSize">24sp</dimen>
+    <dimen name="playlist_details_description_layout_marginTop">8dp</dimen>
+    <dimen name="playlist_details_total_duration_layout_marginTop">8dp</dimen>
+    <dimen name="playlist_details_textSize">18sp</dimen>
+    <dimen name="playlist_button_share_layout_marginTop">16dp</dimen>
+    <dimen name="playlist_bottom_sheet_RecyclerView_layout_marginTop">12dp</dimen>
 </resources>

@@ -293,9 +293,9 @@
         app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior">
         
         <View
-            android:layout_width="@dimen/player_bottom_sheet_drag_handle_layout_width"
-            android:layout_height="@dimen/player_bottom_sheet_drag_handle_layout_height"
-            android:layout_marginTop="@dimen/player_bottom_sheet_drag_handle_layout_marginTop"
+            android:layout_width="@dimen/bottom_sheet_drag_handle_layout_width"
+            android:layout_height="@dimen/bottom_sheet_drag_handle_layout_height"
+            android:layout_marginTop="@dimen/bottom_sheet_drag_handle_layout_marginTop"
             android:layout_gravity="center_horizontal"
             android:background="@drawable/background_bottom_sheet_drag_handle"/>
 
