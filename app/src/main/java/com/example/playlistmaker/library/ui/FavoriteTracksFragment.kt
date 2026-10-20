@@ -37,10 +37,6 @@ class FavoriteTracksFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        viewModel.observeFavoriteTracksState().observe(viewLifecycleOwner) {
-            render(it)
-        }
-
         onTrackClickDebounce = debounce<Track>(
             CLICK_DEBOUNCE_DELAY,
             viewLifecycleOwner.lifecycleScope,
@@ -51,6 +47,10 @@ class FavoriteTracksFragment : Fragment() {
 
         favoriteTracksAdapter = TrackAdapter(emptyList(), onTrackClickDebounce)
         binding.libraryRecyclerviewFavoriteTracks.adapter = favoriteTracksAdapter
+
+        viewModel.observeFavoriteTracksState().observe(viewLifecycleOwner) {
+            render(it)
+        }
     }
 
     override fun onDestroyView() {

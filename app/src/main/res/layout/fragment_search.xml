@@ -59,13 +59,16 @@
 
     <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="0dp"
+        android:layout_weight="1">
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/search_recyclerview_found_tracks"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginVertical="@dimen/search_RecyclerView_layout_marginVertical"
+            android:layout_height="match_parent"
+            android:layout_marginTop="@dimen/search_RecyclerView_layout_marginTop"
+            android:paddingBottom="@dimen/search_RecyclerView_paddingBottom"
+            android:clipToPadding="false"
             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"/>
 
         <LinearLayout
@@ -128,7 +131,7 @@
         <LinearLayout
             android:id="@+id/search_history"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:orientation="vertical"
             android:visibility="gone">
 
@@ -145,15 +148,18 @@
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/search_recyclerview_history"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="0dp"
+                android:layout_weight="1"
                 android:layout_marginTop="@dimen/search_history_RecyclerView_layout_marginTop"
+                android:paddingBottom="@dimen/search_history_RecyclerView_paddingBottom"
+                android:clipToPadding="false"
                 app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"/>
 
             <Button
                 android:id="@+id/search_button_clear_history"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/search_history_Button_layout_marginTop"
+                android:layout_marginVertical="@dimen/search_history_Button_layout_marginVertical"
                 android:layout_gravity="center"
                 android:text="@string/clear_history"
                 style="@style/ReloadClearHistoryAndNewPlaylistButtonStyle"/>

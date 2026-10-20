@@ -46,10 +46,6 @@ class SearchFragment : Fragment() {
             binding.searchEditText.setText(viewModel.searchInput)
         }
 
-        viewModel.observeSearchState().observe(viewLifecycleOwner) {
-            render(it)
-        }
-
         onTrackClickDebounce = debounce<Track>(
             CLICK_DEBOUNCE_DELAY,
             viewLifecycleOwner.lifecycleScope,
@@ -59,12 +55,15 @@ class SearchFragment : Fragment() {
             openTrackPlayer(track)
         }
 
-        searchHistoryAdapter = TrackAdapter(emptyList(), onTrackClickDebounce)
         trackAdapter = TrackAdapter(emptyList(), onTrackClickDebounce)
+        searchHistoryAdapter = TrackAdapter(emptyList(), onTrackClickDebounce)
 
         binding.searchRecyclerviewFoundTracks.adapter = trackAdapter
         binding.searchRecyclerviewHistory.adapter = searchHistoryAdapter
 
+        viewModel.observeSearchState().observe(viewLifecycleOwner) {
+            render(it)
+        }
 
         binding.searchEditText.setOnFocusChangeListener { _, hasFocus ->
             if (hasFocus && binding.searchEditText.text.isNullOrEmpty()) {

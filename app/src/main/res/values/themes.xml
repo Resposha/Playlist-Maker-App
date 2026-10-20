@@ -8,6 +8,10 @@
         <item name="android:background">@color/white</item>
     </style>
     <style name="ToolbarStyle">
+        <item name="titleTextColor">@color/black</item>
+        <item name="android:textSize">@dimen/toolbar_textSize</item>
+        <item name="android:fontFamily">@font/ys_display_medium</item>
+        <item name="android:textFontWeight">500</item>
         <item name="navigationIconTint">@color/black</item>
     </style>
     <style name="SettingsSwitchAndTextViewsStyle">
@@ -185,5 +189,11 @@
         <item name="android:fontFamily">@font/ys_display_regular</item>
         <item name="android:textFontWeight">400</item>
         <item name="tint">@color/black</item>
+    </style>
+    <style name="PlaylistMenuTextViewStyle">
+        <item name="android:textColor">@color/black</item>
+        <item name="android:textSize">@dimen/playlist_menu_TextView_textSize</item>
+        <item name="android:fontFamily">@font/ys_display_regular</item>
+        <item name="android:textFontWeight">400</item>
     </style>
 </resources>

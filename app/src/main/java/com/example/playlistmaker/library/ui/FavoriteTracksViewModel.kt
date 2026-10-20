@@ -10,8 +10,8 @@ import kotlinx.coroutines.launch
 class FavoriteTracksViewModel(
     private val favoriteTrackInteractor: FavoriteTrackInteractor
 ) : ViewModel() {
-    private val favoriteTracksLiveData = MutableLiveData<FavoriteTracksState>()
-    fun observeFavoriteTracksState(): LiveData<FavoriteTracksState> = favoriteTracksLiveData
+    private val favoriteTracksStateLiveData = MutableLiveData<FavoriteTracksState>()
+    fun observeFavoriteTracksState(): LiveData<FavoriteTracksState> = favoriteTracksStateLiveData
 
     init {
         getFavoriteTracks()
@@ -32,6 +32,6 @@ class FavoriteTracksViewModel(
     }
 
     private fun renderState(state: FavoriteTracksState) {
-        favoriteTracksLiveData.postValue(state)
+        favoriteTracksStateLiveData.postValue(state)
     }
 }

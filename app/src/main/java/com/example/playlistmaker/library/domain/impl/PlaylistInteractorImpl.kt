@@ -4,6 +4,7 @@ import com.example.playlistmaker.library.domain.api.PlaylistInteractor
 import com.example.playlistmaker.library.domain.api.PlaylistRepository
 import com.example.playlistmaker.library.domain.models.Playlist
 import com.example.playlistmaker.search.domain.models.Track
+import kotlinx.coroutines.flow.Flow
 
 class PlaylistInteractorImpl(
     private val playlistRepository: PlaylistRepository
@@ -26,5 +27,13 @@ class PlaylistInteractorImpl(
         playlist: Playlist
     ) {
         playlistRepository.addTrackToPlaylist(track, playlist)
+    }
+
+    override suspend fun getPlaylistById(playlistId: Int): Playlist {
+        return playlistRepository.getPlaylistById(playlistId)
+    }
+
+    override fun getTracksByIds(trackIds: List<Int>): Flow<List<Track>> {
+        return playlistRepository.getTracksByIds(trackIds)
     }
 }

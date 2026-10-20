@@ -16,7 +16,8 @@
     <dimen name="search_field_layout_marginVertical">8dp</dimen>
     <dimen name="search_progressbar_layout_width_and_layout_height">44dp</dimen>
     <dimen name="search_progressbar_layout_marginTop">140dp</dimen>
-    <dimen name="search_RecyclerView_layout_marginVertical">16dp</dimen>
+    <dimen name="search_RecyclerView_layout_marginTop">16dp</dimen>
+    <dimen name="search_RecyclerView_paddingBottom">16dp</dimen>
     <dimen name="search_track_item_paddingHorizontal">12dp</dimen>
     <dimen name="search_track_item_paddingVertical">8dp</dimen>
     <dimen name="search_track_info_paddingHorizontal">8dp</dimen>
@@ -34,7 +35,8 @@
     <dimen name="search_history_TextView_paddingTop">18dp</dimen>
     <dimen name="search_history_TextView_paddingBottom">12dp</dimen>
     <dimen name="search_history_RecyclerView_layout_marginTop">8dp</dimen>
-    <dimen name="search_history_Button_layout_marginTop">24dp</dimen>
+    <dimen name="search_history_RecyclerView_paddingBottom">16dp</dimen>
+    <dimen name="search_history_Button_layout_marginVertical">24dp</dimen>
     <dimen name="search_album_art_layout_width_and_height">45dp</dimen>
     <dimen name="player_ConstraintLayout_paddingBottom">24dp</dimen>
     <dimen name="player_layout_constraintGuide_begin_and_end">24dp</dimen>
@@ -59,14 +61,17 @@
     <dimen name="player_bottom_sheet_TextView_paddingBottom">12dp</dimen>
     <dimen name="player_bottom_sheet_button_new_playlist_layout_marginTop">16dp</dimen>
     <dimen name="player_bottom_sheet_RecyclerView_layout_marginTop">24dp</dimen>
+    <dimen name="player_bottom_sheet_RecyclerView_paddingBottom">16dp</dimen>
     <dimen name="library_TabLayout_layout_marginHorizontal">16dp</dimen>
     <dimen name="library_button_new_playlist_layout_marginTop">24dp</dimen>
     <dimen name="library_empty_library_image_layout_marginTop">106dp</dimen>
     <dimen name="library_no_playlists_image_layout_marginTop">46dp</dimen>
     <dimen name="library_empty_library_and_no_playlists_images_layout_marginBottom">16dp</dimen>
     <dimen name="library_RecyclerView_favorite_tracks_layout_marginTop">16dp</dimen>
+    <dimen name="library_RecyclerView_favorite_tracks_paddingBottom">16dp</dimen>
     <dimen name="library_RecyclerView_playlists_layout_marginHorizontal">12dp</dimen>
-    <dimen name="library_RecyclerView_playlists_layout_marginVertical">8dp</dimen>
+    <dimen name="library_RecyclerView_playlists_layout_marginTop">8dp</dimen>
+    <dimen name="library_RecyclerView_playlists_paddingBottom">16dp</dimen>
     <dimen name="new_playlist_art_container_layout_marginHorizontal">24dp</dimen>
     <dimen name="new_playlist_art_container_layout_marginTop">26dp</dimen>
     <dimen name="new_playlist_hintTextAppearance_textSize">12sp</dimen>
@@ -97,5 +102,13 @@
     <dimen name="playlist_details_total_duration_layout_marginTop">8dp</dimen>
     <dimen name="playlist_details_textSize">18sp</dimen>
     <dimen name="playlist_button_share_layout_marginTop">16dp</dimen>
-    <dimen name="playlist_bottom_sheet_RecyclerView_layout_marginTop">12dp</dimen>
+    <dimen name="playlist_info_container_Space_layout_height">24dp</dimen>
+    <dimen name="playlist_bottom_sheet_RecyclerView_tracks_layout_marginTop">12dp</dimen>
+    <dimen name="playlist_bottom_sheet_RecyclerView_tracks_paddingBottom">16dp</dimen>
+    <dimen name="playlist_bottom_sheet_RecyclerView_menu_layout_marginTop">12dp</dimen>
+    <dimen name="playlist_bottom_sheet_menu_paddingBottom">24dp</dimen>
+    <dimen name="playlist_menu_share_layout_marginTop">8dp</dimen>
+    <dimen name="playlist_menu_TextView_paddingHorizontal">16dp</dimen>
+    <dimen name="playlist_menu_TextView_paddingVertical">21dp</dimen>
+    <dimen name="playlist_menu_TextView_textSize">16sp</dimen>
 </resources>

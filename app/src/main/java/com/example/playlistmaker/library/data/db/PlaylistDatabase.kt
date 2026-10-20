@@ -8,7 +8,7 @@ import com.example.playlistmaker.library.data.db.entity.PlaylistEntity
 import com.example.playlistmaker.library.data.db.entity.PlaylistTrackCrossRef
 import com.example.playlistmaker.library.data.db.entity.PlaylistTrackEntity
 
-@Database(version = 2, entities = [PlaylistEntity::class, PlaylistTrackEntity::class, PlaylistTrackCrossRef::class])
+@Database(version = 3, entities = [PlaylistEntity::class, PlaylistTrackEntity::class, PlaylistTrackCrossRef::class])
 abstract class PlaylistDatabase : RoomDatabase() {
     abstract fun playlistDao(): PlaylistDao
 

@@ -70,6 +70,17 @@ class PlayerFragment : Fragment() {
 
         setTrackDetails(track)
 
+        onPlaylistClickDebounce = debounce<Playlist>(
+            CLICK_DEBOUNCE_DELAY,
+            viewLifecycleOwner.lifecycleScope,
+            false
+        ) { playlist ->
+            viewModel.addTrackToPlaylist(playlist)
+        }
+
+        playlistsAdapter = SmallPlaylistAdapter(emptyList(), onPlaylistClickDebounce)
+        binding.playerRecyclerviewPlaylists.adapter = playlistsAdapter
+
         viewModel.observePlayerState().observe(viewLifecycleOwner) {
             render(it)
         }
@@ -117,23 +128,16 @@ class PlayerFragment : Fragment() {
             }
         }
 
-        onPlaylistClickDebounce = debounce<Playlist>(
-            CLICK_DEBOUNCE_DELAY,
-            viewLifecycleOwner.lifecycleScope,
-            false
-        ) { playlist ->
-            viewModel.addTrackToPlaylist(playlist)
-        }
-
-        playlistsAdapter = SmallPlaylistAdapter(emptyList(), onPlaylistClickDebounce)
-        binding.playerRecyclerviewPlaylists.adapter = playlistsAdapter
-
         binding.playerToolbar.setNavigationOnClickListener {
             findNavController().popBackStack()
         }
 
         binding.playerButtonAddToPlaylist.setOnClickListener {
             bottomSheetBehavior.state = BottomSheetBehavior.STATE_COLLAPSED
+        }
+
+        binding.playerOverlay.setOnClickListener {
+            bottomSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
         }
 
         binding.playerButtonPlayAndPause.setOnClickListener {

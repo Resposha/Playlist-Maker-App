@@ -9,8 +9,10 @@
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/library_recyclerview_favorite_tracks"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:layout_marginTop="@dimen/library_RecyclerView_favorite_tracks_layout_marginTop"
+        android:paddingBottom="@dimen/library_RecyclerView_favorite_tracks_paddingBottom"
+        android:clipToPadding="false"
         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"/>
 
     <LinearLayout

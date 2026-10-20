@@ -8,6 +8,8 @@ import com.example.playlistmaker.library.domain.api.PlaylistRepository
 import com.example.playlistmaker.library.domain.models.Playlist
 import com.example.playlistmaker.search.domain.models.Track
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.withContext
 
 class PlaylistRepositoryImpl(
@@ -44,5 +46,21 @@ class PlaylistRepositoryImpl(
         )
 
         playlistDatabase.playlistTrackDao().insertCrossRef(crossRef)
+    }
+
+    override suspend fun getPlaylistById(playlistId: Int): Playlist = withContext(Dispatchers.IO) {
+        val playlistWithTracks = playlistDatabase.playlistDao().getPlaylistWithTracksById(playlistId)
+        playlistDbConverter.mapPlaylistWithTracksToPlaylist(playlistWithTracks)
+    }
+
+    override fun getTracksByIds(trackIds: List<Int>): Flow<List<Track>> {
+        return playlistDatabase.playlistTrackDao().getTracks().map { playlistTrackEntityList ->
+            playlistTrackEntityList
+                .filter { playlistTrackEntity ->
+                    val trackId = playlistTrackEntity.trackId.toIntOrNull()
+                    trackId != null && trackIds.contains(trackId)
+                }
+                .map { playlistTrackEntity -> trackDbConverter.mapPlaylistTrackEntityToTrack(playlistTrackEntity) }
+        }
     }
 }
