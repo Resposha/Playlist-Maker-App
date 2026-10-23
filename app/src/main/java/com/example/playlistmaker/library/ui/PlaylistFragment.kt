@@ -20,6 +20,7 @@ import com.example.playlistmaker.search.domain.models.Track
 import com.example.playlistmaker.search.ui.TrackAdapter
 import com.example.playlistmaker.util.debounce
 import com.google.android.material.bottomsheet.BottomSheetBehavior
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import kotlin.getValue
 
@@ -60,7 +61,9 @@ class PlaylistFragment : Fragment() {
             openTrackPlayer(track)
         }
 
-        trackAdapter = TrackAdapter(emptyList(), onTrackClickDebounce)
+        trackAdapter = TrackAdapter(emptyList(), onTrackClickDebounce) { track ->
+            showDeleteTrackDialog(track)
+        }
 
         playlistAdapter = SmallPlaylistAdapter(emptyList()) {
             // empty
@@ -81,6 +84,9 @@ class PlaylistFragment : Fragment() {
                         val tracksBottomSheetBehavior = BottomSheetBehavior.from(binding.playlistBottomSheetTracks)
                         tracksBottomSheetBehavior.peekHeight = totalHeight - contentHeight
                     }
+                }
+                is PlaylistState.Deleted -> {
+                    findNavController().popBackStack()
                 }
             }
         }
@@ -117,10 +123,7 @@ class PlaylistFragment : Fragment() {
         binding.playlistOverlay.setOnClickListener {
             menuBottomSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
         }
-    }
 
-    override fun onResume() {
-        super.onResume()
         viewModel.showPlaylist(playlistId)
     }
 
@@ -165,6 +168,18 @@ class PlaylistFragment : Fragment() {
         }
 
         trackAdapter.updateTracks(tracks)
+    }
+
+    private fun showDeleteTrackDialog(track: Track) {
+        MaterialAlertDialogBuilder(requireContext())
+            .setMessage(R.string.delete_track_dialog_message)
+            .setNegativeButton(R.string.delete_track_dialog_negative_button) { _, _ ->
+                // empty
+            }
+            .setPositiveButton(R.string.delete_track_dialog_positive_button) { _, _ ->
+                viewModel.removeTrack(track.trackId, playlistId)
+            }
+            .show()
     }
 
     private fun openTrackPlayer(track: Track) {

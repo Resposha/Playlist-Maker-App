@@ -143,7 +143,7 @@
         android:orientation="vertical"
         android:background="@drawable/background_bottom_sheet"
         app:behavior_hideable="false"
-        app:behavior_peekHeight="140dp"
+        app:behavior_skipCollapsed="false"
         app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior">
 
         <View
@@ -156,8 +156,7 @@
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/playlist_recyclerview_tracks"
             android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1"
+            android:layout_height="match_parent"
             android:layout_marginTop="@dimen/playlist_bottom_sheet_RecyclerView_tracks_layout_marginTop"
             android:paddingBottom="@dimen/playlist_bottom_sheet_RecyclerView_tracks_paddingBottom"
             android:clipToPadding="false"

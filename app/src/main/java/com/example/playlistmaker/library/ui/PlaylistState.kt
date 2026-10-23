@@ -8,4 +8,6 @@ sealed interface PlaylistState {
         val playlist: Playlist,
         val tracks: List<Track>
     ) : PlaylistState
+
+    object Deleted : PlaylistState
 }

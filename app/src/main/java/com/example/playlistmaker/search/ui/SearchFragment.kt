@@ -55,8 +55,13 @@ class SearchFragment : Fragment() {
             openTrackPlayer(track)
         }
 
-        trackAdapter = TrackAdapter(emptyList(), onTrackClickDebounce)
-        searchHistoryAdapter = TrackAdapter(emptyList(), onTrackClickDebounce)
+        trackAdapter = TrackAdapter(emptyList(), onTrackClickDebounce) {
+            // empty
+        }
+
+        searchHistoryAdapter = TrackAdapter(emptyList(), onTrackClickDebounce) {
+            // empty
+        }
 
         binding.searchRecyclerviewFoundTracks.adapter = trackAdapter
         binding.searchRecyclerviewHistory.adapter = searchHistoryAdapter

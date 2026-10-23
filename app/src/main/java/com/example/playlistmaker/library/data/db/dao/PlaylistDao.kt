@@ -8,6 +8,7 @@ import androidx.room.Transaction
 import androidx.room.Update
 import com.example.playlistmaker.library.data.db.entity.PlaylistEntity
 import com.example.playlistmaker.library.data.db.entity.PlaylistWithTracks
+import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface PlaylistDao {
@@ -23,5 +24,5 @@ interface PlaylistDao {
 
     @Transaction
     @Query("SELECT * FROM playlist_table WHERE playlist_id = :playlistId")
-    suspend fun getPlaylistWithTracksById(playlistId: Int): PlaylistWithTracks
+    fun getPlaylistWithTracksById(playlistId: Int): Flow<PlaylistWithTracks?>
 }

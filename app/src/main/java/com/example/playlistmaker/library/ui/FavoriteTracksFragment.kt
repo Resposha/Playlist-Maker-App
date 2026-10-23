@@ -45,7 +45,10 @@ class FavoriteTracksFragment : Fragment() {
             openTrackPlayer(track)
         }
 
-        favoriteTracksAdapter = TrackAdapter(emptyList(), onTrackClickDebounce)
+        favoriteTracksAdapter = TrackAdapter(emptyList(), onTrackClickDebounce) {
+            // empty
+        }
+
         binding.libraryRecyclerviewFavoriteTracks.adapter = favoriteTracksAdapter
 
         viewModel.observeFavoriteTracksState().observe(viewLifecycleOwner) {
