@@ -18,6 +18,10 @@ class PlaylistInteractorImpl(
         playlistRepository.updatePlaylist(playlist)
     }
 
+    override suspend fun deletePlaylist(playlistId: Int, trackIds: List<Int>) {
+        playlistRepository.deletePlaylist(playlistId, trackIds)
+    }
+
     override suspend fun getPlaylists(): List<Playlist> {
         return playlistRepository.getPlaylists()
     }

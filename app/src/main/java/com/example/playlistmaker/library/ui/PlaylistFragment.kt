@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.core.os.bundleOf
 import androidx.core.view.doOnLayout
 import androidx.core.view.isVisible
@@ -19,6 +20,7 @@ import com.example.playlistmaker.player.ui.SmallPlaylistAdapter
 import com.example.playlistmaker.search.domain.models.Track
 import com.example.playlistmaker.search.ui.TrackAdapter
 import com.example.playlistmaker.util.debounce
+import com.example.playlistmaker.util.toFormattedMinutesSeconds
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import org.koin.androidx.viewmodel.ext.android.viewModel
@@ -35,6 +37,9 @@ class PlaylistFragment : Fragment() {
     private lateinit var trackAdapter: TrackAdapter
     private lateinit var playlistAdapter: SmallPlaylistAdapter
     private lateinit var onTrackClickDebounce: (Track) -> Unit
+
+    private var currentPlaylist: Playlist? = null
+    private var currentTracks: List<Track> = emptyList()
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -75,7 +80,12 @@ class PlaylistFragment : Fragment() {
         viewModel.observePlaylistState().observe(viewLifecycleOwner) { state ->
             when (state) {
                 is PlaylistState.Content -> {
+                    currentPlaylist = state.playlist
+                    currentTracks = state.tracks
+
                     setPlaylistDetails(state.playlist, state.tracks)
+
+                    playlistAdapter.updatePlaylists(listOf(state.playlist))
 
                     binding.playlistContainer.doOnLayout {
                         val totalHeight = binding.playlistContainer.height
@@ -116,12 +126,31 @@ class PlaylistFragment : Fragment() {
             findNavController().popBackStack()
         }
 
+        binding.playlistButtonShare.setOnClickListener {
+            sharePlaylist()
+        }
+
         binding.playlistButtonMenu.setOnClickListener {
             menuBottomSheetBehavior.state = BottomSheetBehavior.STATE_EXPANDED
         }
 
         binding.playlistOverlay.setOnClickListener {
             menuBottomSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
+        }
+
+        binding.playlistMenuShare.setOnClickListener {
+            menuBottomSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
+            sharePlaylist()
+        }
+
+        binding.playlistMenuEditInfo.setOnClickListener {
+            menuBottomSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
+            // дописать
+        }
+
+        binding.playlistMenuDelete.setOnClickListener {
+            menuBottomSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
+            showDeletePlaylistDialog()
         }
 
         viewModel.showPlaylist(playlistId)
@@ -167,19 +196,67 @@ class PlaylistFragment : Fragment() {
             binding.playlistDetailsDescription.isVisible = false
         }
 
-        trackAdapter.updateTracks(tracks)
+        trackAdapter.updatePlaylistTracks(tracks)
     }
 
     private fun showDeleteTrackDialog(track: Track) {
         MaterialAlertDialogBuilder(requireContext())
             .setMessage(R.string.delete_track_dialog_message)
-            .setNegativeButton(R.string.delete_track_dialog_negative_button) { _, _ ->
+            .setNegativeButton(R.string.dialog_negative_button_no) { _, _ ->
                 // empty
             }
-            .setPositiveButton(R.string.delete_track_dialog_positive_button) { _, _ ->
+            .setPositiveButton(R.string.dialog_positive_button_yes) { _, _ ->
                 viewModel.removeTrack(track.trackId, playlistId)
             }
             .show()
+    }
+
+    private fun showDeletePlaylistDialog() {
+        val playlist = currentPlaylist ?: return
+
+        MaterialAlertDialogBuilder(requireContext())
+            .setMessage(getString(R.string.delete_playlist_dialog_message, playlist.name))
+            .setNegativeButton(R.string.dialog_negative_button_no) { _, _ ->
+                // empty
+            }
+            .setPositiveButton(R.string.dialog_positive_button_yes) { _, _ ->
+                viewModel.deletePlaylist(playlist.playlistId, playlist.trackIds)
+            }
+            .show()
+    }
+
+    private fun sharePlaylist() {
+        val playlist = currentPlaylist ?: return
+
+        if (currentTracks.isEmpty()) {
+            Toast.makeText(
+                requireContext(),
+                R.string.no_tracks_to_share,
+                Toast.LENGTH_SHORT
+            ).show()
+            return
+        }
+
+        val tracksCount = resources.getQuantityString(
+            R.plurals.tracks_count,
+            currentTracks.size,
+            currentTracks.size
+        )
+
+        val message = buildString {
+            append(playlist.name).append("\n")
+            if (!playlist.description.isNullOrBlank()) {
+                append(playlist.description).append("\n")
+            }
+            append(tracksCount).append("\n")
+
+            currentTracks.forEachIndexed { index, track ->
+                val duration = track.trackTimeMillis.toFormattedMinutesSeconds()
+                append("${index + 1}. ${track.artistName} - ${track.trackName} ($duration)\n")
+            }
+        }
+
+        viewModel.sharePlaylist(message)
     }
 
     private fun openTrackPlayer(track: Track) {

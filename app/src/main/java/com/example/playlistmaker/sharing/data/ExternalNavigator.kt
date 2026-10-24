@@ -6,10 +6,10 @@ import androidx.core.net.toUri
 
 class ExternalNavigator(private val context: Context) {
 
-    fun shareLink(link: String) {
+    fun share(s: String) {
         val intent = Intent(Intent.ACTION_SEND).apply {
             type = "text/plain"
-            putExtra(Intent.EXTRA_TEXT, link)
+            putExtra(Intent.EXTRA_TEXT, s)
             addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
         }
         context.startActivity(intent)

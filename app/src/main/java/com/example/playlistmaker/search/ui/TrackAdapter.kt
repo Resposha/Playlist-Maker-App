@@ -38,4 +38,19 @@ class TrackAdapter(
         tracks = newTracks
         notifyDataSetChanged()
     }
+
+    fun updatePlaylistTracks(newTracks: List<Track>) {
+        if (this.tracks.size - newTracks.size == 1) {
+            val deletedTrack = this.tracks.firstOrNull { oldTrack -> newTracks.none { newTrack -> newTrack.trackId == oldTrack.trackId } }
+            if (deletedTrack != null) {
+                val index = this.tracks.indexOf(deletedTrack)
+                this.tracks = newTracks
+                notifyItemRemoved(index)
+                return
+            }
+        }
+
+        tracks = newTracks
+        notifyDataSetChanged()
+    }
 }

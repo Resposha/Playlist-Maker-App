@@ -28,6 +28,14 @@ class PlaylistRepositoryImpl(
         playlistDatabase.playlistDao().updatePlaylist(playlistEntity)
     }
 
+    override suspend fun deletePlaylist(playlistId: Int, trackIds: List<Int>) = withContext(Dispatchers.IO) {
+        playlistDatabase.playlistTrackDao().deletePlaylistAndUnusedTracks(
+            playlistDatabase.playlistDao(),
+            playlistId,
+            trackIds
+        )
+    }
+
     override suspend fun getPlaylists(): List<Playlist> = withContext(Dispatchers.IO) {
         val playlistsWithTracks = playlistDatabase.playlistDao().getPlaylistsWithTracks()
         playlistsWithTracks.map { playlistWithTracks ->
@@ -58,17 +66,8 @@ class PlaylistRepositoryImpl(
         playlistDatabase.playlistTrackDao().insertCrossRef(crossRef)
     }
 
-    override suspend fun removeTrackFromPlaylist(trackId: String, playlistId: Int) {
-        val playlistTrackDao = playlistDatabase.playlistTrackDao()
-
-        playlistTrackDao.deleteCrossRef(
-            PlaylistTrackCrossRef(playlistId, trackId)
-        )
-
-        val remainingRefs = playlistTrackDao.getCrossRefsByTrackId(trackId)
-        if (remainingRefs.isEmpty()) {
-            playlistTrackDao.deleteTrackById(trackId)
-        }
+    override suspend fun removeTrackFromPlaylist(trackId: String, playlistId: Int) = withContext(Dispatchers.IO) {
+        playlistDatabase.playlistTrackDao().removeTrackFromPlaylist(trackId, playlistId)
     }
 
     override fun getTracksByIds(trackIds: List<Int>): Flow<List<Track>> {

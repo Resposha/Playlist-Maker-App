@@ -37,9 +37,11 @@
     <string name="new_playlist_dialog_positive_button">Завершить</string>
     <string name="playlist_created">Плейлист %1$s создан</string>
     <string name="delete_track_dialog_message">Хотите удалить трек?</string>
-    <string name="delete_track_dialog_negative_button">НЕТ</string>
-    <string name="delete_track_dialog_positive_button">ДА</string>
+    <string name="delete_playlist_dialog_message">Хотите удалить плейлист «%1$s»?</string>
+    <string name="dialog_negative_button_no">Нет</string>
+    <string name="dialog_positive_button_yes">Да</string>
     <string name="share">Поделиться</string>
+    <string name="no_tracks_to_share">В этом плейлисте нет списка треков, которым можно поделиться</string>
     <string name="edit_information">Редактировать информацию</string>
     <string name="delete_playlist">Удалить плейлист</string>
     <plurals name="tracks_count">
