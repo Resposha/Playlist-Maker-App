@@ -80,14 +80,10 @@ class FavoriteTracksFragment : Fragment() {
     }
 
     private fun openTrackPlayer(track: Track) {
-        try {
-            findNavController().navigate(
-                R.id.action_libraryFragment_to_playerFragment,
-                bundleOf(TRACK to track)
-            )
-        } catch (e: IllegalArgumentException) {
-            // empty
-        }
+        findNavController().navigate(
+            R.id.action_libraryFragment_to_playerFragment,
+            bundleOf(TRACK to track)
+        )
     }
 
     companion object {

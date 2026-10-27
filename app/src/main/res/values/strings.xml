@@ -43,6 +43,8 @@
     <string name="share">Поделиться</string>
     <string name="no_tracks_to_share">В этом плейлисте нет списка треков, которым можно поделиться</string>
     <string name="edit_information">Редактировать информацию</string>
+    <string name="edit">Редактировать</string>
+    <string name="save">Сохранить</string>
     <string name="delete_playlist">Удалить плейлист</string>
     <plurals name="tracks_count">
         <item quantity="one">%d трек</item>

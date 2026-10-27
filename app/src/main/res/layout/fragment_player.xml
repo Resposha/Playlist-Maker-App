@@ -47,11 +47,11 @@
             <!-- Back arrow -->
             <com.google.android.material.appbar.MaterialToolbar
                 android:id="@+id/player_toolbar"
-                android:layout_width="match_parent"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
+                app:navigationIcon="@drawable/ic_arrow_back"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-                app:navigationIcon="@drawable/ic_arrow_back"
                 style="@style/ToolbarStyle"/>
 
             <!-- Album artwork -->
@@ -60,11 +60,11 @@
                 android:layout_width="0dp"
                 android:layout_height="0dp"
                 android:layout_marginTop="@dimen/player_album_art_layout_marginTop"
+                android:scaleType="centerCrop"
                 app:layout_constraintStart_toStartOf="@id/left_border"
                 app:layout_constraintEnd_toEndOf="@id/right_border"
                 app:layout_constraintTop_toBottomOf="@id/player_toolbar"
                 app:layout_constraintDimensionRatio="1:1"
-                android:scaleType="centerCrop"
                 tools:src="@drawable/placeholder_album_and_playlist_art"/>
 
             <!-- Track name -->
@@ -94,11 +94,11 @@
                 android:id="@+id/player_button_add_to_playlist"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:background="@android:color/transparent"
+                app:srcCompat="@drawable/button_add_to_playlist"
                 app:layout_constraintStart_toStartOf="@id/left_border"
                 app:layout_constraintTop_toTopOf="@id/player_button_play_and_pause"
-                app:layout_constraintBottom_toBottomOf="@id/player_button_play_and_pause"
-                android:background="@android:color/transparent"
-                app:srcCompat="@drawable/button_add_to_playlist"/>
+                app:layout_constraintBottom_toBottomOf="@id/player_button_play_and_pause"/>
 
             <!-- Play and pause button -->
             <ImageButton
@@ -106,22 +106,22 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/player_button_play_and_pause_layout_marginTop"
+                android:background="@android:color/transparent"
+                app:srcCompat="@drawable/button_play"
                 app:layout_constraintStart_toEndOf="@id/player_button_add_to_playlist"
                 app:layout_constraintEnd_toStartOf="@id/player_button_add_to_favorite_or_remove"
-                app:layout_constraintTop_toBottomOf="@id/player_artist_name"
-                android:background="@android:color/transparent"
-                app:srcCompat="@drawable/button_play"/>
+                app:layout_constraintTop_toBottomOf="@id/player_artist_name"/>
 
             <!-- Add to favorite button -->
             <ImageButton
                 android:id="@+id/player_button_add_to_favorite_or_remove"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:background="@android:color/transparent"
+                app:srcCompat="@drawable/button_add_to_favorite"
                 app:layout_constraintEnd_toEndOf="@id/right_border"
                 app:layout_constraintTop_toTopOf="@id/player_button_play_and_pause"
-                app:layout_constraintBottom_toBottomOf="@id/player_button_play_and_pause"
-                android:background="@android:color/transparent"
-                app:srcCompat="@drawable/button_add_to_favorite"/>
+                app:layout_constraintBottom_toBottomOf="@id/player_button_play_and_pause"/>
 
             <!-- Playback progress -->
             <TextView
@@ -142,9 +142,9 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/player_track_time_layout_marginTop"
                 android:paddingVertical="@dimen/player_track_details_paddingVertical"
+                android:text="@string/track_time"
                 app:layout_constraintStart_toStartOf="@id/left_border_for_track_details"
                 app:layout_constraintTop_toBottomOf="@id/player_playback_progress"
-                android:text="@string/track_time"
                 style="@style/PlayerTrackDetailsStyle"/>
 
             <!-- Track time value -->
@@ -156,11 +156,11 @@
                 android:layout_marginTop="@dimen/player_track_time_layout_marginTop"
                 android:paddingVertical="@dimen/player_track_details_paddingVertical"
                 android:gravity="end"
+                android:maxLines="1"
+                android:ellipsize="end"
                 app:layout_constraintStart_toEndOf="@id/player_track_time"
                 app:layout_constraintEnd_toStartOf="@id/right_border_for_track_details"
                 app:layout_constraintTop_toBottomOf="@id/player_playback_progress"
-                android:maxLines="1"
-                android:ellipsize="end"
                 style="@style/PlayerTrackDetailsValuesStyle"
                 tools:text="5:35"/>
 
@@ -170,9 +170,9 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:paddingVertical="@dimen/player_track_details_paddingVertical"
+                android:text="@string/collection_name"
                 app:layout_constraintStart_toStartOf="@id/left_border_for_track_details"
                 app:layout_constraintTop_toBottomOf="@id/player_track_time"
-                android:text="@string/collection_name"
                 style="@style/PlayerTrackDetailsStyle"/>
 
             <!-- Collection name value -->
@@ -183,11 +183,11 @@
                 android:layout_marginStart="@dimen/player_track_details_values_layout_marginStart"
                 android:paddingVertical="@dimen/player_track_details_paddingVertical"
                 android:gravity="end"
+                android:maxLines="1"
+                android:ellipsize="end"
                 app:layout_constraintStart_toEndOf="@id/player_collection_name"
                 app:layout_constraintEnd_toStartOf="@id/right_border_for_track_details"
                 app:layout_constraintTop_toBottomOf="@id/player_track_time_value"
-                android:maxLines="1"
-                android:ellipsize="end"
                 style="@style/PlayerTrackDetailsValuesStyle"
                 tools:text="Yesterday (Remastered 2009)"/>
 
@@ -197,9 +197,9 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:paddingVertical="@dimen/player_track_details_paddingVertical"
+                android:text="@string/release_date"
                 app:layout_constraintStart_toStartOf="@id/left_border_for_track_details"
                 app:layout_constraintTop_toBottomOf="@id/player_collection_name"
-                android:text="@string/release_date"
                 style="@style/PlayerTrackDetailsStyle"/>
 
             <!-- Release date value -->
@@ -210,11 +210,11 @@
                 android:layout_marginStart="@dimen/player_track_details_values_layout_marginStart"
                 android:paddingVertical="@dimen/player_track_details_paddingVertical"
                 android:gravity="end"
+                android:maxLines="1"
+                android:ellipsize="end"
                 app:layout_constraintStart_toEndOf="@id/player_release_date"
                 app:layout_constraintEnd_toStartOf="@id/right_border_for_track_details"
                 app:layout_constraintTop_toBottomOf="@id/player_collection_name_value"
-                android:maxLines="1"
-                android:ellipsize="end"
                 style="@style/PlayerTrackDetailsValuesStyle"
                 tools:text="1965"/>
 
@@ -224,9 +224,9 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:paddingVertical="@dimen/player_track_details_paddingVertical"
+                android:text="@string/primary_genre_name"
                 app:layout_constraintStart_toStartOf="@id/left_border_for_track_details"
                 app:layout_constraintTop_toBottomOf="@id/player_release_date"
-                android:text="@string/primary_genre_name"
                 style="@style/PlayerTrackDetailsStyle"/>
 
             <!-- Primary genre name value -->
@@ -237,11 +237,11 @@
                 android:layout_marginStart="@dimen/player_track_details_values_layout_marginStart"
                 android:paddingVertical="@dimen/player_track_details_paddingVertical"
                 android:gravity="end"
+                android:maxLines="1"
+                android:ellipsize="end"
                 app:layout_constraintStart_toEndOf="@id/player_primary_genre_name"
                 app:layout_constraintEnd_toStartOf="@id/right_border_for_track_details"
                 app:layout_constraintTop_toBottomOf="@id/player_release_date_value"
-                android:maxLines="1"
-                android:ellipsize="end"
                 style="@style/PlayerTrackDetailsValuesStyle"
                 tools:text="Rock"/>
 
@@ -251,9 +251,9 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:paddingVertical="@dimen/player_track_details_paddingVertical"
+                android:text="@string/country"
                 app:layout_constraintStart_toStartOf="@id/left_border_for_track_details"
                 app:layout_constraintTop_toBottomOf="@id/player_primary_genre_name"
-                android:text="@string/country"
                 style="@style/PlayerTrackDetailsStyle"/>
 
             <!-- Country value -->
@@ -264,11 +264,11 @@
                 android:layout_marginStart="@dimen/player_track_details_values_layout_marginStart"
                 android:paddingVertical="@dimen/player_track_details_paddingVertical"
                 android:gravity="end"
+                android:maxLines="1"
+                android:ellipsize="end"
                 app:layout_constraintStart_toEndOf="@id/player_country"
                 app:layout_constraintEnd_toStartOf="@id/right_border_for_track_details"
                 app:layout_constraintTop_toBottomOf="@id/player_primary_genre_name_value"
-                android:maxLines="1"
-                android:ellipsize="end"
                 style="@style/PlayerTrackDetailsValuesStyle"
                 tools:text="Великобритания"/>
         </androidx.constraintlayout.widget.ConstraintLayout>

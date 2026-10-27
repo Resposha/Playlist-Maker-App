@@ -149,7 +149,9 @@ class PlayerFragment : Fragment() {
         }
 
         binding.playerButtonNewPlaylist.setOnClickListener {
-            findNavController().navigate(R.id.action_playerFragment_to_newPlaylistFragment)
+            if (findNavController().currentDestination?.id == R.id.playerFragment) {
+                findNavController().navigate(R.id.action_playerFragment_to_newPlaylistFragment)
+            }
         }
     }
 

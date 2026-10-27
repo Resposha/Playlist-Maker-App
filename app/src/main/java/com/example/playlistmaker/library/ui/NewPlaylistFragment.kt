@@ -32,13 +32,13 @@ import org.koin.androidx.viewmodel.ext.android.viewModel
 import java.io.File
 import java.io.FileOutputStream
 
-class NewPlaylistFragment : Fragment() {
+open class NewPlaylistFragment : Fragment() {
     private var _binding: FragmentNewPlaylistBinding? = null
-    private val binding get() = _binding!!
+    protected val binding get() = _binding!!
 
-    private val viewModel: NewPlaylistViewModel by viewModel()
+    protected open val viewModel: NewPlaylistViewModel by viewModel()
 
-    private var artUri: Uri? = null
+    protected var artUri: Uri? = null
 
     private lateinit var confirmDialog: MaterialAlertDialogBuilder
 
@@ -121,7 +121,7 @@ class NewPlaylistFragment : Fragment() {
             }
         }
 
-        requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner, object: OnBackPressedCallback(true) {
+        requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner, object : OnBackPressedCallback(true) {
             override fun handleOnBackPressed() {
                 if (hasUnsavedChanges()) {
                     confirmDialog.show()
@@ -145,7 +145,7 @@ class NewPlaylistFragment : Fragment() {
         return isArtSelected || isNameFilled || isDescriptionFilled
     }
 
-    private suspend fun saveImageToPrivateStorage(uri: Uri): String? = withContext(Dispatchers.IO) {
+    protected suspend fun saveImageToPrivateStorage(uri: Uri): String? = withContext(Dispatchers.IO) {
         val filePath = File(requireActivity().getExternalFilesDir(Environment.DIRECTORY_PICTURES), "playlist_arts")
 
         if (!filePath.exists()){

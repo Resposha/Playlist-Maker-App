@@ -59,7 +59,9 @@ class PlaylistsFragment : Fragment() {
         }
 
         binding.libraryButtonNewPlaylist.setOnClickListener {
-            findNavController().navigate(R.id.action_libraryFragment_to_newPlaylistFragment)
+            if (findNavController().currentDestination?.id == R.id.libraryFragment) {
+                findNavController().navigate(R.id.action_libraryFragment_to_newPlaylistFragment)
+            }
         }
     }
 
@@ -74,14 +76,10 @@ class PlaylistsFragment : Fragment() {
     }
 
     private fun openPlaylist(playlistId: Int) {
-        try {
-            findNavController().navigate(
-                R.id.action_libraryFragment_to_playlistFragment,
-                bundleOf(PLAYLIST_ID to playlistId)
-            )
-        } catch (e: IllegalArgumentException) {
-            // empty
-        }
+        findNavController().navigate(
+            R.id.action_libraryFragment_to_playlistFragment,
+            bundleOf(PLAYLIST_ID to playlistId)
+        )
     }
 
     companion object {

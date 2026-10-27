@@ -6,7 +6,8 @@
     <dimen name="main_Button_iconPadding">8dp</dimen>
     <dimen name="main_Button_cornerRadius">16dp</dimen>
     <dimen name="settings_textSize">16sp</dimen>
-    <dimen name="settings_layout_marginVertical">21dp</dimen>
+    <dimen name="settings_layout_marginBottom">24dp</dimen>
+    <dimen name="settings_paddingVertical">21dp</dimen>
     <dimen name="settings_paddingStart">16dp</dimen>
     <dimen name="settings_paddingEnd">12dp</dimen>
     <dimen name="search_EditText_textSize">16sp</dimen>
@@ -95,7 +96,8 @@
     <dimen name="library_playlist_item_big_layout_marginVertical">8dp</dimen>
     <dimen name="library_playlist_item_big_name_layout_marginTop">4dp</dimen>
     <dimen name="library_playlist_item_big_name_and_number_of_tracks_textSize">12sp</dimen>
-    <dimen name="playlist_elements_layout_marginStart">16dp</dimen>
+    <dimen name="playlist_TextView_and_ImageButton_layout_marginStart">16dp</dimen>
+    <dimen name="playlist_TextView_layout_marginEnd">16dp</dimen>
     <dimen name="playlist_name_layout_marginTop">24dp</dimen>
     <dimen name="playlist_name_textSize">24sp</dimen>
     <dimen name="playlist_details_description_layout_marginTop">8dp</dimen>

@@ -77,6 +77,12 @@ class PlaylistFragment : Fragment() {
         binding.playlistRecyclerviewTracks.adapter = trackAdapter
         binding.playlistRecyclerviewMenu.adapter = playlistAdapter
 
+        val tracksBottomSheetBehavior = BottomSheetBehavior.from(binding.playlistBottomSheetTracks)
+
+        val menuBottomSheetBehavior = BottomSheetBehavior.from(binding.playlistBottomSheetMenu).apply {
+            state = BottomSheetBehavior.STATE_HIDDEN
+        }
+
         viewModel.observePlaylistState().observe(viewLifecycleOwner) { state ->
             when (state) {
                 is PlaylistState.Content -> {
@@ -91,7 +97,6 @@ class PlaylistFragment : Fragment() {
                         val totalHeight = binding.playlistContainer.height
                         val contentHeight = binding.playlistInfoContainer.height
 
-                        val tracksBottomSheetBehavior = BottomSheetBehavior.from(binding.playlistBottomSheetTracks)
                         tracksBottomSheetBehavior.peekHeight = totalHeight - contentHeight
                     }
                 }
@@ -101,15 +106,20 @@ class PlaylistFragment : Fragment() {
             }
         }
 
-        val menuBottomSheetBehavior = BottomSheetBehavior.from(binding.playlistBottomSheetMenu).apply {
-            state = BottomSheetBehavior.STATE_HIDDEN
-        }
-
         menuBottomSheetBehavior.addBottomSheetCallback(object : BottomSheetBehavior.BottomSheetCallback() {
             override fun onStateChanged(bottomSheet: View, newState: Int) {
+                if (_binding == null) return
+
                 when (newState) {
                     BottomSheetBehavior.STATE_HIDDEN -> {
                         binding.playlistOverlay.isVisible = false
+                        tracksBottomSheetBehavior.isDraggable = true
+                        binding.playlistRecyclerviewTracks.suppressLayout(false)
+                    }
+                    BottomSheetBehavior.STATE_EXPANDED -> {
+                        binding.playlistOverlay.isVisible = true
+                        tracksBottomSheetBehavior.isDraggable = false
+                        binding.playlistRecyclerviewTracks.suppressLayout(true)
                     }
                     else -> {
                         binding.playlistOverlay.isVisible = true
@@ -118,6 +128,8 @@ class PlaylistFragment : Fragment() {
             }
 
             override fun onSlide(bottomSheet: View, slideOffset: Float) {
+                if (_binding == null) return
+
                 binding.playlistOverlay.alpha = (slideOffset + 1f) / 2f
             }
         })
@@ -145,7 +157,14 @@ class PlaylistFragment : Fragment() {
 
         binding.playlistMenuEditInfo.setOnClickListener {
             menuBottomSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
-            // дописать
+            binding.playlistOverlay.isVisible = false
+
+            if (findNavController().currentDestination?.id == R.id.playlistFragment) {
+                findNavController().navigate(
+                    R.id.action_playlistFragment_to_editPlaylistFragment,
+                    bundleOf(PLAYLIST_ID to playlistId)
+                )
+            }
         }
 
         binding.playlistMenuDelete.setOnClickListener {
@@ -154,6 +173,14 @@ class PlaylistFragment : Fragment() {
         }
 
         viewModel.showPlaylist(playlistId)
+    }
+
+    override fun onResume() {
+        super.onResume()
+
+        val menuBottomSheetBehavior = BottomSheetBehavior.from(binding.playlistBottomSheetMenu)
+        menuBottomSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
+        binding.playlistOverlay.isVisible = false
     }
 
     override fun onDestroyView() {
@@ -187,13 +214,13 @@ class PlaylistFragment : Fragment() {
         binding.playlistDetailsTotalDuration.text = minutesCount
         binding.playlistDetailsNumberOfTracks.text = tracksCount
 
-        if (playlist.description != null) {
+        if (playlist.description.isNullOrBlank()) {
+            binding.playlistDetailsDescription.isVisible = false
+        } else {
             with(binding.playlistDetailsDescription) {
                 isVisible = true
                 text = playlist.description
             }
-        } else {
-            binding.playlistDetailsDescription.isVisible = false
         }
 
         trackAdapter.updatePlaylistTracks(tracks)
@@ -244,15 +271,15 @@ class PlaylistFragment : Fragment() {
         )
 
         val message = buildString {
-            append(playlist.name).append("\n")
+            appendLine(playlist.name)
             if (!playlist.description.isNullOrBlank()) {
-                append(playlist.description).append("\n")
+                appendLine(playlist.description)
             }
-            append(tracksCount).append("\n")
+            appendLine(tracksCount)
 
             currentTracks.forEachIndexed { index, track ->
                 val duration = track.trackTimeMillis.toFormattedMinutesSeconds()
-                append("${index + 1}. ${track.artistName} - ${track.trackName} ($duration)\n")
+                appendLine("${index + 1}. ${track.artistName} - ${track.trackName} ($duration)")
             }
         }
 
@@ -260,14 +287,10 @@ class PlaylistFragment : Fragment() {
     }
 
     private fun openTrackPlayer(track: Track) {
-        try {
-            findNavController().navigate(
-                R.id.action_playlistFragment_to_playerFragment,
-                bundleOf(TRACK to track)
-            )
-        } catch (e: IllegalArgumentException) {
-            // empty
-        }
+        findNavController().navigate(
+            R.id.action_playlistFragment_to_playerFragment,
+            bundleOf(TRACK to track)
+        )
     }
 
     companion object {
