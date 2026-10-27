@@ -130,14 +130,6 @@
         </androidx.constraintlayout.widget.ConstraintLayout>
     </androidx.core.widget.NestedScrollView>
 
-    <View android:id="@+id/playlist_overlay"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="@color/translucent_black"
-        android:clickable="true"
-        android:focusable="true"
-        android:visibility="gone"/>
-
     <LinearLayout
         android:id="@+id/playlist_bottom_sheet_tracks"
         android:layout_width="match_parent"
@@ -176,6 +168,14 @@
             android:visibility="gone"
             style="@style/PlaceholderTextViewStyle"/>
     </LinearLayout>
+
+    <View android:id="@+id/playlist_overlay"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/translucent_black"
+        android:clickable="true"
+        android:focusable="true"
+        android:visibility="gone"/>
 
     <LinearLayout
         android:id="@+id/playlist_bottom_sheet_menu"

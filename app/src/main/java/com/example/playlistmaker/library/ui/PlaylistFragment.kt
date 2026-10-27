@@ -139,8 +139,7 @@ class PlaylistFragment : Fragment() {
             override fun onSlide(bottomSheet: View, slideOffset: Float) {
                 if (_binding == null) return
 
-                val alpha = if (slideOffset > 0f) slideOffset else 0f
-                binding.playlistOverlay.alpha = alpha
+                binding.playlistOverlay.alpha = (slideOffset + 1f) / 2f
             }
         })
 
