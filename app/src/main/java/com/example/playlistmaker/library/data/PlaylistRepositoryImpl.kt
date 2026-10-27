@@ -9,7 +9,8 @@ import com.example.playlistmaker.library.domain.models.Playlist
 import com.example.playlistmaker.search.domain.models.Track
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.flatMapLatest
+import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.withContext
 
 class PlaylistRepositoryImpl(
@@ -45,10 +46,18 @@ class PlaylistRepositoryImpl(
     }
 
     override fun getPlaylistById(playlistId: Int): Flow<Pair<Playlist, List<Track>>?> {
-        return playlistDatabase.playlistDao().getPlaylistWithTracksById(playlistId).map { playlistWithTracks ->
-            playlistWithTracks?.let { playlistDbConverter.mapPlaylistWithTracksToPlaylistAndTracks(it) }
-        }
-
+        return playlistDatabase.playlistDao().getPlaylistWithTracksById(playlistId)
+            .flatMapLatest { playlistWithTracks ->
+                flow {
+                    if (playlistWithTracks == null) {
+                        emit(null)
+                    } else {
+                        val sortedIds = playlistDatabase.playlistTrackDao().getTrackIdsSortedByAddedAt(playlistId)
+                        val playlistWithSortedTracks = playlistDbConverter.mapPlaylistWithTracksToPlaylistAndTracks(playlistWithTracks, sortedIds)
+                        emit(playlistWithSortedTracks)
+                    }
+                }
+            }
     }
 
     override suspend fun addTrackToPlaylist(
@@ -68,16 +77,5 @@ class PlaylistRepositoryImpl(
 
     override suspend fun removeTrackFromPlaylist(trackId: String, playlistId: Int) = withContext(Dispatchers.IO) {
         playlistDatabase.playlistTrackDao().removeTrackFromPlaylist(trackId, playlistId)
-    }
-
-    override fun getTracksByIds(trackIds: List<Int>): Flow<List<Track>> {
-        return playlistDatabase.playlistTrackDao().getTracks().map { playlistTrackEntityList ->
-            playlistTrackEntityList
-                .filter { playlistTrackEntity ->
-                    val trackId = playlistTrackEntity.trackId.toIntOrNull()
-                    trackId != null && trackIds.contains(trackId)
-                }
-                .map { playlistTrackEntity -> trackDbConverter.mapPlaylistTrackEntityToTrack(playlistTrackEntity) }
-        }
     }
 }

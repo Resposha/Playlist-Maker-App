@@ -17,22 +17,35 @@ class PlaylistDbConverter {
         )
     }
 
-    fun mapPlaylistWithTracksToPlaylistAndTracks(playlistWithTracks: PlaylistWithTracks): Pair<Playlist, List<Track>> {
-        val tracks = playlistWithTracks.tracks.map {
+    fun mapPlaylistWithTracksToPlaylistAndTracks(
+        playlistWithTracks: PlaylistWithTracks,
+        trackIdsOrder: List<String> = emptyList()
+    ): Pair<Playlist, List<Track>> {
+        val rawTracks = playlistWithTracks.tracks.map {
             trackDbConverter.mapPlaylistTrackEntityToTrack(it)
         }
 
-        val trackIds = playlistWithTracks.tracks.map { it.trackId }
+        val finalTracks = if (trackIdsOrder.isNotEmpty()) {
+            rawTracks.sortedBy { track -> trackIdsOrder.indexOf(track.trackId) }
+        } else {
+            rawTracks
+        }
+
+        val finalTrackIds = if (trackIdsOrder.isNotEmpty()) {
+            trackIdsOrder.map { it.toIntOrNull() ?: 0 }
+        } else {
+            playlistWithTracks.tracks.map { it.trackId.toIntOrNull() ?: 0 }
+        }
 
         val playlist = Playlist(
             playlistWithTracks.playlist.playlistId,
             playlistWithTracks.playlist.name,
             playlistWithTracks.playlist.description,
             playlistWithTracks.playlist.artPath,
-            trackIds.map { it.toIntOrNull() ?: 0 },
-            tracks.size
+            finalTrackIds,
+            finalTracks.size
         )
 
-        return Pair(playlist, tracks)
+        return Pair(playlist, finalTracks)
     }
 }

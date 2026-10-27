@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.LinearLayout
 import android.widget.Toast
 import androidx.core.os.bundleOf
 import androidx.core.view.doOnLayout
@@ -37,6 +38,7 @@ class PlaylistFragment : Fragment() {
     private lateinit var trackAdapter: TrackAdapter
     private lateinit var playlistAdapter: SmallPlaylistAdapter
     private lateinit var onTrackClickDebounce: (Track) -> Unit
+    private lateinit var tracksBottomSheetBehavior: BottomSheetBehavior<LinearLayout>
 
     private var currentPlaylist: Playlist? = null
     private var currentTracks: List<Track> = emptyList()
@@ -77,7 +79,7 @@ class PlaylistFragment : Fragment() {
         binding.playlistRecyclerviewTracks.adapter = trackAdapter
         binding.playlistRecyclerviewMenu.adapter = playlistAdapter
 
-        val tracksBottomSheetBehavior = BottomSheetBehavior.from(binding.playlistBottomSheetTracks)
+        tracksBottomSheetBehavior = BottomSheetBehavior.from(binding.playlistBottomSheetTracks)
 
         val menuBottomSheetBehavior = BottomSheetBehavior.from(binding.playlistBottomSheetMenu).apply {
             state = BottomSheetBehavior.STATE_HIDDEN
@@ -89,16 +91,23 @@ class PlaylistFragment : Fragment() {
                     currentPlaylist = state.playlist
                     currentTracks = state.tracks
 
+                    binding.playlistRecyclerviewTracks.isVisible = true
+                    binding.playlistNoTracks.isVisible = false
+
                     setPlaylistDetails(state.playlist, state.tracks)
+                    setTracksBottomSheetPeekHeight()
 
                     playlistAdapter.updatePlaylists(listOf(state.playlist))
+                }
+                is PlaylistState.Empty -> {
+                    currentPlaylist = state.playlist
+                    currentTracks = emptyList()
 
-                    binding.playlistContainer.doOnLayout {
-                        val totalHeight = binding.playlistContainer.height
-                        val contentHeight = binding.playlistInfoContainer.height
+                    binding.playlistRecyclerviewTracks.isVisible = false
+                    binding.playlistNoTracks.isVisible = true
 
-                        tracksBottomSheetBehavior.peekHeight = totalHeight - contentHeight
-                    }
+                    setPlaylistDetails(state.playlist)
+                    setTracksBottomSheetPeekHeight()
                 }
                 is PlaylistState.Deleted -> {
                     findNavController().popBackStack()
@@ -130,7 +139,8 @@ class PlaylistFragment : Fragment() {
             override fun onSlide(bottomSheet: View, slideOffset: Float) {
                 if (_binding == null) return
 
-                binding.playlistOverlay.alpha = (slideOffset + 1f) / 2f
+                val alpha = if (slideOffset > 0f) slideOffset else 0f
+                binding.playlistOverlay.alpha = alpha
             }
         })
 
@@ -188,7 +198,7 @@ class PlaylistFragment : Fragment() {
         _binding = null
     }
 
-    private fun setPlaylistDetails(playlist: Playlist, tracks: List<Track>) {
+    private fun setPlaylistDetails(playlist: Playlist, tracks: List<Track> = emptyList()) {
         Glide.with(requireContext())
             .load(playlist.artPath)
             .placeholder(R.drawable.placeholder_album_and_playlist_art)
@@ -226,6 +236,17 @@ class PlaylistFragment : Fragment() {
         trackAdapter.updatePlaylistTracks(tracks)
     }
 
+    private fun setTracksBottomSheetPeekHeight() {
+        binding.playlistContainer.doOnLayout {
+            if (_binding == null) return@doOnLayout
+
+            val totalHeight = binding.playlistContainer.height
+            val contentHeight = binding.playlistInfoContainer.height
+
+            tracksBottomSheetBehavior.peekHeight = totalHeight - contentHeight
+        }
+    }
+
     private fun showDeleteTrackDialog(track: Track) {
         MaterialAlertDialogBuilder(requireContext())
             .setMessage(R.string.delete_track_dialog_message)
@@ -242,11 +263,12 @@ class PlaylistFragment : Fragment() {
         val playlist = currentPlaylist ?: return
 
         MaterialAlertDialogBuilder(requireContext())
-            .setMessage(getString(R.string.delete_playlist_dialog_message, playlist.name))
-            .setNegativeButton(R.string.dialog_negative_button_no) { _, _ ->
+            .setTitle(R.string.delete_playlist_dialog_title)
+            .setMessage(R.string.delete_playlist_dialog_message)
+            .setNeutralButton(R.string.dialog_neutral_button_cancel) { _, _ ->
                 // empty
             }
-            .setPositiveButton(R.string.dialog_positive_button_yes) { _, _ ->
+            .setPositiveButton(R.string.delete_playlist_dialog_positive_button) { _, _ ->
                 viewModel.deletePlaylist(playlist.playlistId, playlist.trackIds)
             }
             .show()

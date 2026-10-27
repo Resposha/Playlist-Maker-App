@@ -9,5 +9,9 @@ sealed interface PlaylistState {
         val tracks: List<Track>
     ) : PlaylistState
 
+    data class Empty(
+        val playlist: Playlist
+    ) : PlaylistState
+
     object Deleted : PlaylistState
 }

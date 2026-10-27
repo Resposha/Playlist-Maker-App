@@ -24,7 +24,14 @@ class PlaylistViewModel(
         viewModelScope.launch {
             playlistInteractor.getPlaylistById(playlistId).collect { data ->
                 if (data != null) {
-                    playlistStateLiveData.postValue(PlaylistState.Content(data.first, data.second))
+                    val playlist = data.first
+                    val tracks = data.second
+
+                    if (tracks.isEmpty()) {
+                        playlistStateLiveData.postValue(PlaylistState.Empty(playlist))
+                    } else {
+                        playlistStateLiveData.postValue(PlaylistState.Content(playlist, tracks))
+                    }
                 } else {
                     playlistStateLiveData.postValue(PlaylistState.Deleted)
                 }

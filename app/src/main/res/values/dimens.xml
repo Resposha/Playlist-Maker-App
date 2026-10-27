@@ -107,6 +107,8 @@
     <dimen name="playlist_info_container_Space_layout_height">24dp</dimen>
     <dimen name="playlist_bottom_sheet_RecyclerView_tracks_layout_marginTop">12dp</dimen>
     <dimen name="playlist_bottom_sheet_RecyclerView_tracks_paddingBottom">16dp</dimen>
+    <dimen name="playlist_bottom_sheet_no_tracks_in_playlist_message_layout_marginHorizontal">24dp</dimen>
+    <dimen name="playlist_bottom_sheet_no_tracks_in_playlist_message_layout_layout_marginTop">24dp</dimen>
     <dimen name="playlist_bottom_sheet_RecyclerView_menu_layout_marginTop">12dp</dimen>
     <dimen name="playlist_bottom_sheet_menu_paddingBottom">24dp</dimen>
     <dimen name="playlist_menu_share_layout_marginTop">8dp</dimen>

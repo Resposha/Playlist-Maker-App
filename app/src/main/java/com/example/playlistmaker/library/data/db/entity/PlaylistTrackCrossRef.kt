@@ -11,5 +11,7 @@ data class PlaylistTrackCrossRef(
     @ColumnInfo("playlist_id")
     val playlistId: Int,
     @ColumnInfo("track_id")
-    val trackId: String
+    val trackId: String,
+    @ColumnInfo("added_at")
+    val addedAt: Long = System.currentTimeMillis()
 )

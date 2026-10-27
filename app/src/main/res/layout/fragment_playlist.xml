@@ -158,11 +158,23 @@
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/playlist_recyclerview_tracks"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
             android:layout_marginTop="@dimen/playlist_bottom_sheet_RecyclerView_tracks_layout_marginTop"
             android:paddingBottom="@dimen/playlist_bottom_sheet_RecyclerView_tracks_paddingBottom"
             android:clipToPadding="false"
             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"/>
+
+        <TextView
+            android:id="@+id/playlist_no_tracks"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="@dimen/playlist_bottom_sheet_no_tracks_in_playlist_message_layout_marginHorizontal"
+            android:layout_marginTop="@dimen/playlist_bottom_sheet_no_tracks_in_playlist_message_layout_layout_marginTop"
+            android:gravity="center_horizontal"
+            android:text="@string/no_tracks_added_to_playlist"
+            android:visibility="gone"
+            style="@style/PlaceholderTextViewStyle"/>
     </LinearLayout>
 
     <LinearLayout
@@ -185,8 +197,7 @@
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/playlist_recyclerview_menu"
             android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1"
+            android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/playlist_bottom_sheet_RecyclerView_menu_layout_marginTop"
             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"/>
 
