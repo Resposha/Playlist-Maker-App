@@ -5,7 +5,6 @@ import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
-import androidx.room.Transaction
 import com.example.playlistmaker.library.data.db.entity.PlaylistTrackCrossRef
 import com.example.playlistmaker.library.data.db.entity.PlaylistTrackEntity
 
@@ -31,35 +30,4 @@ interface PlaylistTrackDao {
 
     @Query("SELECT track_id FROM playlist_track_cross_ref WHERE playlist_id = :playlistId ORDER BY added_at DESC")
     suspend fun getTrackIdsSortedByAddedAt(playlistId: Int): List<String>
-
-    @Transaction
-    suspend fun removeTrackFromPlaylist(trackId: String, playlistId: Int) {
-        deleteCrossRef(
-            PlaylistTrackCrossRef(playlistId, trackId)
-        )
-
-        val remainingRefs = getCrossRefsByTrackId(trackId)
-        if (remainingRefs.isEmpty()) {
-            deleteTrackById(trackId)
-        }
-    }
-
-    @Transaction
-    suspend fun deletePlaylistAndUnusedTracks(
-        playlistDao: PlaylistDao,
-        playlistId: Int,
-        trackIds: List<Int>
-    ) {
-        playlistDao.deletePlaylistById(playlistId)
-
-        deleteCrossRefsByPlaylistId(playlistId)
-
-        trackIds.forEach { trackId ->
-            val remainingRefs = getCrossRefsByTrackId(trackId.toString())
-
-            if (remainingRefs.isEmpty()) {
-                deleteTrackById(trackId.toString())
-            }
-        }
-    }
 }

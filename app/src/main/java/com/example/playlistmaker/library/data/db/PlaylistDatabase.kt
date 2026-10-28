@@ -21,7 +21,7 @@ abstract class PlaylistDatabase : RoomDatabase() {
                 db.execSQL(
                     """
                     ALTER TABLE playlist_track_cross_ref 
-                    ADD COLUMN added_at INTEGER NOT NULL DEFAULT (strftime('%s', 'now') * 1000)
+                    ADD COLUMN added_at INTEGER NOT NULL DEFAULT ${System.currentTimeMillis()}
                     """.trimIndent()
                 )
             }

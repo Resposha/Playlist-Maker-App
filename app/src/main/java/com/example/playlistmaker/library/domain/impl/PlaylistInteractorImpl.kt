@@ -30,10 +30,7 @@ class PlaylistInteractorImpl(
         return playlistRepository.getPlaylistById(playlistId)
     }
 
-    override suspend fun addTrackToPlaylist(
-        track: Track,
-        playlist: Playlist
-    ) {
+    override suspend fun addTrackToPlaylist(track: Track, playlist: Playlist) {
         playlistRepository.addTrackToPlaylist(track, playlist)
     }
 

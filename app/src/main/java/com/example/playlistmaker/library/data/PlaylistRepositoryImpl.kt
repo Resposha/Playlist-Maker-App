@@ -11,6 +11,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.withContext
 
 class PlaylistRepositoryImpl(
@@ -30,11 +31,22 @@ class PlaylistRepositoryImpl(
     }
 
     override suspend fun deletePlaylist(playlistId: Int, trackIds: List<Int>) = withContext(Dispatchers.IO) {
-        playlistDatabase.playlistTrackDao().deletePlaylistAndUnusedTracks(
-            playlistDatabase.playlistDao(),
-            playlistId,
-            trackIds
-        )
+        val playlistDao = playlistDatabase.playlistDao()
+        val playlistTrackDao = playlistDatabase.playlistTrackDao()
+
+        playlistDatabase.runInTransaction {
+            runBlocking {
+                playlistDao.deletePlaylistById(playlistId)
+                playlistTrackDao.deleteCrossRefsByPlaylistId(playlistId)
+
+                trackIds.forEach { trackId ->
+                    val remainingRefs = playlistTrackDao.getCrossRefsByTrackId(trackId.toString())
+                    if (remainingRefs.isEmpty()) {
+                        playlistTrackDao.deleteTrackById(trackId.toString())
+                    }
+                }
+            }
+        }
     }
 
     override suspend fun getPlaylists(): List<Playlist> = withContext(Dispatchers.IO) {
@@ -60,10 +72,7 @@ class PlaylistRepositoryImpl(
             }
     }
 
-    override suspend fun addTrackToPlaylist(
-        track: Track,
-        playlist: Playlist
-    ) {
+    override suspend fun addTrackToPlaylist(track: Track, playlist: Playlist) {
         val playlistTrackEntity = trackDbConverter.mapTrackToPlaylistTrackEntity(track)
         playlistDatabase.playlistTrackDao().insertTrack(playlistTrackEntity)
 
@@ -76,6 +85,17 @@ class PlaylistRepositoryImpl(
     }
 
     override suspend fun removeTrackFromPlaylist(trackId: String, playlistId: Int) = withContext(Dispatchers.IO) {
-        playlistDatabase.playlistTrackDao().removeTrackFromPlaylist(trackId, playlistId)
+        val playlistTrackDao = playlistDatabase.playlistTrackDao()
+
+        playlistDatabase.runInTransaction {
+            runBlocking {
+                playlistTrackDao.deleteCrossRef(PlaylistTrackCrossRef(playlistId, trackId))
+
+                val remainingRefs = playlistTrackDao.getCrossRefsByTrackId(trackId)
+                if (remainingRefs.isEmpty()) {
+                    playlistTrackDao.deleteTrackById(trackId)
+                }
+            }
+        }
     }
 }
