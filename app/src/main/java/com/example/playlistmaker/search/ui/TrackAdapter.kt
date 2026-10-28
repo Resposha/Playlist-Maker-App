@@ -21,12 +21,20 @@ class TrackAdapter(
         holder.bind(tracks[position])
 
         holder.itemView.setOnClickListener {
-            onTrackClick(tracks[position])
+            val currentPosition = holder.bindingAdapterPosition
+            if (currentPosition != RecyclerView.NO_POSITION) {
+                onTrackClick(tracks[currentPosition])
+            }
         }
 
         holder.itemView.setOnLongClickListener {
-            onTrackLongClick(tracks[position])
-            true
+            val currentPosition = holder.bindingAdapterPosition
+            if (currentPosition != RecyclerView.NO_POSITION) {
+                onTrackLongClick(tracks[currentPosition])
+                true
+            } else {
+                false
+            }
         }
     }
 
