@@ -101,6 +101,8 @@ val dataModule = module {
             PlaylistDatabase::class.java,
             "playlist_database.db"
         )
+            .addMigrations(PlaylistDatabase.MIGRATION_2_3)
+            .fallbackToDestructiveMigration(true)
             .build()
     }
 
