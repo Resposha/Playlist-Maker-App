@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.os.bundleOf
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
@@ -35,7 +36,18 @@ class PlaylistsFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        viewModel.observePlaylistsState().observe(viewLifecycleOwner) { playlists ->
+        onPlaylistClickDebounce = debounce<Playlist>(
+            CLICK_DEBOUNCE_DELAY,
+            viewLifecycleOwner.lifecycleScope,
+            false
+        ) { playlist ->
+            openPlaylist(playlist.playlistId)
+        }
+
+        playlistsAdapter = BigPlaylistAdapter(emptyList(), onPlaylistClickDebounce)
+        binding.libraryRecyclerviewPlaylists.adapter = playlistsAdapter
+
+        viewModel.observePlaylists().observe(viewLifecycleOwner) { playlists ->
             if (playlists.isEmpty()) {
                 binding.libraryRecyclerviewPlaylists.isVisible = false
                 binding.libraryNoPlaylists.isVisible = true
@@ -46,19 +58,10 @@ class PlaylistsFragment : Fragment() {
             }
         }
 
-        onPlaylistClickDebounce = debounce<Playlist>(
-            CLICK_DEBOUNCE_DELAY,
-            viewLifecycleOwner.lifecycleScope,
-            false
-        ) { playlist ->
-            // проверить и дописать
-        }
-
-        playlistsAdapter = BigPlaylistAdapter(emptyList(), onPlaylistClickDebounce)
-        binding.libraryRecyclerviewPlaylists.adapter = playlistsAdapter
-
         binding.libraryButtonNewPlaylist.setOnClickListener {
-            findNavController().navigate(R.id.action_libraryFragment_to_newPlaylistFragment)
+            if (findNavController().currentDestination?.id == R.id.libraryFragment) {
+                findNavController().navigate(R.id.action_libraryFragment_to_newPlaylistFragment)
+            }
         }
     }
 
@@ -72,7 +75,15 @@ class PlaylistsFragment : Fragment() {
         _binding = null
     }
 
+    private fun openPlaylist(playlistId: Int) {
+        findNavController().navigate(
+            R.id.action_libraryFragment_to_playlistFragment,
+            bundleOf(PLAYLIST_ID to playlistId)
+        )
+    }
+
     companion object {
+        private const val PLAYLIST_ID = "playlist_id"
         private const val CLICK_DEBOUNCE_DELAY = 1000L
     }
 }

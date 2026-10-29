@@ -171,4 +171,29 @@
         <item name="android:fontFamily">@font/ys_display_regular</item>
         <item name="android:textFontWeight">400</item>
     </style>
+    <style name="PlaylistFragmentStyle">
+        <item name="android:background">@color/light_gray</item>
+    </style>
+    <style name="PlaylistToolbarStyle">
+        <item name="navigationIconTint">@color/black</item>
+    </style>
+    <style name="PlaylistNameStyle">
+        <item name="android:textColor">@color/black</item>
+        <item name="android:textSize">@dimen/playlist_name_textSize</item>
+        <item name="android:fontFamily">@font/ys_display_bold</item>
+        <item name="android:textFontWeight">700</item>
+    </style>
+    <style name="PlaylistDetailsStyle">
+        <item name="android:textColor">@color/black</item>
+        <item name="android:textSize">@dimen/playlist_details_textSize</item>
+        <item name="android:fontFamily">@font/ys_display_regular</item>
+        <item name="android:textFontWeight">400</item>
+        <item name="tint">@color/black</item>
+    </style>
+    <style name="PlaylistMenuTextViewStyle">
+        <item name="android:textColor">@color/black</item>
+        <item name="android:textSize">@dimen/playlist_menu_TextView_textSize</item>
+        <item name="android:fontFamily">@font/ys_display_regular</item>
+        <item name="android:textFontWeight">400</item>
+    </style>
 </resources>

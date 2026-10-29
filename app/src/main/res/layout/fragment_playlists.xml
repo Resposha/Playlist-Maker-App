@@ -17,14 +17,17 @@
 
     <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="0dp"
+        android:layout_weight="1">
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/library_recyclerview_playlists"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:layout_marginHorizontal="@dimen/library_RecyclerView_playlists_layout_marginHorizontal"
-            android:layout_marginVertical="@dimen/library_RecyclerView_playlists_layout_marginVertical"
+            android:layout_marginTop="@dimen/library_RecyclerView_playlists_layout_marginTop"
+            android:paddingBottom="@dimen/library_RecyclerView_playlists_paddingBottom"
+            android:clipToPadding="false"
             app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
             app:spanCount="2"/>
 

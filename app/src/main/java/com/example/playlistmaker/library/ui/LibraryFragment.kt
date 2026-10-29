@@ -8,14 +8,10 @@ import androidx.fragment.app.Fragment
 import com.example.playlistmaker.R
 import com.example.playlistmaker.databinding.FragmentLibraryBinding
 import com.google.android.material.tabs.TabLayoutMediator
-import org.koin.androidx.viewmodel.ext.android.viewModel
-import kotlin.getValue
 
 class LibraryFragment : Fragment() {
     private var _binding: FragmentLibraryBinding? = null
     private val binding get() = _binding!!
-
-    private val viewModel: LibraryViewModel by viewModel()
 
     private lateinit var tabMediator: TabLayoutMediator
 

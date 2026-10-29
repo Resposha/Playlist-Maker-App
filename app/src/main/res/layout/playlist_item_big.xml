@@ -11,11 +11,11 @@
         android:id="@+id/library_playlist_art"
         android:layout_width="0dp"
         android:layout_height="0dp"
+        android:scaleType="centerCrop"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintDimensionRatio="1:1"
-        android:scaleType="centerCrop"
         tools:src="@drawable/placeholder_album_and_playlist_art"/>
 
     <TextView
@@ -23,11 +23,11 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/library_playlist_item_big_name_layout_marginTop"
+        android:maxLines="1"
+        android:ellipsize="end"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@id/library_playlist_art"
-        android:maxLines="1"
-        android:ellipsize="end"
         style="@style/LibraryBigPlaylistItemNameAndNumberOfTracksStyle"
         tools:text="Summer Party"/>
 

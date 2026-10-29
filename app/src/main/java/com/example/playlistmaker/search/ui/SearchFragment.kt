@@ -46,10 +46,6 @@ class SearchFragment : Fragment() {
             binding.searchEditText.setText(viewModel.searchInput)
         }
 
-        viewModel.observeSearchState().observe(viewLifecycleOwner) {
-            render(it)
-        }
-
         onTrackClickDebounce = debounce<Track>(
             CLICK_DEBOUNCE_DELAY,
             viewLifecycleOwner.lifecycleScope,
@@ -59,12 +55,20 @@ class SearchFragment : Fragment() {
             openTrackPlayer(track)
         }
 
-        searchHistoryAdapter = TrackAdapter(emptyList(), onTrackClickDebounce)
-        trackAdapter = TrackAdapter(emptyList(), onTrackClickDebounce)
+        trackAdapter = TrackAdapter(emptyList(), onTrackClickDebounce) {
+            // empty
+        }
+
+        searchHistoryAdapter = TrackAdapter(emptyList(), onTrackClickDebounce) {
+            // empty
+        }
 
         binding.searchRecyclerviewFoundTracks.adapter = trackAdapter
         binding.searchRecyclerviewHistory.adapter = searchHistoryAdapter
 
+        viewModel.observeSearchState().observe(viewLifecycleOwner) {
+            render(it)
+        }
 
         binding.searchEditText.setOnFocusChangeListener { _, hasFocus ->
             if (hasFocus && binding.searchEditText.text.isNullOrEmpty()) {
@@ -180,14 +184,10 @@ class SearchFragment : Fragment() {
     }
 
     private fun openTrackPlayer(track: Track) {
-        try {
-            findNavController().navigate(
-                R.id.action_searchFragment_to_playerFragment,
-                bundleOf(TRACK to track)
-            )
-        } catch (e: IllegalArgumentException) {
-            // empty
-        }
+        findNavController().navigate(
+            R.id.action_searchFragment_to_playerFragment,
+            bundleOf(TRACK to track)
+        )
     }
 
     companion object {

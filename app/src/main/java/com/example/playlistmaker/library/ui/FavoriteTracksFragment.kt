@@ -37,10 +37,6 @@ class FavoriteTracksFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        viewModel.observeFavoriteTracksState().observe(viewLifecycleOwner) {
-            render(it)
-        }
-
         onTrackClickDebounce = debounce<Track>(
             CLICK_DEBOUNCE_DELAY,
             viewLifecycleOwner.lifecycleScope,
@@ -49,8 +45,15 @@ class FavoriteTracksFragment : Fragment() {
             openTrackPlayer(track)
         }
 
-        favoriteTracksAdapter = TrackAdapter(emptyList(), onTrackClickDebounce)
+        favoriteTracksAdapter = TrackAdapter(emptyList(), onTrackClickDebounce) {
+            // empty
+        }
+
         binding.libraryRecyclerviewFavoriteTracks.adapter = favoriteTracksAdapter
+
+        viewModel.observeFavoriteTracksState().observe(viewLifecycleOwner) {
+            render(it)
+        }
     }
 
     override fun onDestroyView() {
@@ -77,14 +80,10 @@ class FavoriteTracksFragment : Fragment() {
     }
 
     private fun openTrackPlayer(track: Track) {
-        try {
-            findNavController().navigate(
-                R.id.action_libraryFragment_to_playerFragment,
-                bundleOf(TRACK to track)
-            )
-        } catch (e: IllegalArgumentException) {
-            // empty
-        }
+        findNavController().navigate(
+            R.id.action_libraryFragment_to_playerFragment,
+            bundleOf(TRACK to track)
+        )
     }
 
     companion object {
